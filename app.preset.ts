@@ -14,12 +14,10 @@ const appPreset: Partial<Config> = {
                     600: '#4945FF',
                     700: '#271FE0',
                 },
-
                 secondary: {
                     100: '#F0F0FF',
                     200: '#D9D8FF',
                 },
-
                 tertiary: {
                     100: '#F6F6F9',
                     150: '#EAEAEF',
