@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss';
+import appPreset from './app.preset';
+import { withTV } from 'tailwind-variants/transformer';
 
 const config: Config = {
     content: [
@@ -16,5 +18,6 @@ const config: Config = {
         },
     },
     plugins: [],
+    presets: [appPreset],
 };
-export default config;
+export default withTV(config);
