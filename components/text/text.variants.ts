@@ -5,19 +5,27 @@ const textVariants = tv({
     base: 'text-base font-normal',
     variants: {
         size: {
+            xxs: 'text-xxs',
             xs: 'text-xs',
             sm: 'text-sm',
-            md: 'text-md',
+            md: 'text-base',
             lg: 'text-lg',
             xl: 'text-xl',
+            '4xl': 'text-4xl',
         },
 
         weight: {
             extraLight: 'font-extralight',
             light: 'font-light',
-            semibold: 'font-bold',
+            medium: 'font-medium',
+            semibold: 'font-semibold',
             bold: 'font-bold',
-            extraBold: 'font-bold',
+            extraBold: 'font-extrabold',
+        },
+
+        color: {
+            neutral800: 'text-neutral-800',
+            neutral400: 'text-neutral-400',
         },
     },
 });

@@ -10,11 +10,11 @@ const buttonVariants = tv({
         },
         color: {
             primary:
-                'bg-primary-600 hover:bg-primary-500 focus:bg-primary-500 focus:ring-1 focus:ring-primary-700 active:bg-primary-700',
+                'bg-primary-600 hover:bg-primary-500 focus:bg-primary-500 focus:ring-1 focus:ring-primary-700 active:bg-primary-700 text-white',
             secondary:
                 'border-2 border-secondary-200 bg-secondary-100 text-primary-600 hover:bg-white focus:ring-1 focus:ring-primary-700 active:border-primary-700 active:bg-white active:text-primary-700',
             tertiary:
-                'border-2 border-tertiary-200 bg-white text-tertiary-800 hover:bg-tertiary-100 focus:bg-white focus:ring-1 focus:ring-primary-700 active:bg-tertiary-150',
+                'border-2 border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-100 focus:bg-white focus:ring-1 focus:ring-primary-700 active:bg-neutral-150',
         },
     },
 });

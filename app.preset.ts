@@ -8,19 +8,26 @@ const appPreset: Partial<Config> = {
                 75: '303px',
             },
 
+            fontSize: {
+                xxs: '11px',
+            },
+
             colors: {
                 primary: {
                     500: '#7B79FF',
                     600: '#4945FF',
                     700: '#271FE0',
                 },
+
                 secondary: {
                     100: '#F0F0FF',
                     200: '#D9D8FF',
                 },
-                tertiary: {
+
+                neutral: {
                     100: '#F6F6F9',
                     150: '#EAEAEF',
+                    400: '#A5A5BA',
                     200: '#DCDCE4',
                     800: '#32324D',
                 },
