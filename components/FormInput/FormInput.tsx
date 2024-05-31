@@ -1,7 +1,6 @@
 // src/components/FormInput/FormInput.tsx
-import React, { useState } from 'react';
-// import JoditEditor from 'jodit-react';
-
+import React, { useRef, useState } from 'react';
+import JoditEditor from 'jodit-react';
 // import { useRef } from 'react';
 
 interface FormInputProps {
@@ -11,14 +10,13 @@ interface FormInputProps {
     placeholder?: string;
 }
 
-// rich text editor
-// const editor = useRef(null);
-
-// const [content, setContent] = useState('');
-
-// rich text editor
-
 const FormInput: React.FC<FormInputProps> = ({ label, value, onChange, placeholder }) => {
+    // rich text editor
+    const editor = useRef(null);
+
+    const [content, setContent] = useState('');
+
+    // rich text editor
     return (
         <>
             <h1 className='mb-3 text-center text-4xl'>Form Design</h1>
@@ -61,12 +59,13 @@ const FormInput: React.FC<FormInputProps> = ({ label, value, onChange, placehold
                                         name='descriptions'
                                         id='description'
                                     ></textarea> */}
-                                    {/* <JoditEditor
-                                        ref={editor}
-                                        value={content}
-                                        onChange={(newContent) => setContent(newContent)}
-                                    />
-                                    <br /> */}
+                                    <div className='my-4'>
+                                        <JoditEditor
+                                            ref={editor}
+                                            value={content}
+                                            onChange={(newContent) => setContent(newContent)}
+                                        />
+                                    </div>
                                     {/* <!-- richtext editor  --> */}
                                 </div>
                             </div>
