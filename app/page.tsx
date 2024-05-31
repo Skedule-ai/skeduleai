@@ -7,9 +7,10 @@ import { Button } from '../components/button/Button';
 const Homepage = () => {
     return (
         <div>
-            <Button size='lg' color='tertiary' loading>
+            {/* <Button size='lg' color='tertiary' loading>
                 Eshika Rawat
-            </Button>
+            </Button> */}
+
         </div>
     );
 };

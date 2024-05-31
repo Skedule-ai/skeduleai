@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import MainLayout from '../components/layout';
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-
 const inter = Inter({ subsets: ['latin'] });
+import { ClerkProvider } from '@clerk/nextjs'
+import Navbar from '../components/Navbar';
+
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -16,13 +17,21 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
+    return ( 
         
         <html lang='en'>
-            <body className={inter.className}>
+            <body className={inter.className}> 
+            <ClerkProvider>                   
+                <div className="mx-36 text-2xl">                
+                <div className="flex flex-col item-center text-center mt-32">
+                <Navbar />
                 <MainLayout>{children}</MainLayout>
+                </div>
+                </div>
+                </ClerkProvider> 
             </body>
         </html>
+       
        
     );
 }
