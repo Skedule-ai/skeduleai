@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
 import { Card } from '@/components/cards/Card';
 
 const meta: Meta<typeof Card> = {
@@ -9,16 +8,17 @@ const meta: Meta<typeof Card> = {
 export default meta;
 type Story = StoryObj<typeof Card>;
 
-export const Errorcard: Story = {
+export const defaultCard: Story = {
     args: {
         size: 'sm',
-        variant: 'error',
-    },
+        variant: 'default'
+    }
 };
 
-export const DefaultCard: Story = {
+
+export const errorCard: Story = {
     args: {
         size: 'sm',
-        variant: 'default',
-    },
-};
+        variant: 'error'
+    }
+}
