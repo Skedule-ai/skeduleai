@@ -23,3 +23,11 @@ export const Secondary: Story = {
         children: 'Secondary',
     },
 };
+
+export const Tertiary: Story = {
+    args: {
+        size: 'md',
+        color: 'tertiary',
+        children: 'Tertiary',
+    },
+};
