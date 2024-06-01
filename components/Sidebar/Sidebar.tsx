@@ -1,25 +1,46 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
+import { sidebarVariants } from './sidebar.variants';
 
-const Sidebar = () => {
+interface SidebarProps {
+    collapsible?: boolean;
+    hide?: boolean;
+}
+
+const SideBar: React.FC<SidebarProps> = ({ collapsible = false, hide = false }) => {
+    const [isCollapsed, setIsCollapsed] = useState(collapsible);
+    const [isOpen, setIsOpen] = useState(hide);
+
     return (
-        <section
-            className='bg-dark-1 sticky left-0 top-0 flex h-screen w-fit flex-col justify-between p-6 pt-28 text-white
-    max-sm:hidden lg:w-[264px]'
-        >
-            <div className='flex flex-1 flex-col gap-6'>
-                {['home', 'contact us'].map((link) => {
-                    return (
-                        <Link href={'/'} key={link}>
-                            <p className='text-lg font-semibold max-lg:hidden'>{link}</p>
-                        </Link>
-                    );
-                })}
+        <div className='relative'>
+            <button
+                className='nav absolute left-2 top-2 z-50 !h-fit p-2 text-black md:hidden'
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                ☰
+            </button>
+
+            <div className={`${sidebarVariants({ collapsible: isCollapsed })}`}>
+                <button onClick={() => setIsCollapsed(!isCollapsed)} className='p-2 text-black'>
+                    {isCollapsed ? '→' : '←'}
+                </button>
+                <nav className='mt-4'>
+                    <ul>
+                        <li className='px-4 py-2'>
+                            <a href='/dashboard'>Dashboard</a>
+                        </li>
+                        <li className='px-4 py-2'>
+                            <a href='/calender'>Calender</a>
+                        </li>
+                        <li className='px-4 py-2'>
+                            <a href='/inbox'>In</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </section>
+        </div>
     );
 };
 
-export default Sidebar;
+export default SideBar;
