@@ -1,0 +1,47 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { colors } from '../../app.preset.ts'
+
+<Meta title="Configuration/Colors" />
+
+<ColorPalette>
+  <ColorItem 
+    title="Primary" 
+    subtitle="Primary variants" 
+    colors={colors.primary} 
+  />
+
+  <ColorItem 
+    title="Secondary" 
+    subtitle="Secondary variants" 
+    colors={colors.secondary} 
+  />
+
+  <ColorItem
+    title="Neutral"
+    subtitle="Neutral variants"
+    colors={colors.neutral}
+  />
+  
+  <ColorItem 
+    title="Success" 
+    subtitle="Green variants" 
+    colors={colors.green} 
+  />
+  <ColorItem
+    title="Danger"
+    subtitle="Red variants"
+    colors={colors.red}
+  />
+
+  <ColorItem
+    title="Warning"
+    subtitle="Amber variants"
+    colors={colors.amber}
+  />
+
+  <ColorItem
+    title="Alternative"
+    subtitle="Sky variants"
+    colors={colors.sky}
+  />
+</ColorPalette>
