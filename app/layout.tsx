@@ -5,6 +5,7 @@ import MainLayout from '../components/layout';
 const inter = Inter({ subsets: ['latin'] });
 import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from '../components/Navbar';
+import ForgotPasswordPage from './forget-password/page';
 
 
 export const metadata: Metadata = {

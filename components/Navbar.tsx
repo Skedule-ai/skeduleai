@@ -4,13 +4,13 @@ import { UserButton,useAuth,} from "@clerk/nextjs";
 const Navbar = async() => {
     
     return <div>
-        <ul className="flex justify-between m-10 items-center">
+        <ul className="">
             <div>
                 <Link href="/">
                     <li>Home</li>
                 </Link>
             </div>
-            <div className="flex gap-10">
+            {/* <div className="flex gap-10">
             <Link href="/sign-in">
                     <li>Login</li>
                 </Link>
@@ -18,7 +18,7 @@ const Navbar = async() => {
                     <li>Sign Up</li>
                 </Link>
                 
-            </div>         
+            </div>          */}
         </ul>
     </div>
 } 
