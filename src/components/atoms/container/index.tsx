@@ -1,14 +1,14 @@
-import { twMerge } from 'tailwind-merge';
+import React from 'react';
+import { ContainerProps, containerVariants } from './container.variants';
 
-const Container: React.FC<
-    React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-> = ({ children, className, ...props }) => {
-    const style = twMerge(['container mx-auto', className]);
-    return (
-        <div className={style} {...props}>
-            {children}
-        </div>
-    );
-};
+const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+    ({ as = 'div', center, fullWidth, className, fullscreen, ...rest }, ref) => {
+        return React.createElement(as, {
+            ...rest,
+            className: containerVariants({ center, fullscreen, fullWidth, className }),
+            ref,
+        });
+    },
+);
 
 export default Container;

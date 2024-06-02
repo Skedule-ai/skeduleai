@@ -1,9 +1,13 @@
-import AuthLayout from '@/components/molecules/layout/auth-layout';
+import Container from '@/components/atoms/container';
 
-export default function AuthenticationLayout({
+export default function AuthLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return <AuthLayout>{children}</AuthLayout>;
+    return (
+        <Container fullscreen className='flex items-center justify-center dark:bg-neutral-950'>
+            {children}
+        </Container>
+    );
 }
