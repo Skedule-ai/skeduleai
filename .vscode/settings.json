@@ -1,5 +1,6 @@
 {
     "eslint.enable": true,
+    "editor.wordWrap": "on",
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.fontFamily": "'Fira Code'",
@@ -38,6 +39,16 @@
         }
     },
     "tailwindCSS.experimental.classRegex": [
-        ["tv\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
-    ]
+        [
+            "tv\\((([^()]*|\\([^()]*\\))*)\\)",
+            "[\"'`]([^\"'`]*).*?[\"'`]"
+        ]
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "node_modules/": true,
+        "npm": true
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,37 +1,63 @@
 {
-    "extends": [
-        "next/core-web-vitals",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:storybook/recommended",
-        "plugin:prettier/recommended",
-        "plugin:tailwindcss/recommended"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:storybook/recommended",
+    "plugin:prettier/recommended",
+    "plugin:tailwindcss/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "prettier",
+    "@typescript-eslint"
+  ],
+  "ignorePatterns": [
+    "node_modules/**",
+    "public/**",
+    "tsconfig.json",
+    "*.d.ts"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    // Tailwind specific fix
+    "tailwindcss/no-custom-classname": [
+      0
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": "./tsconfig.json"
-    },
-    "plugins": ["prettier", "@typescript-eslint"],
-    "ignorePatterns": ["node_modules/**", "public/**", "tsconfig.json", "*.d.ts"],
-    "rules": {
-        "prettier/prettier": "error",
-        "no-console": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        // Tailwind specific fix
-        "tailwindcss/no-custom-classname": [0],
-        // NextJs specific fixes:
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "jsx-quotes": ["error", "prefer-single"],
-        "quotes": [2, "single"],
-        "semi": ["error", "always"],
-        "react/prop-types": "off",
-        // NextJs specific fix: suppress errors for missing 'import React' in files for nextjs
-        "react/react-in-jsx-scope": "off",
-        // NextJs specific fix: allow jsx syntax in ts and tsx files
-        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-
-        "react/display-name": "off"
-    }
+    // NextJs specific fixes:
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "jsx-quotes": [
+      "error",
+      "prefer-single"
+    ],
+    "quotes": [
+      2,
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "react/prop-types": "off",
+    // NextJs specific fix: suppress errors for missing 'import React' in files for nextjs
+    "react/react-in-jsx-scope": "off",
+    // NextJs specific fix: allow jsx syntax in ts and tsx files
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
+    "react/display-name": "off"
+  }
 }
