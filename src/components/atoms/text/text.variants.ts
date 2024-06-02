@@ -21,8 +21,9 @@ export const fontWeight = {
 };
 
 export const fontColor = {
-    neutral800: 'text-neutral-800',
-    neutral400: 'text-neutral-400',
+    primary: 'bg-blue-600',
+    secondary: 'text-neutral-700',
+    tertiary: 'text-neutral-400',
 };
 
 const textVariants = tv({
@@ -37,6 +38,7 @@ const textVariants = tv({
 type TextProps = React.ComponentPropsWithRef<'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'> &
     VariantProps<typeof textVariants> & {
         as?: ElementType;
+        htmlFor?: string;
     };
 
 export { type TextProps, textVariants };
