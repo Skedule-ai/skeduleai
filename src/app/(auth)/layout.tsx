@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import AuthLayout from "@/components/molecules/layout/auth-layout";
+import AuthLayout from '@/components/molecules/layout/auth-layout';
 
 export default function AuthenticationLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return <AuthLayout>{children}</AuthLayout>;
+    return <AuthLayout>{children}</AuthLayout>;
 }
