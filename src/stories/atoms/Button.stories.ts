@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import Button from '../../components/atoms/button';
-import { btnSize } from '@/components/atoms/button/definitions';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -11,9 +10,7 @@ const meta = {
         layout: 'centered',
     },
     tags: ['autodocs'],
-    argTypes: {
-        size: { control: 'select', options: Object.keys(btnSize) },
-    },
+    argTypes: {},
     args: { onClick: fn(), size: 'md' },
 } satisfies Meta<typeof Button>;
 

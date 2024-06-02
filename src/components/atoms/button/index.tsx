@@ -1,19 +1,15 @@
-import { twMerge } from 'tailwind-merge';
-import { btnSize, btnVariant, ButtonProps } from './definitions';
+import React from 'react';
+import { ButtonProps, buttonVariants } from './button.variants';
 
-const Button: React.FC<ButtonProps> = ({
-    children,
-    className,
-    size = 'md',
-    variant = 'primary',
-    ...props
-}) => {
-    const style = twMerge([btnSize[size] ?? 'md', btnVariant[variant], className]);
-    return (
-        <button className={style} {...props}>
-            {children}
-        </button>
-    );
-};
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ size, color = 'primary', className, loading, children, ...rest }, ref) => {
+        return (
+            <button ref={ref} className={buttonVariants({ size, color, className })} {...rest}>
+                {loading && 'Loading...'}
+                {children}
+            </button>
+        );
+    },
+);
 
 export default Button;
