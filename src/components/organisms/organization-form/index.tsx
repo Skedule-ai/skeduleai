@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Formik, Form } from 'formik';
 import OrganizationSchema from './organization-form-validation';

@@ -1,12 +1,11 @@
 'use client';
-import { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
-import { Header1, Subtitle } from '@/components/atoms/typography';
+
 import { Flex } from '@/components/atoms/flex';
-import OrganizationForm from '@/components/organisms/organization-form';
 import Container from '@/components/atoms/container';
 
-const Modal = () => {
+const Modal: React.FC<PropsWithChildren> = ({ children }) => {
     const [open, setOpen] = useState(true);
 
     return (
@@ -38,15 +37,7 @@ const Modal = () => {
                             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                         >
                             <DialogPanel className='relative overflow-hidden rounded-lg bg-white p-8 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg'>
-                                <Flex dir='column' gap={6}>
-                                    <Flex dir='column'>
-                                        <Header1>Organization Details</Header1>
-                                        <Subtitle>
-                                            Please fill in the details of your organization.
-                                        </Subtitle>
-                                    </Flex>
-                                    <OrganizationForm submitBtnText='Submit' />
-                                </Flex>
+                                {children}
                             </DialogPanel>
                         </TransitionChild>
                     </Flex>
