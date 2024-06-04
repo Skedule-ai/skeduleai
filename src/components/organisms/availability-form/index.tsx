@@ -84,34 +84,33 @@ const AvailabilityForm: React.FC<AvailabilityFormType> = ({ submitBtnText = 'Sub
                     </div>
 
                     <h2>Number of Slots</h2>
-<div className='mb-4'>
-    <div className='relative'>
-        <Field
-            as='select'
-            name='numberOfSlots'
-            className='form-select w-full rounded-md border border-gray-300 px-4 py-2'
-        >
-            <option value=''>Select</option>
-            {/* Add options for number of slots here */}
-        </Field>
-        <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2'>
-            <svg
-                className='h-5 w-5 text-gray-400'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-            >
-                <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M19 9l-7 7-7-7'
-                ></path>
-            </svg>
-        </div>
-    </div>
-</div>
-
+                    <div className='mb-4'>
+                        <div className='relative'>
+                            <Field
+                                as='select'
+                                name='numberOfSlots'
+                                className='form-select w-full rounded-md border border-gray-300 px-4 py-2'
+                            >
+                                <option value=''>Select</option>
+                                {/* Add options for number of slots here */}
+                            </Field>
+                            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2'>
+                                <svg
+                                    className='h-5 w-5 text-gray-400'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    stroke='currentColor'
+                                >
+                                    <path
+                                        strokeLinecap='round'
+                                        strokeLinejoin='round'
+                                        strokeWidth='2'
+                                        d='M19 9l-7 7-7-7'
+                                    ></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
                     <h2>Business Days</h2>
                     <div className='mb-4 flex flex-wrap'>
