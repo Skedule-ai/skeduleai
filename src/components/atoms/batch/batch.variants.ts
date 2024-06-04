@@ -5,7 +5,7 @@ const batchVariants = tv({
     variants: {
         state: {
             default: 'bg-gray-200 text-gray-700',
-            active: 'bg-blue-200 text-blue-700',
+            active: 'rinf-2 ring ring-blue-700',
         },
         color: {
             red: 'bg-red-500 text-white',
@@ -15,9 +15,8 @@ const batchVariants = tv({
         },
     },
     compoundVariants: [
-        { state: 'default', color: 'red', className: 'bg-red-200 text-white' },
-        { state: 'active', color: 'red', className: 'bg-red-300 text-white' },
-
+        { state: 'default', color: 'red', className: 'bg-red-500 text-white' },
+        { state: 'active', color: 'red', className: 'bg-red-500 text-white' },
     ],
 });
 

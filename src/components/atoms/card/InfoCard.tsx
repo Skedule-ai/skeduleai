@@ -2,6 +2,7 @@ import React from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import Batch from '../batch';
+import { Flex } from '../flex';
 
 type InfoCardProps = {
     imageUrl: string;
@@ -24,19 +25,19 @@ const InfoCard: React.FC<InfoCardProps> = ({
     return (
         <Card {...props}>
             <img src={imageUrl} alt={title} className='h-1/2 w-full rounded-t object-cover' />
-            <div className='flex justify-between p-4'>
-                <div className='flex flex-col gap-2'>
+            <Flex dir='row' justifyContent='between' className='p-4' >
+                <Flex dir='column' gap={2} >
                     <h2 className='text-sm font-semibold md:text-base lg:text-lg'>{title}</h2>
                     <p className='text-xs font-normal text-gray-500 md:text-sm lg:text-base'>
                         {subtitle}
                     </p>
-                </div>
+                </Flex>
                 <div>
                     <Batch state={batchState} color={batchColor}>
                         {buttonText}
                     </Batch>
                 </div>
-            </div>
+            </Flex>
         </Card>
     );
 };
