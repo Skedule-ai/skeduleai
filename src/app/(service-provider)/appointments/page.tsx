@@ -11,7 +11,7 @@ export default function Page() {
                     <Header1>Organization Details</Header1>
                     <Subtitle>Please fill in the details of your organization.</Subtitle>
                 </Flex>
-                <OrganizationForm submitBtnText='Submit' />
+                <OrganizationForm submitBtnText='Continue' />
             </Flex>
         </Modal>
     );
