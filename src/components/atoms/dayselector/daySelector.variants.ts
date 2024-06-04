@@ -1,7 +1,7 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const daySelectorVariants = tv({
-    base: 'inline-flex space-x-3 rounded',
+    base: 'grid grid-cols-2 gap-5 sm:grid-cols-4 lg:grid-cols-7',
     variants: {
         selected: {
             true: 'bg-blue-500 text-white',
@@ -11,7 +11,7 @@ const daySelectorVariants = tv({
 });
 
 const buttonVariants = tv({
-    base: 'rounded px-3 py-2',
+    base: 'w-full rounded px-3 py-2',
     variants: {
         selected: {
             true: 'bg-blue-500 text-white',
