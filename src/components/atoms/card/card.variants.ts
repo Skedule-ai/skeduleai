@@ -2,10 +2,12 @@ import { type ElementType } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const cardVariants = tv({
-    base: 'card w-75 h-60 rounded border-2',
+    base: 'card w-75 h-auto rounded border-2',
     variants: {
         size: {
-            sm: 'h-32 w-44',
+            sm: 'w-full sm:w-44',
+            md: 'w-full md:w-64', 
+            lg: 'w-full lg:w-96',
         },
         variant: {
             default: 'border-tertiary-150 bg-white shadow-md hover:cursor-pointer',
@@ -17,6 +19,8 @@ const cardVariants = tv({
 type CardProps = React.ComponentPropsWithRef<'div'> &
     VariantProps<typeof cardVariants> & {
         as?: ElementType;
+        children: React.ReactNode;
+        // image?: string;
     };
 
 export { type CardProps, cardVariants };
