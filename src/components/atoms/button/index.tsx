@@ -13,3 +13,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 export default Button;
+
+export const PrimaryButton: React.FC<ButtonProps> = (props) => {
+    return <Button color='primary' {...props} />;
+};
+
+export const PrimaryOutlineButton: React.FC<ButtonProps> = (props) => {
+    return <Button color='outline' {...props} />;
+};
