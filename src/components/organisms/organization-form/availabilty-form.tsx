@@ -27,7 +27,7 @@ const AvailabilityForm: React.FC<AvailabilityFormType> = ({ submitBtnText = 'Sub
                 console.log('Form data', values);
             }}
         >
-            {({ values, handleChange }) => (
+            {({}) => (
                 <Form>
                     <Flex dir='column' gap={6}>
                         {avalabilityFormFields.map((field, _inx) => {

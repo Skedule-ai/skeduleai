@@ -17,7 +17,7 @@ const DaySelector: React.FC<DaySelectorProps> = ({ ...rest }) => {
             {days.map((day) => (
                 <button
                     key={day}
-                    className ={buttonVariants({ selected: selectedDays.includes(day)})}
+                    className={buttonVariants({ selected: selectedDays.includes(day) })}
                     onClick={() => toggleDay(day)}
                 >
                     {day}

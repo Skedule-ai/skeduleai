@@ -46,6 +46,6 @@ export const DefaultInfoCard: Story = {
         subtitle: 'This is a subtitle',
         buttonText: 'designation',
         batchState: 'default',
-        batchColor: 'green'
+        batchColor: 'green',
     },
 };

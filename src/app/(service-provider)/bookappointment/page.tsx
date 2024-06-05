@@ -1,8 +1,5 @@
 import { Flex } from '@/components/atoms/flex';
 import { Header1, Subtitle } from '@/components/atoms/typography';
-import Modal from '@/components/molecules/modal';
-import OrganizationForm from '@/components/organisms/organization-form';
-import Input from '@/components/atoms/fields';
 
 const bookAppointmentPage = () => {
     return (

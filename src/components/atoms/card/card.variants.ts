@@ -6,7 +6,7 @@ const cardVariants = tv({
     variants: {
         size: {
             sm: 'w-full sm:w-44',
-            md: 'w-full md:w-64', 
+            md: 'w-full md:w-64',
             lg: 'w-full lg:w-96',
         },
         variant: {
