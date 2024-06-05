@@ -5,9 +5,9 @@ const cardVariants = tv({
     base: 'card w-75 h-auto rounded border-2',
     variants: {
         size: {
-            sm: 'w-full sm:w-44',
+            sm: 'w-full sm:w-52',
             md: 'w-full md:w-64', 
-            lg: 'w-full lg:w-96',
+            lg: 'w-full md:w-80 lg:w-100',
         },
         variant: {
             default: 'border-tertiary-150 bg-white shadow-md hover:cursor-pointer',

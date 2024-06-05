@@ -1,4 +1,3 @@
-// src/stories/AcceptRejectCard.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
@@ -9,9 +8,12 @@ const meta: Meta<typeof AcceptRejectCard> = {
     parameters: {
         layout: 'centered',
     },
+    tags: ['autodocs'],
     argTypes: {
         title: { control: 'text' },
-        timing: { control: 'text' },
+        fromTime: { control: 'text' },
+        toTime: { control: 'text' },
+        isFree: { control: 'boolean' },
         userImages: { control: 'array' },
         size: {
             control: { type: 'select', options: ['sm', 'md', 'lg'] },
@@ -35,7 +37,9 @@ export const DefaultAcceptRejectCard: Story = {
         size: 'lg',
         variant: 'default',
         title: 'Brainstorming session',
-        timing: '12:30 PM -> 04:36 PM IST (Free)',
+        fromTime: '12:30 PM',
+        toTime: '04:36 PM IST',
+        isFree: true,
         userImages: [
             'https://randomuser.me/api/portraits/women/1.jpg',
             'https://randomuser.me/api/portraits/men/1.jpg',

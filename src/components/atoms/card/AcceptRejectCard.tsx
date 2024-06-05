@@ -27,17 +27,17 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     return (
         <Card {...props}>
             <Flex dir='column' className='p-4'>
-                <Flex dir='row' justifyContent='between' alignItems='center' gap={6}>
+                <Flex dir='row' justifyContent='between' alignItems='center'>
                     <h2 className='text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>
 
-                    <Flex dir='row' justifyContent='between' className='mt-2'>
+                    <Flex dir='row' justifyContent='end' className='mt-2'>
                         <Flex dir='row' className='relative'>
                             {userImages.slice(0, 5).map((image, index) => (
                                 <img
                                     key={index}
                                     src={image}
                                     alt={`User ${index + 1}`}
-                                    className={`size-5 rounded-full object-cover md:size-8 ${index !== 0 && '-ml-2'}`}
+                                    className={`size-5 rounded-full object-cover md:size-6 ${index !== 0 && '-ml-2'}`}
                                     style={{ zIndex: 5 - index }}
                                 />
                             ))}
@@ -45,21 +45,19 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     </Flex>
                 </Flex>
 
-                <Flex dir='column' gap={3}>
-                    <Flex
-                        dir='row'
-                        alignItems='center'
-                        gap={2}
-                        className='text-xs font-normal text-gray-500 md:text-sm lg:text-base'
-                    >
-                        <Clock className='size-3 md:size-5' />
-                        <p className='flex items-center'>
-                            <span className='text-green-500'>{fromTime}</span>
-                            <span className='text-gray-500'>{'->'}</span>
-                            <span className='text-red-500'>{toTime}</span>
-                            {isFree && <span className='text-blue-500'>(Free)</span>}
-                        </p>
-                    </Flex>
+                <Flex
+                    dir='row'
+                    alignItems='center'
+                    gap={1}
+                    className='mt-4 text-xs font-medium text-gray-500 md:text-sm'
+                >
+                    <Clock className='flex size-4 items-center justify-center'/>
+                    <p className='flex items-center gap-1'>
+                        <span className='text-green-600'>{fromTime}</span>
+                        <span className='text-gray-500'>{'->'}</span>
+                        <span className='text-red-500'>{toTime}</span>
+                        {isFree && <span className='text-blue-500'>(Free)</span>}
+                    </p>
                 </Flex>
 
                 <hr className='my-4' />
