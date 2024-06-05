@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import Card from '@/components/atoms/card';
 
-
 const meta: Meta<typeof Card> = {
     title: 'Atoms/Card',
     component: Card,

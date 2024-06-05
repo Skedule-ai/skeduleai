@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Batch from '@/components/atoms/batch';
 
-
 const meta = {
     title: 'Atoms/Batch',
     component: Batch,
@@ -24,14 +23,14 @@ export const Graybatch: Story = {
     args: {
         state: 'default',
         color: 'gray',
-        children: 'Batch', 
+        children: 'Batch',
     },
 };
 
 export const Redbatch: Story = {
     args: {
         state: 'active',
-        color: 'red', 
-        children: 'Batch', 
+        color: 'red',
+        children: 'Batch',
     },
 };

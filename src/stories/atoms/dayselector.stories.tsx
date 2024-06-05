@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
 import DaySelector from '@/components/atoms/dayselector';
 
 const meta = {
@@ -10,7 +9,7 @@ const meta = {
     },
     tags: ['autodocs'],
     argTypes: {},
-    args: { onChange: fn() },
+    args: {},
 } satisfies Meta<typeof DaySelector>;
 
 export default meta;
@@ -18,7 +17,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    args: {
-        size: 'md',
-    },
+    args: {},
 };

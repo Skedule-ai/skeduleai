@@ -14,7 +14,7 @@ const meta: Meta<typeof AcceptRejectCard> = {
         fromTime: { control: 'text' },
         toTime: { control: 'text' },
         isFree: { control: 'boolean' },
-        userImages: { control: 'array' },
+        userImages: { control: 'object' },
         size: {
             control: { type: 'select', options: ['sm', 'md', 'lg'] },
         },
