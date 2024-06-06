@@ -1,5 +1,6 @@
 import React from 'react';
-import Button from '../button/index';
+import Button from '@/components/atoms/button';
+import Image from 'next/image';
 import { Flex } from '../flex';
 
 interface NavbarProps {
@@ -15,14 +16,18 @@ const PageHeader: React.FC<NavbarProps> = ({ logoSrc, logoAlt, OrganizationName 
                 <div className='mx-auto flex max-w-screen-xl flex-wrap items-center justify-between'>
                     <a href='#' className='flex items-center'>
                         <img src={logoSrc} className='mr-3 h-6 sm:h-9' alt={logoAlt} />
+                        <Image
+                            height={24}
+                            width={50}
+                            src={logoSrc}
+                            className='mr-3 h-6 sm:h-9'
+                            alt={logoAlt}
+                        />
                         <span className='self-center whitespace-nowrap text-xl font-semibold text-blue-700'>
                             {OrganizationName}
                         </span>
                     </a>
                     <div className='ml-auto flex items-end lg:order-2'>
-                        {/* <button className='rounded border-gray-400 bg-gray-100 px-4 py-2 font-semibold text-gray-800 shadow hover:bg-gray-100 hover:text-blue-600'>
-                            Sign in
-                        </button> */}
                         <Flex gap={2}>
                             <Button size='md' color='tertiary'>
                                 Sign in

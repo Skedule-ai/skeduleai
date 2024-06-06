@@ -20,7 +20,7 @@ const DateComponent = () => {
         { label: 'Sydney', value: 'Australia/Sydney' },
         { label: 'Berlin', value: 'Europe/Berlin' },
         { label: 'Moscow', value: 'Europe/Moscow' },
-        { label: 'India', value: 'Asia/Kolkata' },
+        { label: 'India', value: 'Asia/Calcutta' },
         { label: 'Beijing', value: 'Asia/Shanghai' },
         { label: 'Sao Paulo', value: 'America/Sao_Paulo' },
     ];
@@ -58,13 +58,13 @@ const DateComponent = () => {
     return (
         <div className='ml-64 flex flex-grow flex-col'>
             <header className='flex p-4'>
-                <Button
+                {/* <Button
                     className='flex items-center bg-white px-4 py-2 text-black shadow'
                     color='tertiary'
                     size='md'
                 >
                     <span>{currentDay}</span>
-                </Button>
+                </Button> */}
                 <Button
                     className='ml-4 flex items-center bg-white px-4 py-2 text-black shadow'
                     color='tertiary'
@@ -76,13 +76,13 @@ const DateComponent = () => {
                         onChange={(e) => setCurrentDate(e.target.value)}
                     />
                 </Button>
-                <Button
+                {/* <Button
                     className='ml-4 flex items-center bg-white px-4 py-2 text-black shadow'
                     color='tertiary'
                     size='md'
                 >
                     <span>{currentTime}</span>
-                </Button>
+                </Button> */}
                 <div className='relative ml-5'>
                     <Button
                         className='flex items-center bg-white px-4 py-2 text-black shadow'
@@ -91,7 +91,7 @@ const DateComponent = () => {
                         onClick={() => setShowDropdown(!showDropdown)}
                     >
                         <span>{timeZone}</span>
-                        <span className='ml-2'>{showDropdown ? '❌' : '▼'}</span>{' '}
+                        <span className='ml-2'>{showDropdown ? '✖️' : '▼'}</span>{' '}
                         {/* Cross icon when dropdown is shown, arrow icon otherwise */}
                     </Button>
                     {showDropdown && (

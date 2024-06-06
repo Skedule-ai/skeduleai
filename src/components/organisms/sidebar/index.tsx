@@ -2,6 +2,7 @@ import React from 'react';
 import { sidebarVariants } from './sidebar.variants';
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
+// import { Flex, FlexItem } from '@/components/atoms/flex';
 
 type SidebarProps = {
     collapse?: boolean;
@@ -19,7 +20,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse, ...props }) => {
                 >
                     <div className='flex flex-shrink-0 items-center justify-center py-4'>
                         <a href='/'>
-                            <img src='/Light Mode.png' alt='Logo' className='h-10' />
+                            <img src='/logo' alt='Logo' className='h-10' />
                         </a>
                     </div>
                     <ul className='mt-4 w-full flex-grow'>
@@ -48,6 +49,14 @@ const SideBar: React.FC<SidebarProps> = ({ collapse, ...props }) => {
             </div>
         </>
     );
+    // const contatinerClass = sidebarVariants({ collapse });
+    // return (
+    //     <Container className={contatinerClass} {...props}>
+    //         <Flex dir='column' alignItems='center' justifyContent='center'>
+    //             <FlexItem>Sidebar</FlexItem>
+    //         </Flex>
+    //     </Container>
+    // );
 };
 
 export default SideBar;

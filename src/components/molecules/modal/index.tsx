@@ -4,6 +4,7 @@ import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/re
 import { Header1, Subtitle } from '@/components/atoms/typography';
 import { Flex } from '@/components/atoms/flex';
 import OrganizationForm from '@/components/organisms/organization-form';
+import IndividualForm from '@/components/organisms/individual';
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
 // import Switch from '@/components/atoms/switch';
@@ -23,7 +24,7 @@ const Modal = () => {
 
     return (
         <Transition show={open}>
-            <Dialog className='relative z-10' onClose={handleClose}>
+            <Dialog className='relative z-10' onClose={setOpen}>
                 <TransitionChild
                     enter='ease-out duration-300'
                     enterFrom='opacity-0'
@@ -90,18 +91,14 @@ const Modal = () => {
                                         </label>
                                         {isChecked ? (
                                             <>
-                                                <Header1>Individual Details</Header1>
-                                                <Subtitle>
-                                                    Please fill in your personal details.
-                                                </Subtitle>
-                                                {/* Add your individual form component here */}
+                                                <Subtitle>Tell Us About</Subtitle>
+                                                <Header1>Your Business</Header1>
+                                                <IndividualForm submitBtnText='Continue'></IndividualForm>
                                             </>
                                         ) : (
                                             <>
-                                                <Header1>Organization Details</Header1>
-                                                <Subtitle>
-                                                    Please fill in the details of your organization.
-                                                </Subtitle>
+                                                <Subtitle>Tell Us About</Subtitle>
+                                                <Header1>Your Organization</Header1>
                                                 <OrganizationForm submitBtnText='Continue' />
                                             </>
                                         )}
