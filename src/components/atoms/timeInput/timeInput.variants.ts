@@ -7,8 +7,8 @@ const timeInputVariants = tv({
             sm: 'text-sm',
             md: 'text-base',
             lg: 'text-lg',
-        }
-    }
+        },
+    },
 });
 
 type TimeInputProps = VariantProps<typeof timeInputVariants>;

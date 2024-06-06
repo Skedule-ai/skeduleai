@@ -17,6 +17,8 @@ const PageHeader: React.FC<NavbarProps> = ({ logoSrc, logoAlt, OrganizationName 
                         <img
                             src={logoSrc}
                             className='mr-3 size-6 rounded-full sm:size-9'
+                            height={24}
+                            width={50}
                             alt={logoAlt}
                         />
                         <span className='self-center whitespace-nowrap text-xl font-semibold text-blue-700'>

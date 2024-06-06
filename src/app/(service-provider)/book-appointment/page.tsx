@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import BookingManageSchema from '@/components/organisms/validations/booking-manage-form-validation';
 import Container from '@/components/atoms/container';
@@ -10,8 +10,17 @@ import { Flex } from '@/components/atoms/flex';
 import PageHeader from '@/components/atoms/pageheader';
 import { Header1, Header3, ErrorTitle } from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
+import BookingModal from '@/components/atoms/modals/BookingModal';
 
 const BookAppointmentsPage: React.FC = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        meetingDuration: '',
+        selectDate: '',
+        selectTime: '',
+        timeZone: '',
+    });
+
     const initialValues = {
         meetingDuration: '',
         selectDate: '',
@@ -19,10 +28,15 @@ const BookAppointmentsPage: React.FC = () => {
         timeZone: '',
     };
 
+    const handleSubmit = (values: typeof initialValues) => {
+        setFormData(values);
+        setIsOpen(true);
+    };
+
     return (
         <Container center>
             <PageHeader
-                logoSrc='https://randomuser.me/api/portraits/men/1.jpg'
+                logoSrc='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
                 OrganizationName='Organization name'
                 logoAlt='Logo'
             />
@@ -36,7 +50,7 @@ const BookAppointmentsPage: React.FC = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={BookingManageSchema}
-                        onSubmit={(values) => console.log(values)}
+                        onSubmit={handleSubmit}
                     >
                         {({ errors, touched }) => (
                             <Form className='w-80'>
@@ -51,7 +65,7 @@ const BookAppointmentsPage: React.FC = () => {
                                     ) : null}
                                     <Field
                                         name='selectDate'
-                                        // type='date'
+                                        type='date'
                                         as={Input}
                                         placeholder='Select date'
                                     />
@@ -61,7 +75,7 @@ const BookAppointmentsPage: React.FC = () => {
 
                                     <Field
                                         name='selectTime'
-                                        // type='time'
+                                        type='time'
                                         as={Input}
                                         placeholder='Select time'
                                     />
@@ -74,6 +88,9 @@ const BookAppointmentsPage: React.FC = () => {
                                         <ErrorTitle>{errors.timeZone}</ErrorTitle>
                                     ) : null}
                                 </Flex>
+                                <Button className='mt-10' type='submit' size='lg' color='outline'>
+                                    Book Appointment
+                                </Button>
                             </Form>
                         )}
                     </Formik>
@@ -93,11 +110,14 @@ const BookAppointmentsPage: React.FC = () => {
                     />
                 </Flex>
             </Flex>
-            <Flex dir='row' justifyContent='center' alignItems='center' className='mt-10'>
-                <Button size='lg' color='outline'>
-                    Book Appointment{' '}
-                </Button>
-            </Flex>
+
+            {isOpen && (
+                <BookingModal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    formData={formData}
+                />
+            )}
         </Container>
     );
 };

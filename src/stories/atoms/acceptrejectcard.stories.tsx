@@ -14,7 +14,7 @@ const meta: Meta<typeof AcceptRejectCard> = {
         fromTime: { control: 'text' },
         toTime: { control: 'text' },
         isFree: { control: 'boolean' },
-        userImages: { control: 'array' },
+        userImages: { control: 'object' },
         size: {
             control: { type: 'select', options: ['sm', 'md', 'lg'] },
         },
@@ -40,13 +40,6 @@ export const DefaultAcceptRejectCard: Story = {
         fromTime: '12:30 PM',
         toTime: '04:36 PM IST',
         isFree: true,
-        userImages: [
-            'https://randomuser.me/api/portraits/women/1.jpg',
-            'https://randomuser.me/api/portraits/men/1.jpg',
-            'https://randomuser.me/api/portraits/women/2.jpg',
-            'https://randomuser.me/api/portraits/men/2.jpg',
-            'https://randomuser.me/api/portraits/women/3.jpg',
-            'https://randomuser.me/api/portraits/men/3.jpg',
-        ],
+        userImages: ["https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"],
     },
 };

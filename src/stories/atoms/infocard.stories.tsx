@@ -40,12 +40,11 @@ export const DefaultInfoCard: Story = {
     args: {
         size: 'lg',
         variant: 'default',
-        imageUrl:
-            'https://images.unsplash.com/photo-1533450718592-29d45635f0a9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
+        imageUrl: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
         title: 'Default Title',
         subtitle: 'This is a subtitle',
         buttonText: 'designation',
         batchState: 'default',
-        batchColor: 'green'
+        batchColor: 'green',
     },
 };
