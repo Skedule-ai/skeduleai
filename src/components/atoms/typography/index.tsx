@@ -64,6 +64,14 @@ export const TableLabel = ({ children }: any) => {
     );
 };
 
+export const ErrorTitle = ({ children }: any) => {
+    return (
+        <Text as={'p'} size='xxs' weight='medium' color='error'>
+            {children}
+        </Text>
+    );
+};
+
 export const Label: React.FC<
     React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
 > = ({ children, htmlFor }) => {

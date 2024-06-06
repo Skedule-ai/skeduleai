@@ -52,7 +52,7 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     className='mt-4 text-xs font-medium text-gray-500 md:text-sm'
                 >
                     <Clock className='flex size-4 items-center justify-center'/>
-                    <p className='flex items-center gap-1'>
+                    <p className='flex items-center gap-1' style={{ marginBottom: '.9px'}}>
                         <span className='text-green-600'>{fromTime}</span>
                         <span className='text-gray-500'>{'->'}</span>
                         <span className='text-red-500'>{toTime}</span>

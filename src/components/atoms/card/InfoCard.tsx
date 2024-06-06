@@ -24,7 +24,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
 }) => {
     return (
         <Card {...props}>
-            <img src={imageUrl} alt={title} className='h-1/2 w-full rounded-t object-cover' />
+            <img src={imageUrl} alt={title} className='h-3/5 w-full rounded-t object-cover' />
             <Flex dir='row' justifyContent='between' className='p-4' >
                 <Flex dir='column' gap={2} >
                     <h2 className='text-sm font-semibold md:text-base lg:text-lg'>{title}</h2>

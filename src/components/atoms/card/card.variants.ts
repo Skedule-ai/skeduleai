@@ -20,7 +20,6 @@ type CardProps = React.ComponentPropsWithRef<'div'> &
     VariantProps<typeof cardVariants> & {
         as?: ElementType;
         children: React.ReactNode;
-        // image?: string;
     };
 
 export { type CardProps, cardVariants };
