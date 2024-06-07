@@ -19,3 +19,10 @@ model organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model userConfiguration {
+  userId          String   @id
+  onBoardingModal Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
