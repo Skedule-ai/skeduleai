@@ -21,7 +21,7 @@ export const fontWeight = {
 };
 
 export const fontColor = {
-    primary: 'bg-blue-600',
+    primary: 'text-blue-600',
     secondary: 'text-neutral-700',
     tertiary: 'text-neutral-400',
     error: 'text-red-500',

@@ -19,9 +19,9 @@ interface BookingModalProps {
     };
 }
 
-const BookingModal: React.FC<BookingModalProps> = ({ onClose, formData }) => {
+const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }) => {
     return (
-        <Modal>
+        <Modal show={isOpen} onClose={onClose}>
             <Flex
                 dir='row'
                 alignItems='center'
@@ -43,7 +43,13 @@ const BookingModal: React.FC<BookingModalProps> = ({ onClose, formData }) => {
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     {Object.entries(formData).map(([key, value]) => (
-                        <Button size='lg' key={key} color='disabled' disabled>
+                        <Button
+                            className='flex justify-center'
+                            size='lg'
+                            key={key}
+                            color='disabled'
+                            disabled
+                        >
                             {value}
                         </Button>
                     ))}

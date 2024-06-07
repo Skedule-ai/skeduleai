@@ -25,13 +25,13 @@ const BookingModalVariants: React.FC = () => {
     };
 
     return (
-        <div className='rounded-md border-2 border-[#DCDCE4] bg-[#F6F6F9] p-6 shadow-md'>
+        <div className='m-auto w-11/12 rounded-md border-2 border-[#DCDCE4] bg-[#F6F6F9] p-6 shadow-md md:w-auto'>
             <Flex dir='row' gap={4} justifyContent='center'>
                 {formOptions.map((option) => (
                     <div
                         key={option}
                         onClick={() => setActiveForm(option)}
-                        className={`cursor-pointer px-4 py-2 font-bold ${activeForm === option ? 'border-b-2 border-blue-500 text-blue-500' : 'border-b-2 border-white text-gray-500'}`}
+                        className={`cursor-pointer px-4 py-2 text-sm font-bold md:text-base ${activeForm === option ? 'border-b-2 border-blue-500 text-blue-500' : 'border-b-2 border-white text-gray-500'}`}
                     >
                         {option}
                     </div>

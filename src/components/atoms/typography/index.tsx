@@ -32,6 +32,14 @@ export const Subtitle = ({ children }: any) => {
     );
 };
 
+export const IconTitle = ({ children }: any) => {
+    return (
+        <Text as={'p'} size='md' color='primary' weight='semibold'>
+            {children}
+        </Text>
+    );
+};
+
 export const Body = ({ children }: any) => {
     return (
         <Text as={'p'} size='sm' color='secondary'>
