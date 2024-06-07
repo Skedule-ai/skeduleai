@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
@@ -40,8 +40,13 @@ const BookAppointmentsPage: React.FC = () => {
                 OrganizationName='Organization name'
                 logoAlt='Logo'
             />
-            <Flex dir='row' justifyContent='between' alignItems='center' className='mt-10 p-4'>
-                <Flex dir='column' gap={4} className='h-auto w-1/2 pl-32'>
+            <Flex
+                dir='row'
+                justifyContent='between'
+                alignItems='center'
+                className='mt-10 w-screen p-4'
+            >
+                <Flex dir='column' gap={4} className='m-5 h-auto md:m-0 md:pl-32 lg:w-1/2'>
                     <Header1>Hey There!</Header1>
                     <Header3>
                         Schedule your appointment in just a few easy steps: Select a service, choose
@@ -53,8 +58,8 @@ const BookAppointmentsPage: React.FC = () => {
                         onSubmit={handleSubmit}
                     >
                         {({ errors, touched }) => (
-                            <Form className='w-80'>
-                                <Flex dir='column' gap={3}>
+                            <Form className='md:w-80'>
+                                <Flex dir='column' gap={3} className='w-full md:w-auto'>
                                     <Field
                                         name='meetingDuration'
                                         as={Input}
@@ -88,15 +93,26 @@ const BookAppointmentsPage: React.FC = () => {
                                         <ErrorTitle>{errors.timeZone}</ErrorTitle>
                                     ) : null}
                                 </Flex>
-                                <Button className='mt-10' type='submit' size='lg' color='outline'>
-                                    Book Appointment
-                                </Button>
+                                <Flex
+                                    dir='row'
+                                    justifyContent='center'
+                                    className='md:flex md:justify-start'
+                                >
+                                    <Button
+                                        className='mt-10'
+                                        type='submit'
+                                        size='lg'
+                                        color='outline'
+                                    >
+                                        Book Appointment
+                                    </Button>
+                                </Flex>
                             </Form>
                         )}
                     </Formik>
                 </Flex>
 
-                <Flex dir='row' justifyContent='center' className='h-auto w-1/2'>
+                <Flex dir='row' justifyContent='center' className='hidden h-auto w-1/2 lg:flex'>
                     <InfoCard
                         batchColor='green'
                         batchState='default'
