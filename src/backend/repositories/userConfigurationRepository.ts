@@ -17,3 +17,4 @@ export async function updateUserConfigurationRepository(
 ) {
     return await prisma.userConfiguration.update({ where: filter, data });
 }
+
