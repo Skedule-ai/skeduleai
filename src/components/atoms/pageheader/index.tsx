@@ -15,15 +15,14 @@ const PageHeader: React.FC<NavbarProps> = ({ logoSrc, logoAlt, OrganizationName 
             <nav className='w-full border-gray-200 bg-white px-4 py-2.5 lg:px-6 dark:bg-gray-800'>
                 <div className='mx-auto flex max-w-screen-xl flex-wrap items-center justify-between'>
                     <a href='#' className='flex items-center'>
-                        <img src={logoSrc} className='mr-3 h-6 sm:h-9' alt={logoAlt} />
                         <Image
+                            src={logoSrc}
                             height={24}
                             width={50}
-                            src={logoSrc}
                             className='mr-3 h-6 sm:h-9'
                             alt={logoAlt}
                         />
-                        <span className='self-center whitespace-nowrap text-xl font-semibold text-blue-700'>
+                        <span className='self-center whitespace-nowrap text-3xl font-semibold text-blue-700 md:text-xl'>
                             {OrganizationName}
                         </span>
                     </a>

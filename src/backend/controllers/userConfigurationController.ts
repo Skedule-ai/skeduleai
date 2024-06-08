@@ -16,3 +16,6 @@ export async function findUserConfiguration() {
 export async function updateUserConfiguration(data: CreateUserConfigurationDTO) {
     return await updateUserConfigurationService(data);
 }
+
+
+
