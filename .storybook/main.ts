@@ -7,6 +7,7 @@ const config: StorybookConfig = {
         '@storybook/addon-links',
         '@storybook/addon-essentials',
         '@chromatic-com/storybook',
+        '@storybook/addon-actions',
         '@storybook/addon-interactions',
     ],
     framework: {

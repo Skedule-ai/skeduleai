@@ -32,6 +32,14 @@ export const Subtitle = ({ children }: any) => {
     );
 };
 
+export const IconTitle = ({ children }: any) => {
+    return (
+        <Text as={'p'} size='md' color='primary' weight='semibold'>
+            {children}
+        </Text>
+    );
+};
+
 export const Body = ({ children }: any) => {
     return (
         <Text as={'p'} size='sm' color='secondary'>
@@ -59,6 +67,14 @@ export const SmallText = ({ children }: any) => {
 export const TableLabel = ({ children }: any) => {
     return (
         <Text as={'p'} size='xxs' weight='bold'>
+            {children}
+        </Text>
+    );
+};
+
+export const ErrorTitle = ({ children }: any) => {
+    return (
+        <Text as={'p'} size='xxs' weight='medium' color='error'>
             {children}
         </Text>
     );

@@ -19,6 +19,7 @@ const buttonVariants = tv({
                 'active:bg-neutral-150 border-2 border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-100 focus:bg-white focus:ring-1 focus:ring-blue-700',
             outline:
                 'border border-blue-600 text-blue-600 hover:bg-blue-100 focus:bg-blue-100 focus:ring-1 focus:ring-blue-700 active:bg-blue-200',
+            disabled: 'border-2 border-gray-200 bg-neutral-100 text-gray-500',
         },
     },
 });

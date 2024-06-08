@@ -2,7 +2,7 @@ import { tv, type VariantProps } from 'tailwind-variants';
 import { type ElementType } from 'react';
 
 export const fontSize = {
-    xxs: 'text-xxs',
+    xxs: 'text-[10px]',
     xs: 'text-xs',
     sm: 'text-sm',
     md: 'text-base',
@@ -21,9 +21,10 @@ export const fontWeight = {
 };
 
 export const fontColor = {
-    primary: 'bg-blue-600',
+    primary: 'text-blue-600',
     secondary: 'text-neutral-700',
     tertiary: 'text-neutral-400',
+    error: 'text-red-500',
 };
 
 const textVariants = tv({
