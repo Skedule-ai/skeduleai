@@ -1,5 +1,4 @@
-'use client';
-import { useState } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { Header1, Subtitle } from '@/components/atoms/typography';
 import { Flex } from '@/components/atoms/flex';
@@ -9,22 +8,15 @@ import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
 // import Switch from '@/components/atoms/switch';
 
-const Modal = () => {
-    const [open, setOpen] = useState(true);
-    const [isChecked, setIsChecked] = useState(false);
+type ModalProps = PropsWithChildren & {
+    show?: boolean;
+    onClose?: (value: boolean) => void;
+};
 
-    const handleClose = () => {
-        setOpen(false);
-        window.location.href = '/dashboard';
-    };
-
-    const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
-    };
-
+const Modal: React.FC<ModalProps> = ({ children, show, onClose = () => {} }) => {
     return (
-        <Transition show={open}>
-            <Dialog className='relative z-10' onClose={setOpen}>
+        <Transition show={show}>
+            <Dialog className='relative z-10' onClose={onClose}>
                 <TransitionChild
                     enter='ease-out duration-300'
                     enterFrom='opacity-0'
