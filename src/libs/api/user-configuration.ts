@@ -7,7 +7,16 @@ export const useFetchUserConfigurationQuery = (options?: QueryHelperResovers) =>
     return { data, error, isLoading };
 };
 
-export const useCreateUserConfigurationMutation = (data: CreateUserConfigurationArgs) => {
-    const [createUserConfiguration, swrResponse] = useMutation(endpoint, data);
+export const useUpdateUserConfigurationMutation = (
+    initialData?: CreateUserConfigurationArgs,
+): [
+    (data: CreateUserConfigurationArgs) => Promise<any>,
+    {
+        data: any;
+        error: any;
+        isLoading: boolean;
+    },
+] => {
+    const [createUserConfiguration, swrResponse] = useMutation(endpoint, initialData);
     return [createUserConfiguration, swrResponse];
 };

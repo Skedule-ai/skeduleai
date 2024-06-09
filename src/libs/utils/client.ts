@@ -46,7 +46,17 @@ interface PostData {
     [key: string]: any;
 }
 
-export function useMutation(url: string, initialData: PostData | null = null) {
+export function useMutation(
+    url: string,
+    initialData: PostData | null = null,
+): [
+    (data: PostData) => Promise<any>,
+    {
+        data: any;
+        error: any;
+        isLoading: boolean;
+    },
+] {
     const { data, error, isValidating } = useSWR(url, { fallbackData: initialData });
 
     const postData = async (data: PostData) => {
