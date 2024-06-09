@@ -7,14 +7,13 @@ export interface BookingServiceDTO {
     updatedAt?: Date;
 }
 
-export interface BookingDetails {
+export interface BookingDetailsDTO {
     id: string;
     customerId: string;
-    service: BookingServiceDTO;
     serviceId: string;
-    date: Date;
+    date: string | Date;
+    duration: string | Date;
     status: number;
-    duration: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

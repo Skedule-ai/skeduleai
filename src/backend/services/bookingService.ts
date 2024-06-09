@@ -1,4 +1,4 @@
-import { currentUser, createClerkClient, User, Organization } from '@clerk/nextjs/server';
+import { currentUser, User, Organization } from '@clerk/nextjs/server';
 import { nanoid } from 'nanoid';
 
 import {
@@ -6,6 +6,7 @@ import {
     findBookingServiceRepo,
 } from '@/backend/repositories/bookingServiceRepository';
 import { BookingServiceDTO } from '../interfaces/bookingServiceDTO';
+import { getClerkClient as getClient } from '../utils/clerkClient';
 
 const getBookingPageURL = (id: string) => {
     const appUrl = process.env.APP_URL ?? '';
@@ -28,13 +29,6 @@ const generateBookingServiceResponse = async (
             img: organization?.imageUrl,
         },
     };
-};
-
-const getClient = () => {
-    const client = createClerkClient({
-        secretKey: process.env.CLERK_SECRET_KEY,
-    });
-    return client;
 };
 
 const getUser = async (id: string) => {

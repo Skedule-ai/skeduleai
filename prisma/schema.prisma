@@ -53,13 +53,14 @@ model bookingService {
 }
 
 model bookingDetails {
-  id         String         @id
+  id         String          @id
   customerId String
-  service    bookingService @relation(references: [id], fields: [serviceId])
+  service    bookingService? @relation(references: [id], fields: [serviceId])
   serviceId  String
   date       DateTime
+  time       DateTime
   status     Int
   duration   DateTime
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 }
