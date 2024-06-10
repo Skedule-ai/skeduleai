@@ -30,7 +30,7 @@ const BookingModalMobile: React.FC<BookingModalMobileProps> = ({ isOpen, onClose
                     gap={1}
                     onClick={onClose}
                 >
-                    <ArrowLeft className='text-blue-600 size-3' /> <IconTitle>Back</IconTitle>
+                    <ArrowLeft className='size-3 text-blue-600' /> <IconTitle>Back</IconTitle>
                 </Flex>
                 <Flex dir='column' gap={3} className='p-5'>
                     <Header2>Host Name(Service provider)</Header2>

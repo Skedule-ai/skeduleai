@@ -1,20 +1,18 @@
 'use client';
 import React from 'react';
 import { Formik, Form } from 'formik';
-import OrganizationSchema from './organization-form-validation';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import Button from '@/components/atoms/button';
-import organizationFormFields from './organization-form-fields';
 import Input from '@/components/atoms/fields';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import { Label } from '@/components/atoms/typography';
+import organizationFormFields from '../organization-form/organization-form-fields';
+import OrganizationSchema from '../organization-form/organization-form-validation';
 
 type OrganizationFormType = {
     submitBtnText?: string;
-    onClose?: (value: boolean) => void;
 };
-
-const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
+const IndividualForm: React.FC<OrganizationFormType> = (props) => {
     const initValues = {
         organizationName: '',
         timezone: '',
@@ -24,18 +22,12 @@ const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
     };
 
     type FieldNameType = keyof typeof initValues;
-
     return (
         <Formik
             initialValues={initValues}
             validationSchema={OrganizationSchema}
             validateOnMount
-            onSubmit={(values) => {
-                console.log(values);
-                if (props.onClose) {
-                    props.onClose(true);
-                }
-            }}
+            onSubmit={() => {}}
         >
             {({ isSubmitting, values, errors, status, isValid, handleChange }) => {
                 return (
@@ -82,7 +74,6 @@ const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
                                     type='submit'
                                     size={'xl'}
                                     color='outline'
-                                    className='cursor-pointer'
                                     disabled={isSubmitting || status?.submitSuccess || !isValid}
                                     loading={isSubmitting}
                                 >
@@ -97,4 +88,4 @@ const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
     );
 };
 
-export default OrganizationForm;
+export default IndividualForm;

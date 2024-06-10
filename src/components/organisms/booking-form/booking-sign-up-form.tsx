@@ -44,7 +44,11 @@ const SignUpForm: React.FC<{ onSubmit: (values: any) => void }> = ({ onSubmit })
                             <ErrorTitle>{errors.password}</ErrorTitle>
                         ) : null}
 
-                         <Field name='confirmPassword' as={Input} placeholder='Enter Confirm Password' />
+                        <Field
+                            name='confirmPassword'
+                            as={Input}
+                            placeholder='Enter Confirm Password'
+                        />
                         {errors.confirmPassword && touched.confirmPassword ? (
                             <ErrorTitle>{errors.confirmPassword}</ErrorTitle>
                         ) : null}

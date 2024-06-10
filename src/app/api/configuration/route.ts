@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import {createUserConfiguration,findUserConfiguration
+import {
+    createUserConfiguration,
+    findUserConfiguration,
 } from '@/backend/controllers/userConfigurationController';
 
 export async function POST(request: Request) {
@@ -20,4 +22,3 @@ export async function GET() {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 }
-
