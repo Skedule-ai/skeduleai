@@ -11,7 +11,9 @@ import { Label } from '@/components/atoms/typography';
 
 type OrganizationFormType = {
     submitBtnText?: string;
+    onClose?: (value: boolean) => void;
 };
+
 const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
     const initValues = {
         organizationName: '',
@@ -22,12 +24,18 @@ const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
     };
 
     type FieldNameType = keyof typeof initValues;
+
     return (
         <Formik
             initialValues={initValues}
             validationSchema={OrganizationSchema}
             validateOnMount
-            onSubmit={() => {}}
+            onSubmit={(values) => {
+                console.log(values);
+                if (props.onClose) {
+                    props.onClose(true);
+                }
+            }}
         >
             {({ isSubmitting, values, errors, status, isValid, handleChange }) => {
                 return (
@@ -74,6 +82,7 @@ const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
                                     type='submit'
                                     size={'xl'}
                                     color='outline'
+                                    className='cursor-pointer'
                                     disabled={isSubmitting || status?.submitSuccess || !isValid}
                                     loading={isSubmitting}
                                 >

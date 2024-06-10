@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import {registerAvailabilityConfiguration,
+import {
+    registerAvailabilityConfiguration,
     findAvailabilityConfiguration,
 } from '@/backend/controllers/availabilityConfigurationController';
 
@@ -16,8 +17,8 @@ export async function POST(request: Request) {
 export async function GET() {
     try {
         const availabilityConfiguration = await findAvailabilityConfiguration();
-        console.log(availabilityConfiguration)
-        return NextResponse.json({availabilityConfiguration}, { status: 201 });
+        console.log(availabilityConfiguration);
+        return NextResponse.json({ availabilityConfiguration }, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
