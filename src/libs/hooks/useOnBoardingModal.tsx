@@ -1,13 +1,24 @@
 import { useState } from 'react';
-import { useFetchUserConfigurationQuery } from '../api/user-configuration';
+import {
+    useUpdateUserConfigurationMutation,
+    useFetchUserConfigurationQuery,
+} from '../api/user-configuration';
 
 const useOnBoardingModal = () => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const [postData] = useUpdateUserConfigurationMutation();
+    const handleSubmit = () => {
+        postData({
+            onBoardingModal: true,
+        });
+    };
+
     useFetchUserConfigurationQuery({
         onCompleted: ({ userConfiguration }) => {
-            if (!userConfiguration) {
+            if (!userConfiguration?.onBoardingModal) {
                 setIsOpen(true);
+                handleSubmit();
             }
         },
         onError: (err) => {

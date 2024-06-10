@@ -1,3 +1,4 @@
+'use client';
 import React, { PropsWithChildren } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 
