@@ -1,8 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Button from '@/components/atoms/button';
 
-const DateTimeDisplay = ({
+type DateTimeDisplayProps = {
+    currentDate: string;
+    currentDay: string;
+    currentTime: string;
+    timeZone: string;
+    timeZones: {
+        label: string;
+        value: string;
+    }[];
+    onDateChange: (date: string) => void;
+    onTimeZoneChange: (zone: string) => void;
+    showDropdown: boolean;
+    toggleDropdown: () => void;
+    searchQuery: string;
+    onSearchQueryChange: (query: any) => void;
+};
+
+const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
     currentDate,
     timeZone,
     timeZones,
@@ -18,12 +34,12 @@ const DateTimeDisplay = ({
     );
 
     return (
-        <div className='flex flex-grow flex-col p-4'>
+        <div className='flex grow flex-col p-4'>
             <header className='flex flex-col items-start sm:flex-row sm:items-center sm:space-x-4'>
                 <div className='mb-4 block sm:hidden'>
                     <Button className='p-2' size='xs' color='tertiary' type='button'>
                         <svg
-                            className='h-6 w-6'
+                            className='size-6'
                             fill='none'
                             stroke='currentColor'
                             viewBox='0 0 24 24'
@@ -61,7 +77,7 @@ const DateTimeDisplay = ({
                         <span className='ml-2'>{showDropdown ? '✖️' : '▼'}</span>
                     </Button>
                     {showDropdown && (
-                        <div className='absolute mt-2 max-h-60 w-48 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5'>
+                        <div className='absolute mt-2 max-h-60 w-48 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'>
                             <input
                                 type='text'
                                 placeholder='Search...'
@@ -84,23 +100,6 @@ const DateTimeDisplay = ({
             </header>
         </div>
     );
-};
-
-DateTimeDisplay.propTypes = {
-    currentDate: PropTypes.string.isRequired,
-    timeZone: PropTypes.string.isRequired,
-    timeZones: PropTypes.arrayOf(
-        PropTypes.shape({
-            label: PropTypes.string,
-            value: PropTypes.string,
-        }),
-    ).isRequired,
-    onDateChange: PropTypes.func.isRequired,
-    onTimeZoneChange: PropTypes.func.isRequired,
-    showDropdown: PropTypes.bool.isRequired,
-    toggleDropdown: PropTypes.func.isRequired,
-    searchQuery: PropTypes.string.isRequired,
-    onSearchQueryChange: PropTypes.func.isRequired,
 };
 
 export default DateTimeDisplay;

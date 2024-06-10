@@ -1,4 +1,4 @@
-import{
+import {
     registerAvailabilityConfigurationService,
     findAvailabilityConfigurationService,
     updateAvailabilityConfigurationService,

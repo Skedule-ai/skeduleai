@@ -31,11 +31,11 @@ const DateContainer = () => {
         return () => clearInterval(interval);
     }, [timeZone]);
 
-    const handleDateChange = (date) => {
+    const handleDateChange = (date: string) => {
         setCurrentDate(date);
     };
 
-    const handleTimeZoneChange = (zone) => {
+    const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
         setShowDropdown(false);
     };
@@ -44,7 +44,7 @@ const DateContainer = () => {
         setShowDropdown(!showDropdown);
     };
 
-    const handleSearchQueryChange = (query) => {
+    const handleSearchQueryChange = (query: string) => {
         setSearchQuery(query);
     };
 

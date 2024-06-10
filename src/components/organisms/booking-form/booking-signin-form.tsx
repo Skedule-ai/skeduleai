@@ -44,7 +44,12 @@ const SignInForm: React.FC<{ onSubmit: (values: any) => void }> = ({ onSubmit })
                         ) : null}
 
                         <Flex justifyContent='center' className='mt-5'>
-                            <Button className='bg-white flex w-48' type='submit' size='lg' color='outline' >
+                            <Button
+                                className='flex w-48 bg-white'
+                                type='submit'
+                                size='lg'
+                                color='outline'
+                            >
                                 Schedule Appointment
                             </Button>
                         </Flex>

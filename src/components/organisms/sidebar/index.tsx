@@ -14,7 +14,10 @@ type SidebarProps = {
 
 const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isCollapsed, setIsCollapsed] = useState(collapse);
+    const [
+        isCollapsed,
+        // setIsCollapsed
+    ] = useState(collapse);
 
     const handleToggle = () => setIsOpen(!isOpen);
 

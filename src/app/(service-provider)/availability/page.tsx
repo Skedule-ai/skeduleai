@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
 import { Flex } from '@/components/atoms/flex';
-import { Header1, Subtitle } from '@/components/atoms/typography';
+// import { Header1, Subtitle } from '@/components/atoms/typography';
 import Modal from '@/components/molecules/modal';
-import AvailabilityForm from '@/components/organisms/availability-form/index';
+// import AvailabilityForm from '@/components/organisms/availability-form/index';
 
 export default function AvailabilityPage() {
     return (

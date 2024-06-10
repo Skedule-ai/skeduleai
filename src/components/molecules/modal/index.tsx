@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { Header1, Subtitle } from '@/components/atoms/typography';
 import { Flex } from '@/components/atoms/flex';
-import OrganizationForm from '@/components/organisms/organization-form';
+// import OrganizationForm from '@/components/organisms/organization-form';
 import IndividualForm from '@/components/organisms/individual';
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
