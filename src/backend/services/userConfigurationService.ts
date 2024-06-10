@@ -7,7 +7,11 @@ import {
 import { CreateUserConfigurationDTO } from '../interfaces/createUserConfigurationInterface';
 
 export async function createUserConfigurationService(data: CreateUserConfigurationDTO) {
-    const userConfiguration = await createUserConfigurationRepository(data);
+    const user = await currentUser();
+    if (!user?.id) {
+        throw new Error('Unauthorized.');
+    }
+    const userConfiguration = await createUserConfigurationRepository(user?.id, data);
     return { userConfiguration };
 }
 
@@ -20,6 +24,10 @@ export async function findUserConfigurationService() {
 }
 
 export async function updateUserConfigurationService(data: CreateUserConfigurationDTO) {
-    const userConfiguration = await createUserConfigurationRepository(data);
+    const user = await currentUser();
+    if (!user?.id) {
+        throw new Error('Unauthorized.');
+    }
+    const userConfiguration = await createUserConfigurationRepository(user?.id, data);
     return { userConfiguration };
 }
