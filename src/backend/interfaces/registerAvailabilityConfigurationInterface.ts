@@ -1,4 +1,4 @@
-export interface CreateOrganizationConfigurationDTO{
+export interface CreateAvailabilityConfigurationDTO{
   userId: String;   
   organizationId: String;  
   timezone: String;

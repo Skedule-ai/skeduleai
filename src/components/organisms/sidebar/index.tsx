@@ -40,7 +40,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                         type='button'
                     >
                         <svg
-                            className='h-6 w-6'
+                            className='size-6'
                             fill='none'
                             stroke='currentColor'
                             viewBox='0 0 24 24'
@@ -57,13 +57,13 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                 </div>
             )}
             <Container
-                className={`fixed inset-y-0 left-0 z-40 h-screen w-64 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:w-64 md:translate-x-0`}
+                className={`fixed inset-y-0 left-0 z-40 h-screen w-64${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:w-64 md:translate-x-0`}
             >
                 <Container
                     className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} text-black`}
                     {...props}
                 >
-                    <Flex className='items-center justify-between px-4 py-4'>
+                    <Flex className='items-center justify-between p-4'>
                         <a href='/'>
                             <ScheduleAILogo />
                         </a>
@@ -83,7 +83,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             </>
                         </Button>
                     </Flex>
-                    <ul className='ml-1 mt-4 w-full flex-grow'>
+                    <ul className='ml-1 mt-4 w-full grow'>
                         <li className='flex items-center px-4 py-2 hover:bg-gray-100'>
                             <Dropdown
                                 color='primary'
@@ -138,12 +138,12 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             </a>
                         </li>
                     </ul>
-                    <Flex className='flex-shrink-0 items-center justify-center'>
+                    <Flex className='shrink-0 items-center justify-center'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>
                             My Profile
                         </Button>
                     </Flex>
-                    <Flex className='flex-shrink-0 items-center justify-center px-4 py-2'>
+                    <Flex className='shrink-0 items-center justify-center px-4 py-2'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>
                             LogOut
                         </Button>
