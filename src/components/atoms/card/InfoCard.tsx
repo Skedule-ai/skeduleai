@@ -12,6 +12,7 @@ type InfoCardProps = {
     buttonText: string;
     batchState: 'default' | 'active';
     batchColor: 'red' | 'green' | 'blue' | 'yellow';
+    children?: React.ReactNode;
 } & CardProps;
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -21,6 +22,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
     buttonText,
     batchState,
     batchColor,
+    children,
     ...props
 }) => {
     return (
