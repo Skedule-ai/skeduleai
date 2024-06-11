@@ -8,3 +8,7 @@ export async function createBookingServiceRepo(data: BookingServiceDTO) {
 export async function findBookingServiceRepo(id: string) {
     return await prisma.bookingService.findFirst({ where: { id } });
 }
+
+export async function findBookingServiceRepoByUser(userId: string, organizationId?: string) {
+    return await prisma.bookingService.findFirst({ where: { userId, organizationId } });
+}

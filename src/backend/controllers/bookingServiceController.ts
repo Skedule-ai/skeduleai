@@ -1,5 +1,9 @@
 import { BookingServiceDTO } from '../interfaces/bookingServiceDTO';
-import { createBookingService, findBookingService } from '../services/bookingService';
+import {
+    createBookingService,
+    findBookingService,
+    findBookingServiceById,
+} from '../services/bookingService';
 
 export async function createBookingServiceController(
     data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,
@@ -7,6 +11,12 @@ export async function createBookingServiceController(
     return await createBookingService(data);
 }
 
-export async function findBookingServiceController(data: Partial<Pick<BookingServiceDTO, 'id'>>) {
+export async function findBookingServiceController(
+    data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,
+) {
     return await findBookingService(data);
+}
+
+export async function findBookingServiceByIdController(params: { id: string }) {
+    return await findBookingServiceById(params.id);
 }
