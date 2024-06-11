@@ -22,15 +22,14 @@ model organization {
 
 model availabilityConfiguration {
   userId         String
-  organizationId String
+  organizationId String   
   timezone       String
-  workingHour    Int
-  workingMinute  Int
-  availableSlots Int
-  workingDays    Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
+  startTime      String   
+  endTime        String   
+  duration       DateTime
+  workingDay     Int 
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   @@id([userId, organizationId])
 }
 
