@@ -4,13 +4,26 @@ import { nanoid } from 'nanoid';
 import {
     createBookingServiceRepo,
     findBookingServiceRepo,
+    findBookingServiceRepoByUser,
 } from '@/backend/repositories/bookingServiceRepository';
 import { BookingServiceDTO } from '../interfaces/bookingServiceDTO';
 import { getClerkClient as getClient } from '../utils/clerkClient';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { getTimeStops } from '@/libs/utils/datetime-helpers';
 
 const getBookingPageURL = (id: string) => {
     const appUrl = process.env.APP_URL ?? '';
     return appUrl.concat('/booking/', id);
+};
+
+const getClerkImagePath = (imageUrl: string = '') => {
+    const path = imageUrl.split('https://img.clerk.com').find((path, inx) => inx === 1) ?? '';
+    return path;
+};
+
+const getFormattedImagePath = (imageUrl: string = '') => {
+    const path = getClerkImagePath(imageUrl);
+    return imageUrl ? '/profile'.concat(path) : '';
 };
 
 const generateBookingServiceResponse = async (
@@ -23,10 +36,11 @@ const generateBookingServiceResponse = async (
         bookingUrl,
         serviceProvider: {
             name: user.fullName,
+            image: getFormattedImagePath(user.imageUrl),
         },
         organization: {
             name: organization?.name,
-            img: organization?.imageUrl,
+            img: getFormattedImagePath(organization?.imageUrl),
         },
     };
 };
@@ -54,42 +68,88 @@ export async function createBookingService(
 ) {
     try {
         const user = await currentUser();
-        if (user?.id) {
-            const id = nanoid(12);
 
-            const createBookingServiceInfo = await createBookingServiceRepo({
-                id,
-                userId: user.id,
-                organizationId: data.organizationId ?? '',
-            });
+        if (!user?.id) {
+            throw new Error('Unauthorized');
+        }
 
-            const formatResponse = generateBookingServiceResponse(createBookingServiceInfo, user);
+        const id = nanoid(12);
+        const createBookingServiceInfo = await createBookingServiceRepo({
+            id,
+            userId: user.id,
+            organizationId: data.organizationId ?? '',
+        });
 
+        const formatResponse = await generateBookingServiceResponse(createBookingServiceInfo, user);
+
+        return { bookingService: formatResponse };
+    } catch (err) {
+        console.log('err: ', err);
+        if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code == 'P2002') {
+                return { message: 'Booking URL for user already exists.' };
+            }
+            console.error(JSON.stringify(err));
+            throw new Error(err.message);
+        }
+    }
+}
+
+export async function findBookingService(data: Partial<Pick<BookingServiceDTO, 'organizationId'>>) {
+    try {
+        const user = await currentUser();
+        if (!user?.id) {
+            throw new Error('Unauthorized');
+        }
+        const userBookingServiceInfo = await findBookingServiceRepoByUser(
+            user.id,
+            data?.organizationId,
+        );
+
+        let organization: Organization | undefined;
+        if (userBookingServiceInfo) {
+            if (userBookingServiceInfo?.organizationId) {
+                organization = await getUserOrganization(
+                    userBookingServiceInfo.organizationId,
+                    user.id,
+                );
+            }
+
+            const formatResponse = await generateBookingServiceResponse(
+                userBookingServiceInfo,
+                user,
+                organization,
+            );
             return { bookingService: formatResponse };
         }
     } catch (err) {
+        console.log(err);
         if (err instanceof Error) {
             throw new Error(err.message);
         }
     }
 }
 
-export async function findBookingService(data: Partial<Pick<BookingServiceDTO, 'id'>>) {
+export async function findBookingServiceById(id: string) {
     try {
-        if (data?.id) {
-            const userBookingServiceInfo = await findBookingServiceRepo(data.id);
-            let user = await currentUser();
+        if (id) {
+            const userBookingServiceInfo = await findBookingServiceRepo(id);
             let organization: Organization | undefined;
             if (userBookingServiceInfo) {
-                if (!user || user.id !== userBookingServiceInfo.userId) {
-                    user = await getUser(userBookingServiceInfo.id);
-                    if (userBookingServiceInfo.organizationId) {
-                        organization = await getUserOrganization(
-                            userBookingServiceInfo.organizationId,
-                            user.id,
-                        );
-                    }
+                // Step 1: Get user info
+                const user = await getUser(userBookingServiceInfo.userId);
+
+                // Step 2: Get organization info
+                if (userBookingServiceInfo.organizationId) {
+                    organization = await getUserOrganization(
+                        userBookingServiceInfo.organizationId,
+                        user.id,
+                    );
                 }
+
+                // Step 3: Get time slots
+                // ToDo: To be fixed once availability API configuration is fixed
+                const timeSlots = getTimeStops('09:00 AM', '05:00 PM', 30);
 
                 if (user?.id) {
                     const formatResponse = await generateBookingServiceResponse(
@@ -97,7 +157,7 @@ export async function findBookingService(data: Partial<Pick<BookingServiceDTO, '
                         user,
                         organization,
                     );
-                    return { bookingService: formatResponse };
+                    return { bookingService: { ...formatResponse, timeSlots } };
                 }
             }
         }
