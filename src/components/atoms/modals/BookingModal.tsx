@@ -1,21 +1,23 @@
 'use client';
 
 import React from 'react';
-import { Flex } from '../flex';
+import { Flex } from '@/components/atoms/flex';
 import Modal from '@/components/molecules/modal';
-import { Header2, Header3, Subtitle } from '../typography';
+import { Header2, Header3, Subtitle } from '@/components/atoms/typography';
 import { Cross } from '@strapi/icons';
-import Button from '../button';
-import BookingModalVariants from './booking-modal-variants';
+import Button from '@/components/atoms/button';
+import BookingModalVariants from '@/components/atoms/modals/booking-modal-variants';
 
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
     formData: {
-        meetingDuration: string;
-        selectDate: string;
-        selectTime: string;
-        timeZone: string;
+        serviceId: string;
+        name: string;
+        email: string;
+        phoneNumber: string;
+        date: string;
+        time: string;
     };
 }
 
@@ -38,7 +40,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }
             </Flex>
 
             <Flex dir='column' gap={3} className='p-5'>
-                <Header2>Host Name(Service provider)</Header2>
+                <Header2>Host Name (Service provider)</Header2>
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
@@ -56,7 +58,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }
                 </Flex>
             </Flex>
 
-            {/* the componenet here  */}
+            {/* the component here  */}
             <BookingModalVariants />
         </Modal>
     );

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form } from 'formik';
+import { useRouter } from 'next/navigation';
 import BookingManageSchema from '@/components/organisms/validations/booking-manage-form-validation';
 import Container from '@/components/atoms/container';
 import InfoCard from '@/components/atoms/card/InfoCard';
@@ -12,29 +13,56 @@ import { Header1, Header3, ErrorTitle } from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
 import BookingModal from '@/components/atoms/modals/BookingModal';
 import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
-// import { ArrowLeft } from '@strapi/icons';
+import { useCreateAppointmentMutation } from '@/libs/api/appointments';
+import { useFetchBookingServiceQuery } from '@/libs/api/bookingService';
 
-const BookAppointmentsPage: React.FC = () => {
+const BookAppointmentsPage: React.FC = ({ params }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenMobile, setIsOpenMobile] = useState(false);
     const [isMediumOrLarger, setIsMediumOrLarger] = useState(false);
-
     const [formData, setFormData] = useState({
-        meetingDuration: '',
-        selectDate: '',
-        selectTime: '',
-        timeZone: '',
+        serviceId: '',
+        name: '',
+        email: '',
+        phoneNumber: '',
+        date: '',
+        time: '',
     });
 
     const initialValues = {
-        meetingDuration: '',
-        selectDate: '',
-        selectTime: '',
-        timeZone: '',
+        serviceId: '',
+        name: '',
+        email: '',
+        phoneNumber: '',
+        date: '',
+        time: '',
     };
 
-    const handleSubmit = (values: typeof initialValues) => {
+    const router = useRouter();
+    const id = params.id;
+
+    const {
+        data: bookingServiceData,
+        error: bookingServiceError,
+        isLoading: bookingServiceLoading,
+    } = useFetchBookingServiceQuery(id as string);
+    const [
+        createAppointment,
+        { data: appointmentData, error: appointmentError, isLoading: appointmentLoading },
+    ] = useCreateAppointmentMutation();
+
+    const handleSubmit = async (values: typeof initialValues) => {
         setFormData(values);
+        try {
+            const response = await createAppointment(values);
+            // Assuming response contains the appointment ID
+            const appointmentId = response.id;
+            // Redirect to the booking details page
+            router.push(`/book-appointment/${appointmentId}`);
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+        }
+
         if (isMediumOrLarger) {
             setIsOpen(true);
         } else {
@@ -44,20 +72,17 @@ const BookAppointmentsPage: React.FC = () => {
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMediumOrLarger(window.innerWidth >= 768); // Tailwind's `md` breakpoint is 768px
+            setIsMediumOrLarger(window.innerWidth >= 768);
         };
-
-        // Check the screen size on mount
         handleResize();
-
-        // Add event listener for window resize
         window.addEventListener('resize', handleResize);
-
-        // Remove event listener on cleanup
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    if (bookingServiceLoading) return <div>Loading...</div>;
+    if (bookingServiceError) return <div>Error: {bookingServiceError.message}</div>;
 
     return (
         <Container center>
@@ -90,38 +115,51 @@ const BookAppointmentsPage: React.FC = () => {
                                 <Form className='md:w-80'>
                                     <Flex dir='column' gap={3} className='w-full md:w-auto'>
                                         <Field
-                                            name='meetingDuration'
+                                            name='serviceId'
                                             as={Input}
-                                            placeholder='Meeting duration'
+                                            placeholder='Service ID'
                                         />
-                                        {errors.meetingDuration && touched.meetingDuration ? (
-                                            <ErrorTitle>{errors.meetingDuration}</ErrorTitle>
+                                        {errors.serviceId && touched.serviceId ? (
+                                            <ErrorTitle>{errors.serviceId}</ErrorTitle>
+                                        ) : null}
+                                        <Field name='name' as={Input} placeholder='Name' />
+                                        {errors.name && touched.name ? (
+                                            <ErrorTitle>{errors.name}</ErrorTitle>
                                         ) : null}
                                         <Field
-                                            name='selectDate'
+                                            name='email'
+                                            type='email'
+                                            as={Input}
+                                            placeholder='Email'
+                                        />
+                                        {errors.email && touched.email ? (
+                                            <ErrorTitle>{errors.email}</ErrorTitle>
+                                        ) : null}
+                                        <Field
+                                            name='phoneNumber'
+                                            as={Input}
+                                            placeholder='Phone Number'
+                                        />
+                                        {errors.phoneNumber && touched.phoneNumber ? (
+                                            <ErrorTitle>{errors.phoneNumber}</ErrorTitle>
+                                        ) : null}
+                                        <Field
+                                            name='date'
                                             type='date'
                                             as={Input}
                                             placeholder='Select date'
                                         />
-                                        {errors.selectDate && touched.selectDate ? (
-                                            <ErrorTitle className=''>
-                                                {errors.selectDate}
-                                            </ErrorTitle>
+                                        {errors.date && touched.date ? (
+                                            <ErrorTitle>{errors.date}</ErrorTitle>
                                         ) : null}
-
                                         <Field
-                                            name='selectTime'
+                                            name='time'
                                             type='time'
                                             as={Input}
                                             placeholder='Select time'
                                         />
-                                        {errors.selectTime && touched.selectTime ? (
-                                            <ErrorTitle>{errors.selectTime}</ErrorTitle>
-                                        ) : null}
-
-                                        <Field name='timeZone' as={Input} placeholder='Time zone' />
-                                        {errors.timeZone && touched.timeZone ? (
-                                            <ErrorTitle>{errors.timeZone}</ErrorTitle>
+                                        {errors.time && touched.time ? (
+                                            <ErrorTitle>{errors.time}</ErrorTitle>
                                         ) : null}
                                     </Flex>
                                     <Flex
@@ -134,6 +172,7 @@ const BookAppointmentsPage: React.FC = () => {
                                             type='submit'
                                             size='lg'
                                             color='outline'
+                                            isLoading={appointmentLoading}
                                         >
                                             Book Appointment
                                         </Button>

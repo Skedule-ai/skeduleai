@@ -1,18 +1,27 @@
 import useSWR, { mutate } from 'swr';
 
-export type QueryHelperResovers = {
+export type QueryHelperResolvers = {
     onCompleted?: (data: any) => void;
     onError?: (err: any) => void;
 };
 
-export const get: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> = (...args) =>
-    fetch(...args).then((res) => res.json());
+export const get = async (url: string, queryHelpers?: QueryHelperResolvers) => {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        queryHelpers?.onCompleted?.(data);
+        return data;
+    } catch (error) {
+        queryHelpers?.onError?.(error);
+        throw error;
+    }
+};
 
-export function useQuery(url: string, queryHelpers?: QueryHelperResovers) {
-    const { data, error, isLoading } = useSWR(url, get, {
-        onSuccess: queryHelpers?.onCompleted,
-        onError: queryHelpers?.onError,
-    });
+export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
+    const { data, error, isValidating: isLoading } = useSWR([url, queryHelpers], get);
     return {
         data,
         error,
@@ -20,7 +29,7 @@ export function useQuery(url: string, queryHelpers?: QueryHelperResovers) {
     };
 }
 
-export async function post(url: string, data: any) {
+export const post = async (url: string, data: any) => {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -40,7 +49,7 @@ export async function post(url: string, data: any) {
     }
 
     return response.json();
-}
+};
 
 interface PostData {
     [key: string]: any;

@@ -15,7 +15,7 @@ const PageHeader: React.FC<NavbarProps> = ({ logoSrc, logoAlt, OrganizationName 
             <nav className='w-full border-gray-200 bg-white px-4 py-2.5 lg:px-6 dark:bg-gray-800'>
                 <div className='mx-auto flex max-w-screen-xl flex-wrap items-center justify-between'>
                     <a href='#' className='flex items-center'>
-                        <Image
+                        <img
                             src={logoSrc}
                             height={24}
                             width={50}
