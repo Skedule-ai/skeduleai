@@ -8,10 +8,8 @@ const dropdownVariants = tv({
             md: 'text-base',
             lg: 'text-lg',
         },
-
         color: {
             primary: 'rounded border border-gray-300 bg-white shadow-sm',
-
             secondary: 'rounded border border-gray-200 bg-gray-100 shadow-sm',
         },
     },
