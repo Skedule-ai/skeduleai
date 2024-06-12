@@ -24,8 +24,8 @@ model availabilityConfiguration {
   userId         String
   organizationId String   
   timezone       String
-  startTime      String   
-  endTime        String   
+  startTime      DateTime    
+  endTime        DateTime    
   duration       DateTime
   workingDay     Int 
   createdAt      DateTime  @default(now())
@@ -77,3 +77,4 @@ model guestUser {
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 }
+

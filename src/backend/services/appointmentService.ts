@@ -52,6 +52,7 @@ export async function createAppointmentService(data: AppointmentDTO) {
     }
 }
 
+
 export async function findAppointmentService(data: AppointmentDTO) {
     const { name, email, phoneNumber, ...appointmentData } = data;
     const client = getClerkClient();
