@@ -1,9 +1,9 @@
 export interface CreateAvailabilityConfigurationDTO{
   userId: String;   
   organizationId: String;  
-  timezone: String;
-  startTime: String; 
-  endTime: String;
+  timezone: string;
+  startTime: DateTime; 
+  endTime: DateTime;
   duration: Date;
   workingDay: number;
   createdAt: Date; 
