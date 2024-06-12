@@ -64,7 +64,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                     {...props}
                 >
                     <Flex className='items-center justify-between px-4 py-4'>
-                        <a href='/'>
+                        <a href='/dashboard'>
                             <ScheduleAILogo />
                         </a>
 

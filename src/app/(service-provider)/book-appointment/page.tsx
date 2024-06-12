@@ -12,7 +12,7 @@ import { Header1, Header3, ErrorTitle, IconTitle } from '@/components/atoms/typo
 import Button from '@/components/atoms/button';
 import BookingModal from '@/components/atoms/modals/BookingModal';
 import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
-import { ArrowLeft } from '@strapi/icons';
+// import { ArrowLeft } from '@strapi/icons';
 
 const BookAppointmentsPage: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
