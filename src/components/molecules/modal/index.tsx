@@ -1,9 +1,12 @@
-import { useState, PropsWithChildren } from 'react';
+'use client';
+import React, { PropsWithChildren } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
+
 import { Flex } from '@/components/atoms/flex';
+// import OrganizationForm from '@/components/organisms/organization-form';
+
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
-import Switch from '@/components/atoms/switch/index';
 
 type ModalProps = PropsWithChildren & {
     show?: boolean;
@@ -11,21 +14,16 @@ type ModalProps = PropsWithChildren & {
 };
 
 const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {} }) => {
-    const [isChecked, setIsChecked] = useState(false);
-
-    const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
-    };
-
-    const handleClose = () => {
-        onClose(false);
-        // Redirect to the dashboard
-        window.location.href = '/dashboard'; // Replace '/dashboard' with your actual dashboard route
+    const handleClose = (value: boolean) => {
+        onClose(value);
+        if (!value) {
+            window.location.href = '/dashboard';
+        }
     };
 
     return (
         <Transition show={show}>
-            <Dialog className='relative z-10' onClose={handleClose}>
+            <Dialog className='relative z-10' onClose={() => handleClose(false)}>
                 <TransitionChild
                     enter='ease-out duration-300'
                     enterFrom='opacity-0'
@@ -57,14 +55,12 @@ const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {}
                                     color='tertiary'
                                     type='button'
                                     className='absolute right-6 top-5 text-gray-500 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                                    onClick={handleClose}
+                                    onClick={() => handleClose(false)}
                                 >
                                     <span className='sr-only'>Close</span>
                                     &#10005;
                                 </Button>
-                                {/* switchcomponents */}
-                                <Switch label1={'organization'} label2={'individual'} />
-                                {/* switchcomponents */}
+                                <div className='mt-4'>{children}</div>
                             </DialogPanel>
                         </TransitionChild>
                     </Flex>

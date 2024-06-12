@@ -10,9 +10,9 @@ export default function DashboardLayout({
     return (
         <Container fullscreen className='w-screen'>
             <Flex dir='row'>
-                {/* <FlexItem>
+                <FlexItem>
                     <SideBar />
-                </FlexItem> */}
+                </FlexItem>
                 <FlexItem>{children}</FlexItem>
             </Flex>
         </Container>

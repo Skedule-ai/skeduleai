@@ -17,9 +17,9 @@ type AcceptRejectCardProps = {
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     title,
-    fromTime,
-    toTime,
-    isFree,
+    // fromTime,
+    // toTime,
+    // isFree,
     userImages,
     onAccept,
     onReject,

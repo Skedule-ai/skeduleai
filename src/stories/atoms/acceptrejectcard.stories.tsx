@@ -40,6 +40,6 @@ export const DefaultAcceptRejectCard: Story = {
         fromTime: '12:30 PM',
         toTime: '04:36 PM IST',
         isFree: true,
-        userImages: ["https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"],
+        userImages: ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'],
     },
 };
