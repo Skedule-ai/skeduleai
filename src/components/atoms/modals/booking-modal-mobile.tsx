@@ -12,12 +12,10 @@ interface BookingModalMobileProps {
     isOpen: boolean;
     onClose: () => void;
     formData: {
-        serviceId: string;
-        name: string;
-        email: string;
-        phoneNumber: string;
-        date: string;
-        time: string;
+        meetingDuration: string;
+        selectDate: string;
+        selectTime: string;
+        timeZone: string;
     };
 }
 
