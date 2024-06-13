@@ -78,3 +78,13 @@ model guestUser {
   updatedAt           DateTime         @updatedAt
 }
 
+model Booking {
+    id         String   @id @default(uuid())
+    startTime  DateTime
+    endTime    DateTime
+    status     String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+

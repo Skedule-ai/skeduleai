@@ -1,4 +1,4 @@
-import { createAppoinmentRepository } from '@/backend/repositories/appointmentRepository';
+import { createAppoinmentRepository,findAppointmentRepository } from '@/backend/repositories/appointmentRepository';
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
 import { getClerkClient } from '../utils/clerkClient';
 import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
@@ -7,6 +7,7 @@ import { AppointmentStatus } from '../utils/enum';
 import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
 import { createGuestUserRepository } from '../repositories/guestUserRepository';
 import { GuestUserDTO } from '../interfaces/guestUserDTO';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function createAppointmentService(data: AppointmentDTO) {
     try {
@@ -53,35 +54,20 @@ export async function createAppointmentService(data: AppointmentDTO) {
 }
 
 
-export async function findAppointmentService(data: AppointmentDTO) {
-    const { name, email, phoneNumber, ...appointmentData } = data;
-    const client = getClerkClient();
-    if (!name || !email || !phoneNumber) {
-        throw new Error('Missing required fields');
-    }
-
-    const user = await client.users.createUser({
-        firstName: name,
-        lastName: '',
-        emailAddress: [email],
-        phoneNumber: [phoneNumber],
-    });
-
-    if (user) {
-        const bookingDetails: BookingDetailsDTO = {
-            id: nanoid(8),
-            customerId: user.id,
-            serviceId: appointmentData.serviceId,
-            date: appointmentData.date,
-            duration: appointmentData.time,
-            status: AppointmentStatus.PENDING,
-        };
-
-        const appointment = await createAppoinmentRepository(bookingDetails);
-        return { appointment };
+export async function getAppointmentService() {
+    try {
+        const user = await currentUser();
+        if (user?.id) {
+            const getAppointment = await findAppointmentRepository({ id: user.id });
+            return { getAppointment };
+        } else {
+            throw new Error("User not found or missing ID");
+        }
+    } catch (error) {
+        console.error("Error finding appointment configuration:", error);
+        throw error;
     }
 }
-
 
 
 
