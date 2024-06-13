@@ -2,8 +2,8 @@ import React from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
-// import { Clock } from '@strapi/icons';
-import Image from 'next/image';
+import { Clock } from '@strapi/icons';
+// import Image from 'next/image';
 
 type AcceptRejectCardProps = {
     title: string;
@@ -17,9 +17,9 @@ type AcceptRejectCardProps = {
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     title,
-    // fromTime,
-    // toTime,
-    // isFree,
+    fromTime,
+    toTime,
+    isFree,
     userImages,
     onAccept,
     onReject,
@@ -34,7 +34,7 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     <Flex dir='row' justifyContent='end' className='mt-2'>
                         <Flex dir='row' className='relative'>
                             {userImages.slice(0, 5).map((image, index) => (
-                                <Image
+                                <img
                                     key={index}
                                     src={image}
                                     alt={`User ${index + 1}`}
@@ -54,13 +54,13 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     gap={1}
                     className='mt-4 text-xs font-medium text-gray-500 md:text-sm'
                 >
-                    {/* <Clock className='flex size-4 items-center justify-center' />
+                    <Clock className='flex size-4 items-center justify-center' />
                     <p className='flex items-center gap-1'>
                         <span className='text-green-600'>{fromTime}</span>
                         <span className='text-gray-500'>{'->'}</span>
                         <span className='text-red-500'>{toTime}</span>
                         {isFree && <span className='text-blue-500'>(Free)</span>}
-                    </p> */}
+                    </p>
                 </Flex>
 
                 <hr className='my-4' />
