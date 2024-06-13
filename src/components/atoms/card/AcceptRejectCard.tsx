@@ -3,7 +3,7 @@ import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
 import { Clock } from '@strapi/icons';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 type AcceptRejectCardProps = {
     title: string;
@@ -17,9 +17,9 @@ type AcceptRejectCardProps = {
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     title,
-    // fromTime,
-    // toTime,
-    // isFree,
+    fromTime,
+    toTime,
+    isFree,
     userImages,
     onAccept,
     onReject,

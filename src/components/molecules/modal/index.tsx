@@ -8,6 +8,7 @@ import { Flex } from '@/components/atoms/flex';
 import IndividualForm from '@/components/organisms/individual';
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
+import { Header1, Subtitle } from '@/components/atoms/typography';
 
 type ModalProps = PropsWithChildren & {
     show?: boolean;
