@@ -6,12 +6,10 @@ import Button from '@/components/atoms/button';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import { getFormFields, getInitialValues } from './constants';
 import { DetailsType } from '@/libs/utils/enums';
-import OrgFields from './fields';
+import IndividualFields from './fields';
 import AvailabilityFields from '../availability-fields';
-import {
-    organizationDetailsSchema,
-    availabilityDetailsSchema,
-} from '../validations/organization-form-validation';
+import { availabilityDetailsSchema } from '../validations/organization-form-validation';
+import individualSchema from './individual-form-validation';
 
 type OrganizationFormType = {
     submitBtnText?: string;
@@ -20,7 +18,7 @@ type OrganizationFormType = {
 
 const IndividualForm: React.FC<OrganizationFormType> = () => {
     const [detailsType, setDetailsType] = React.useState<DetailsType>(
-        DetailsType.organizationDetails,
+        DetailsType.individualDetails,
     );
     const formFields = getFormFields();
     const initValues = getInitialValues(detailsType);
@@ -29,8 +27,8 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
         <Formik
             initialValues={initValues}
             validationSchema={
-                detailsType === DetailsType.organizationDetails
-                    ? organizationDetailsSchema
+                detailsType === DetailsType.individualDetails
+                    ? individualSchema
                     : availabilityDetailsSchema
             }
             validateOnMount
@@ -42,15 +40,15 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
                 return (
                     <Form>
                         <Flex dir='column' fullWidth gap={6}>
-                            {detailsType === DetailsType.organizationDetails ? (
-                                <OrgFields
-                                    fields={formFields[detailsType]}
+                            {detailsType === DetailsType.individualDetails ? (
+                                <IndividualFields
+                                    fields={formFields.individual}
                                     errors={errors}
                                     handleChange={handleChange}
                                 />
                             ) : (
                                 <AvailabilityFields
-                                    fields={formFields[detailsType]}
+                                    fields={formFields.availability}
                                     errors={errors}
                                     handleChange={handleChange}
                                 />
@@ -77,7 +75,7 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
                                     loading={isSubmitting}
                                     onClick={() => {
                                         if (
-                                            detailsType === DetailsType.organizationDetails &&
+                                            detailsType === DetailsType.individualDetails &&
                                             isValid
                                         ) {
                                             setDetailsType(DetailsType.availabilityDetails);

@@ -2,10 +2,10 @@ import { DetailsType } from '@/libs/utils/enums';
 
 export const getFormFields = () => {
     return {
-        organization: [
+        individual: [
             {
-                label: 'Business name',
-                name: 'organizationName',
+                label: 'Your Name',
+                name: 'name',
                 placeholder: 'Enter your business name',
                 required: true,
                 type: 'text',
