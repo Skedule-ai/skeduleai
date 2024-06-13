@@ -25,6 +25,17 @@ const OrganizationForm: React.FC<OrganizationFormType> = () => {
     const formFields = getFormFields();
     const initValues = getInitialValues(detailsType);
 
+const OrganizationForm: React.FC<OrganizationFormType> = (props) => {
+    const initValues = {
+        organizationName: '',
+        timezone: '',
+        currency: '',
+        submitError: '',
+        submitSuccess: '',
+    };
+
+    type FieldNameType = keyof typeof initValues;
+
     return (
         <Formik
             initialValues={initValues}
@@ -36,6 +47,9 @@ const OrganizationForm: React.FC<OrganizationFormType> = () => {
             validateOnMount
             onSubmit={(values) => {
                 console.log(values);
+                if (props.onClose) {
+                    props.onClose(true);
+                }
             }}
         >
             {({ isSubmitting, values, errors, status, isValid, handleChange, handleSubmit }) => {

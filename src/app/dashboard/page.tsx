@@ -14,7 +14,6 @@ const Home = () => {
                 <SideBar />
                 <Container>
                     <Date />
-
                     <Grid columns={3} gap={2} rows={3}>
                         <React.Fragment key='.0'>
                             {/* <span className='size-10 bg-neutral-950'>1</span> */}

@@ -20,16 +20,16 @@ model organization {
   updatedAt DateTime @updatedAt
 }
 
-model availabilityConfiguration{
-  userId             String   
-  organizationId     String   
-  timezone           String
-  workingHour        Int 
-  workingMinute      Int
-  availableSlots     Int
-  workingDays        Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model availabilityConfiguration {
+  userId         String
+  organizationId String
+  timezone       String
+  workingHour    Int
+  workingMinute  Int
+  availableSlots Int
+  workingDays    Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@id([userId, organizationId])
 }
@@ -39,4 +39,42 @@ model userConfiguration {
   onBoardingModal Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model bookingService {
+  id             String           @unique
+  userId         String
+  organizationId String
+  bookingDetails bookingDetails[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@id([userId, organizationId])
+}
+
+model bookingDetails {
+  id          String          @id
+  customerId  String
+  guest       guestUser?      @relation(references: [id], fields: [guestUserId])
+  guestUserId Int?
+  service     bookingService? @relation(references: [id], fields: [serviceId])
+  serviceId   String
+  date        DateTime
+  time        DateTime
+  status      Int
+  duration    DateTime
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model guestUser {
+  id                  Int              @id @default(autoincrement())
+  name                String
+  email               String
+  phoneNumber         String
+  emailVerified       Boolean          @default(false)
+  phoneNumberVerified Boolean          @default(false)
+  bookingDetails      bookingDetails[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
 }

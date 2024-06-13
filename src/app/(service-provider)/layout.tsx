@@ -1,6 +1,6 @@
 import Container from '@/components/atoms/container';
 import { Flex, FlexItem } from '@/components/atoms/flex';
-import SideBar from '@/components/organisms/sidebar';
+// import SideBar from '@/components/organisms/sidebar';
 
 export default function DashboardLayout({
     children,
