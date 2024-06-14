@@ -14,6 +14,7 @@ import Button from '@/components/atoms/button';
 import InfoCard from '@/components/atoms/card/InfoCard';
 import BookingModal from '@/components/atoms/modals/BookingModal';
 import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
+import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 
 const BookAppointmentsPage: React.FC = ({ params }: any) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -46,12 +47,12 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         const fetchServiceProviderDetails = async () => {
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/customer/appointment/${id}`
+                    `http://localhost:3000/api/customer/appointment/${id}`,
                 );
                 const data = await response.json();
                 setServiceProvider(data.bookingService.serviceProvider);
                 setAvailableTimeSlots(data.bookingService.timeSlots);
-                toast.success('Successfully fetched the Service Provider Details')
+                toast.success('Successfully fetched the Service Provider Details');
             } catch (error) {
                 console.error('Error fetching service provider details:', error);
                 toast.error('Failed to fetch service provider details.');
@@ -73,47 +74,11 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         }
     };
 
-    const handleBooking = async (appointmentData: any) => {
-        try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookAppointment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(appointmentData),
-            });
-            toast.success('Appointment booked successfully.');
-        } catch (error) {
-            console.error('Error booking appointment:', error);
-            toast.error('Failed to book appointment.');
-        }
-    };
-
-    const handleGuestSubmit = (guestData: any) => {
-        const appointmentData = {
-            ...guestData,
-            serviceId: id,
-            date: formData.selectDate,
-            time: formData.selectTime,
-        };
-        handleBooking(appointmentData);
-    };
-
-    const handleAuthSubmit = async () => {
-        const appointmentData = {
-            serviceId: id,
-            date: formData.selectDate,
-            time: formData.selectTime,
-        };
-        localStorage.setItem('appointmentData', JSON.stringify(appointmentData));
-        router.push('/sign-in');
-    };
-
     return (
         <Container center>
             <Toaster />
             <PageHeader
-                logoSrc={serviceProvider?.image || 'default-logo.jpg'}
+                logoSrc={<ScheduleAILogo /> || ''}
                 OrganizationName={serviceProvider?.name || 'Organization name'}
                 logoAlt='Logo'
             />
@@ -222,8 +187,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     formData={formData}
-                    handleGuestSubmit={handleGuestSubmit}
-                    handleAuthSubmit={handleAuthSubmit}
+                    serviceId={id}
+                    availableTimeSlots={availableTimeSlots}
                 />
             )}
 
@@ -232,8 +197,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     isOpen={isOpenMobile}
                     onClose={() => setIsOpenMobile(false)}
                     formData={formData}
-                    handleGuestSubmit={handleGuestSubmit}
-                    handleAuthSubmit={handleAuthSubmit}
+                    serviceId={id}
+                    availableTimeSlots={availableTimeSlots}
                 />
             )}
         </Container>

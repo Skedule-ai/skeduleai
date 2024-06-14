@@ -17,9 +17,17 @@ interface BookingModalProps {
         selectTime: string;
         timeZone: string;
     };
+    serviceId: string;
+    availableTimeSlots: any[];
 }
 
-const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }) => {
+const BookingModal: React.FC<BookingModalProps> = ({
+    isOpen,
+    onClose,
+    formData,
+    serviceId,
+    availableTimeSlots,
+}) => {
     return (
         <Modal show={isOpen} onClose={onClose}>
             <Flex
@@ -57,7 +65,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }
             </Flex>
 
             {/* the componenet here  */}
-            <BookingModalVariants />
+            <BookingModalVariants
+                formData={formData}
+                serviceId={serviceId}
+                availableTimeSlots={availableTimeSlots}
+                onClose={onClose}
+            />
         </Modal>
     );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Flex } from '../flex';
 
 interface NavbarProps {

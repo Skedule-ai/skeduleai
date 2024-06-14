@@ -7,6 +7,7 @@ import { Flex } from '@/components/atoms/flex';
 import Input from '@/components/atoms/fields';
 import Button from '@/components/atoms/button';
 import { ErrorTitle } from '@/components/atoms/typography';
+import toast from 'react-hot-toast';
 
 const GuestFormSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -14,18 +15,58 @@ const GuestFormSchema = Yup.object().shape({
     contactNumber: Yup.string().required('Contact number is required'),
 });
 
-const GuestForm: React.FC<{ onSubmit: (values: any) => void }> = ({ onSubmit }) => {
+interface GuestFormProps {
+    onSubmit: (values: any) => void;
+    formData: {
+        selectDate: string;
+        selectTime: string;
+    };
+    serviceId: string;
+    onClose: () => void;
+}
+
+const GuestForm: React.FC<GuestFormProps> = ({ onSubmit, formData, serviceId, onClose }) => {
     const initialValues = {
         name: '',
         email: '',
         contactNumber: '',
     };
 
+    const handleSubmit = async (values: any) => {
+        const payload = {
+            serviceId,
+            name: values.name,
+            email: values.email,
+            phoneNumber: values.contactNumber,
+            date: formData.selectDate,
+            time: formData.selectTime,
+        };
+        try {
+            const response = await fetch('http://localhost:3000/api/customer/appointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                console.log(payload);
+                toast.success('Appointment scheduled successfully');
+                onClose();
+            } else {
+                throw new Error('Failed to schedule appointment');
+            }
+        } catch (error) {
+            toast.error('Failed to schedule appointment. Please try again later.');
+        }
+    };
+
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={GuestFormSchema}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
         >
             {({ errors, touched }) => (
                 <Form className='w-full'>
