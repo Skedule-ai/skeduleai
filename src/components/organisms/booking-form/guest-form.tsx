@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { Flex } from '@/components/atoms/flex';
@@ -8,6 +8,9 @@ import Input from '@/components/atoms/fields';
 import Button from '@/components/atoms/button';
 import { ErrorTitle } from '@/components/atoms/typography';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import BookingConfirmpage from '@/app/booking/[id]/booking-confirm/page';
+import { Loader } from '@strapi/icons';
 
 const GuestFormSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -26,6 +29,8 @@ interface GuestFormProps {
 }
 
 const GuestForm: React.FC<GuestFormProps> = ({ onSubmit, formData, serviceId, onClose }) => {
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
     const initialValues = {
         name: '',
         email: '',
@@ -33,6 +38,7 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSubmit, formData, serviceId, on
     };
 
     const handleSubmit = async (values: any) => {
+        setLoading(true);
         const payload = {
             serviceId,
             name: values.name,
@@ -52,12 +58,16 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSubmit, formData, serviceId, on
 
             if (response.ok) {
                 console.log(payload);
+                setLoading(false);
                 toast.success('Appointment scheduled successfully');
+                <BookingConfirmpage data={payload} />;
+                router.push(`/booking/${payload.serviceId}/booking-confirm`);
                 onClose();
             } else {
                 throw new Error('Failed to schedule appointment');
             }
         } catch (error) {
+            setLoading(false);
             toast.error('Failed to schedule appointment. Please try again later.');
         }
     };
@@ -92,11 +102,12 @@ const GuestForm: React.FC<GuestFormProps> = ({ onSubmit, formData, serviceId, on
 
                         <Flex justifyContent='center' className='mt-5'>
                             <Button
-                                className='flex w-48 bg-white'
+                                className={`flex ${loading ? 'w-56' : 'w-48'} bg-white`}
                                 type='submit'
                                 size='lg'
                                 color='outline'
                             >
+                                {loading && <Loader className='animate-spin' />}
                                 Schedule Appointment
                             </Button>
                         </Flex>

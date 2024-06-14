@@ -10,6 +10,7 @@ interface BookingModalVariantsProps {
     formData: any;
     serviceId: string;
     availableTimeSlots: any[];
+    serviceProviderName:string;
     onClose: () => void;
 }
 
@@ -18,6 +19,7 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     serviceId,
     availableTimeSlots,
     onClose,
+    serviceProviderName
 }) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
@@ -31,6 +33,7 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                         serviceId={serviceId}
                         availableTimeSlots={availableTimeSlots}
                         onClose={onClose}
+                        serviceProviderName={serviceProviderName}
                     />
                 );
 

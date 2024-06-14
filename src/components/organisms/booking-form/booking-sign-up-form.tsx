@@ -28,10 +28,10 @@ interface SignUpFormProps {
     onClose: () => void;
 }
 const SignUpForm: React.FC<SignUpFormProps> = ({ formData, serviceId, onClose }) => {
-    
     const initialValues = {
         name: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     };
@@ -99,6 +99,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ formData, serviceId, onClose })
                         <Field name='email' as={Input} placeholder='Enter your email' />
                         {errors.email && touched.email ? (
                             <ErrorTitle>{errors.email}</ErrorTitle>
+                        ) : null}
+
+                        <Field name='phone' as={Input} placeholder='Enter your phone Number' />
+                        {errors.phone && touched.phone ? (
+                            <ErrorTitle>{errors.phone}</ErrorTitle>
                         ) : null}
 
                         <Field

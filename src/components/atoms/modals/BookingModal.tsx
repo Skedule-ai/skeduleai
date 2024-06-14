@@ -18,6 +18,7 @@ interface BookingModalProps {
         timeZone: string;
     };
     serviceId: string;
+    serviceProviderName: string;
     availableTimeSlots: any[];
 }
 
@@ -27,6 +28,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     formData,
     serviceId,
     availableTimeSlots,
+    serviceProviderName,
 }) => {
     return (
         <Modal show={isOpen} onClose={onClose}>
@@ -46,13 +48,13 @@ const BookingModal: React.FC<BookingModalProps> = ({
             </Flex>
 
             <Flex dir='column' gap={3} className='p-5'>
-                <Header2>Host Name(Service provider)</Header2>
+                <Header2>{serviceProviderName}(Service provider)</Header2>
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     {Object.entries(formData).map(([key, value]) => (
                         <Button
-                            className='flex justify-center'
+                            className='flex justify-center text-xs font-normal'
                             size='lg'
                             key={key}
                             color='disabled'
@@ -68,6 +70,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
             <BookingModalVariants
                 formData={formData}
                 serviceId={serviceId}
+                serviceProviderName={serviceProviderName}
                 availableTimeSlots={availableTimeSlots}
                 onClose={onClose}
             />

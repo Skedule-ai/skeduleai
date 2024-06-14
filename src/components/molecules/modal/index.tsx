@@ -13,7 +13,7 @@ type ModalProps = PropsWithChildren & {
 const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {} }) => {
     return (
         <Transition show={show}>
-            <Dialog className='relative z-10' onClose={() => handleClose(false)}>
+            <Dialog className='relative z-10' onClose={onClose}>
                 <TransitionChild
                     enter='ease-out duration-300'
                     enterFrom='opacity-0'

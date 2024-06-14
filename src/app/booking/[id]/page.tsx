@@ -15,13 +15,90 @@ import InfoCard from '@/components/atoms/card/InfoCard';
 import BookingModal from '@/components/atoms/modals/BookingModal';
 import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimezoneSelect from 'react-timezone-select';
+import makeAnimated from 'react-select/animated';
+import Select from 'react-select';
+import { Loader } from '@strapi/icons';
+
+const animatedComponents = makeAnimated();
+
+const CustomDatePicker = ({ field, form, ...props }: any) => {
+    return (
+        <DatePicker
+            selected={field.value}
+            onChange={(val) => form.setFieldValue(field.name, val)}
+            minDate={new Date()}
+            {...props}
+            className='w-full rounded-md border p-3'
+        />
+    );
+};
+
+const CustomTimezoneSelect = ({ field, form, ...props }: any) => {
+    const customStyles = {
+        control: (provided) => ({
+            ...provided,
+            width: '100%',
+            padding: '5px',
+        }),
+    };
+
+    return (
+        <TimezoneSelect
+            value={field.value}
+            onChange={(option) => form.setFieldValue(field.name, option.value)}
+            styles={customStyles}
+            {...props}
+        />
+    );
+};
+
+const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) => {
+    const options = availableTimeSlots.map((slot: any) => ({
+        value: slot.startTime,
+        label: slot.startTime,
+    }));
+
+    const customStyles = {
+        menu: (provided) => ({
+            ...provided,
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            padding: '10px',
+            border: '1px solid gray',
+            width: '7rem',
+            backgroundColor: state.isSelected ? 'green' : 'transparent',
+            color: state.isSelected ? 'white' : 'black',
+        }),
+    };
+
+    return (
+        <Select
+            options={options}
+            value={options.find((option) => option.value === field.value) || null}
+            onChange={(option) => form.setFieldValue(field.name, option ? option.value : '')}
+            components={animatedComponents}
+            isClearable
+            className='w-full rounded-md border p-3'
+            styles={customStyles}
+            {...props}
+        />
+    );
+};
 
 const BookAppointmentsPage: React.FC = ({ params }: any) => {
+    const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenMobile, setIsOpenMobile] = useState(false);
     const [isMediumOrLarger, setIsMediumOrLarger] = useState(false);
     const [formData, setFormData] = useState({
-        meetingDuration: '',
+        meetingDuration: '30',
         selectDate: '',
         selectTime: '',
         timeZone: '',
@@ -57,6 +134,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                 console.error('Error fetching service provider details:', error);
                 toast.error('Failed to fetch service provider details.');
                 router.push('/404');
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -65,8 +144,32 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         }
     }, [id, router]);
 
+    if (loading) {
+        return (
+            <div className='flex items-center justify-center'>
+                <div className='animate-spin'>
+                    <Loader fontSize={30} />
+                </div>
+            </div>
+        );
+    }
+
     const handleSubmit = (values: typeof formData) => {
-        setFormData(values);
+        const formatDate = (date: Date) => {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
+
+        const formattedValues = {
+            ...values,
+            selectDate:
+                values.selectDate instanceof Date
+                    ? formatDate(values.selectDate)
+                    : values.selectDate,
+        };
+        setFormData(formattedValues);
         if (isMediumOrLarger) {
             setIsOpen(true);
         } else {
@@ -75,12 +178,12 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
     };
 
     return (
-        <Container center>
+        <Container fullWidth>
             <Toaster />
             <PageHeader
-                logoSrc={<ScheduleAILogo /> || ''}
-                OrganizationName={serviceProvider?.name || 'Organization name'}
-                logoAlt='Logo'
+                logoSrc={<ScheduleAILogo />}
+                OrganizationName='Organization name'
+                isUserSignedIn={true}
             />
 
             {!isOpenMobile && (
@@ -88,9 +191,9 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     dir='row'
                     justifyContent='between'
                     alignItems='center'
-                    className='mt-10 w-screen p-4'
+                    className='m-auto mt-10 w-[90%]'
                 >
-                    <Flex dir='column' gap={4} className='m-5 h-auto md:m-0 md:pl-32 lg:w-1/2'>
+                    <Flex dir='column' gap={4} className='m-5 h-auto md:m-0 md:pl-28 lg:w-1/2'>
                         <Header1>Hey There!</Header1>
                         <Header3>
                             Schedule your appointment in just a few easy steps: Select a service,
@@ -115,9 +218,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                                         ) : null}
                                         <Field
                                             name='selectDate'
-                                            type='date'
-                                            as={Input}
-                                            placeholder='Select date'
+                                            component={CustomDatePicker}
+                                            placeholderText='Select date'
                                         />
                                         {errors.selectDate && touched.selectDate ? (
                                             <ErrorTitle className=''>
@@ -127,20 +229,20 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
 
                                         <Field
                                             name='selectTime'
-                                            as='select'
+                                            component={CustomTimeSelect}
+                                            availableTimeSlots={availableTimeSlots}
                                             placeholder='Select time'
-                                        >
-                                            {availableTimeSlots.map((slot: any, index: number) => (
-                                                <option key={index} value={slot.startTime}>
-                                                    {slot.startTime}
-                                                </option>
-                                            ))}
-                                        </Field>
+                                        />
+
                                         {errors.selectTime && touched.selectTime ? (
                                             <ErrorTitle>{errors.selectTime}</ErrorTitle>
                                         ) : null}
 
-                                        <Field name='timeZone' as={Input} placeholder='Time zone' />
+                                        <Field
+                                            name='timeZone'
+                                            component={CustomTimezoneSelect}
+                                            placeholder='Select timezone'
+                                        />
                                         {errors.timeZone && touched.timeZone ? (
                                             <ErrorTitle>{errors.timeZone}</ErrorTitle>
                                         ) : null}
@@ -164,14 +266,12 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                         </Formik>
                     </Flex>
 
-                    <Flex dir='row' justifyContent='center' className='hidden h-auto w-1/2 lg:flex'>
+                    <Flex dir='row' justifyContent='center' className='hidden h-full w-1/2 lg:flex'>
                         <InfoCard
                             batchColor='green'
                             batchState='default'
                             buttonText='designation'
                             imageUrl={serviceProvider?.image || 'default-image.jpg'}
-                            onClick={() => {}}
-                            size='lg'
                             subtitle='Service Provider'
                             title={serviceProvider?.name || 'Service Provider Name'}
                             variant='default'
@@ -188,6 +288,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     onClose={() => setIsOpen(false)}
                     formData={formData}
                     serviceId={id}
+                    serviceProviderName={serviceProvider?.name}
                     availableTimeSlots={availableTimeSlots}
                 />
             )}
@@ -198,6 +299,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     onClose={() => setIsOpenMobile(false)}
                     formData={formData}
                     serviceId={id}
+                    serviceProviderName={serviceProvider?.name}
                     availableTimeSlots={availableTimeSlots}
                 />
             )}

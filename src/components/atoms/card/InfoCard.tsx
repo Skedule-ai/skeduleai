@@ -3,7 +3,7 @@ import Card from './index';
 import { CardProps } from './card.variants';
 import Batch from '../batch';
 import { Flex } from '../flex';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 type InfoCardProps = {
     imageUrl: string;
@@ -27,7 +27,13 @@ const InfoCard: React.FC<InfoCardProps> = ({
 }) => {
     return (
         <Card {...props}>
-            <img src={imageUrl} alt={title} className='h-3/5 w-full rounded-t object-cover' />
+            <img
+                src={imageUrl}
+                width={400}
+                height={50}
+                alt={title}
+                className='rounded-t object-cover'
+            />
             {/* <Image
                 height={50}
                 width={50}
