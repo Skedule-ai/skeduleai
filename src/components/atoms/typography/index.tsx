@@ -41,9 +41,9 @@ export const IconTitle = ({ children }: any) => {
     );
 };
 
-export const Body = ({ children }: any) => {
+export const Body = ({ children, color = 'secondary' }: any) => {
     return (
-        <Text as={'p'} size='sm' color='secondary'>
+        <Text as={'p'} size='sm' color={color}>
             {children}
         </Text>
     );
