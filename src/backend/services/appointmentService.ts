@@ -4,6 +4,7 @@ import {
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
 import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
+import { User, currentUser } from '@clerk/nextjs/server';
 import { nanoid } from 'nanoid';
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
 import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
@@ -15,17 +16,26 @@ import { AppointmentStatus } from '../utils/enum';
 export async function createAppointmentService(data: AppointmentDTO) {
     try {
         const { name, email, phoneNumber, ...appointmentData } = data;
+        // Step 1: Check if user is logged in.
+        let user: User | null | undefined = await currentUser();
         const client = getClerkClient();
-        if (!name || !email || !phoneNumber) {
+
+        // Step 2: If not a logged in user, Make basic info of user required.
+        if (!user && (!name || !email || !phoneNumber)) {
             throw new Error('Missing required fields');
         }
 
-        const userList = await client.users.getUserList({
-            emailAddress: [email],
-            phoneNumber: [phoneNumber],
-        });
+        // Step 3: Check if given basic info is part of our users list.
+        if (!user) {
+            const userList = await client.users.getUserList({
+                emailAddress: [email],
+                phoneNumber: [phoneNumber],
+            });
 
-        const user = userList.data.find((data, inx) => inx === 0);
+            user = userList.data.find((data, inx) => inx === 0);
+        }
+
+        // Step 4: If user record is not found, Register as guest user.
         let guest: GuestUserDTO | undefined;
         if (!user) {
             guest = await createGuestUserRepository({
@@ -35,6 +45,7 @@ export async function createAppointmentService(data: AppointmentDTO) {
             });
         }
 
+        // Step 5: Generate booking details.
         const bookingDetails: BookingDetailsDTO = {
             id: nanoid(8),
             customerId: user?.id ?? '',
@@ -46,7 +57,10 @@ export async function createAppointmentService(data: AppointmentDTO) {
             status: AppointmentStatus.PENDING,
         };
 
+        // Step 5: Add booking details to DB
         const appointment = await createAppoinmentRepository(bookingDetails);
+
+        // Step 5: return booking details
         return { appointment };
     } catch (err) {
         console.log(err);
