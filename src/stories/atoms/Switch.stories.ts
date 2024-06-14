@@ -11,7 +11,9 @@ const meta = {
     },
     tags: ['autodocs'],
     argTypes: {},
-    args: { onClick: fn(), size: 'md' },
+    args: {
+        onToggle: fn(),
+    },
 } satisfies Meta<typeof Switch>;
 
 export default meta;
@@ -19,6 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ToggleSwitch: Story = {
     args: {
-        size: 'lg',
+        label1: 'Tab1',
+        label2: 'Tab2',
     },
 };

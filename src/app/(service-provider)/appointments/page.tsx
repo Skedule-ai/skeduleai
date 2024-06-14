@@ -1,11 +1,5 @@
-import OrganizationOnboardingModal from '@/components/organisms/modals/organization-onboarding-modal';
-import SideBar from '@/components/organisms/sidebar';
+import ApponitmentsModalTemplate from '@/components/organisms/appointments/modal-template';
 
 export default function Page() {
-    return (
-        <>
-            <SideBar />
-            <OrganizationOnboardingModal />
-        </>
-    );
+    return <ApponitmentsModalTemplate />;
 }
