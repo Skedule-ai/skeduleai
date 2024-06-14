@@ -4,7 +4,6 @@ import { CardProps } from './card.variants';
 import { Flex } from '../flex';
 import { Clock } from '@strapi/icons';
 import Image from 'next/image';
-// import Image from 'next/image';
 
 type AcceptRejectCardProps = {
     title: string;
