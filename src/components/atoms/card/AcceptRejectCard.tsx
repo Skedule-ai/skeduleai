@@ -3,7 +3,7 @@ import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
 import { Clock } from '@strapi/icons';
-// import Image from 'next/image';
+import Image from 'next/image';
 
 type AcceptRejectCardProps = {
     title: string;
@@ -34,7 +34,7 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     <Flex dir='row' justifyContent='end' className='mt-2'>
                         <Flex dir='row' className='relative'>
                             {userImages.slice(0, 5).map((image, index) => (
-                                <img
+                                <Image
                                     key={index}
                                     src={image}
                                     alt={`User ${index + 1}`}

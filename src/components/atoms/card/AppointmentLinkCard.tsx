@@ -15,7 +15,7 @@ type AppointmentLinkProps = {
 
 const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     title,
-    isFree,
+    // isFree,
     link,
     subtitle,
     ...props
