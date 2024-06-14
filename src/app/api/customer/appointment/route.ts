@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createAppointmentController } from '@/backend/controllers/appointmentController';
+import { createAppointmentController,findAppointmentController } from '@/backend/controllers/appointmentController';
 
 export async function POST(request: Request) {
     try {
@@ -14,8 +14,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
     try {
-        const data = await request.json();
-        const appointment = await createAppointmentController(data);
+        const appointment = await findAppointmentController();
         return NextResponse.json(appointment, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 400 });

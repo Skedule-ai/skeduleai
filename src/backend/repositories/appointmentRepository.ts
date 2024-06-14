@@ -9,3 +9,6 @@ export async function findAppointmentRepository(filter: Pick<BookingDetailsDTO, 
     return await prisma.bookingDetails.findFirst({ where: filter }); 
 }
 
+export async function findAllAppointmentRepositoryByServiceId(filter: Pick<BookingDetailsDTO, 'serviceId'>,) {
+    return await prisma.bookingDetails.findMany({ where: filter }); 
+}
