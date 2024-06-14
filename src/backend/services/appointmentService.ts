@@ -1,7 +1,18 @@
+
 import { createAppoinmentRepository,findAllAppointmentRepositoryByServiceId,findAppointmentRepository } from '@/backend/repositories/appointmentRepository';
+
+import {
+    createAppoinmentRepository,
+    findBookingDetails,
+    updateBookingStatusRepo,
+} from '@/backend/repositories/appointmentRepository';
+import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
+import { User, currentUser } from '@clerk/nextjs/server';
+import { nanoid } from 'nanoid';
+
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { getClerkClient } from '../utils/clerkClient';
 import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
+
 import { nanoid } from 'nanoid';
 import { AppointmentStatus } from '../utils/enum';
 import { addDuration, formatDate, formatTime } from '@/libs/utils/datetime-helpers';
@@ -9,6 +20,12 @@ import { createGuestUserRepository } from '../repositories/guestUserRepository';
 import { GuestUserDTO } from '../interfaces/guestUserDTO';
 import { currentUser,User } from '@clerk/nextjs/server';
 import {  findBookingServiceRepoByUser } from '../repositories/bookingServiceRepository';
+
+
+import { GuestUserDTO } from '../interfaces/guestUserDTO';
+import { createGuestUserRepository } from '../repositories/guestUserRepository';
+import { getClerkClient } from '../utils/clerkClient';
+import { AppointmentStatus } from '../utils/enum';
 
 
 export async function createAppointmentService(data: AppointmentDTO) {
@@ -69,6 +86,7 @@ export async function createAppointmentService(data: AppointmentDTO) {
 }
 
 
+
 export async function getAppointmentService() {
     try {
         const user = await currentUser();
@@ -96,4 +114,26 @@ export async function getAppointmentService() {
 }
 
 
+
+
+export async function updateAppointmentStatusService(id: string, accepted: boolean) {
+    try {
+        const bookingDetails = await findBookingDetails(id);
+        if (!bookingDetails) {
+            throw new Error('Invalid update.');
+        }
+
+        const updatedBookingDetails = await updateBookingStatusRepo(
+            id,
+            accepted ? AppointmentStatus.ACCEPTED : AppointmentStatus.REJECT,
+        );
+
+        return { bookingDetails: updatedBookingDetails };
+    } catch (error) {
+        console.error('Error updating booking status:', error);
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+    }
+}
 

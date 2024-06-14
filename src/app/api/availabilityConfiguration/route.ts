@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
 import {
-    registerAvailabilityConfiguration,
     findAvailabilityConfiguration,
+    registerAvailabilityConfiguration,
 } from '@/backend/controllers/availabilityConfigurationController';
+import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
     try {
