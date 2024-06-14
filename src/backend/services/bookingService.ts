@@ -98,6 +98,7 @@ export async function createBookingService(
 export async function findBookingService(data: Partial<Pick<BookingServiceDTO, 'organizationId'>>) {
     try {
         const user = await currentUser();
+
         if (!user?.id) {
             throw new Error('Unauthorized');
         }
