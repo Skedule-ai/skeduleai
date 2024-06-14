@@ -1,5 +1,5 @@
+import { BookingServiceDTO } from '@/backend/interfaces/bookingServiceDTO';
 import { prisma } from '@/backend/utils/db';
-import { BookingServiceDTO } from '../interfaces/bookingServiceDTO';
 
 export async function createBookingServiceRepo(data: BookingServiceDTO) {
     return await prisma.bookingService.create({ data });
