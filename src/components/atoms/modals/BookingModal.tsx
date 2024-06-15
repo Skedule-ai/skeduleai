@@ -17,9 +17,19 @@ interface BookingModalProps {
         selectTime: string;
         timeZone: string;
     };
+    serviceId: string;
+    serviceProviderName: string;
+    availableTimeSlots: any[];
 }
 
-const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }) => {
+const BookingModal: React.FC<BookingModalProps> = ({
+    isOpen,
+    onClose,
+    formData,
+    serviceId,
+    availableTimeSlots,
+    serviceProviderName,
+}) => {
     return (
         <Modal show={isOpen} onClose={onClose}>
             <Flex
@@ -38,13 +48,17 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }
             </Flex>
 
             <Flex dir='column' gap={3} className='p-5'>
+<<<<<<< Updated upstream
+                <Header2>{serviceProviderName}(Service provider)</Header2>
+=======
                 <Header2>Host Name(Service provider)</Header2>
+>>>>>>> Stashed changes
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     {Object.entries(formData).map(([key, value]) => (
                         <Button
-                            className='flex justify-center'
+                            className='flex justify-center text-xs font-normal'
                             size='lg'
                             key={key}
                             color='disabled'
@@ -57,7 +71,17 @@ const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, formData }
             </Flex>
 
             {/* the componenet here  */}
+<<<<<<< Updated upstream
+            <BookingModalVariants
+                formData={formData}
+                serviceId={serviceId}
+                serviceProviderName={serviceProviderName}
+                availableTimeSlots={availableTimeSlots}
+                onClose={onClose}
+            />
+=======
             <BookingModalVariants />
+>>>>>>> Stashed changes
         </Modal>
     );
 };
