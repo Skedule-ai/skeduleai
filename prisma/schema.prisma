@@ -22,15 +22,16 @@ model organization {
 
 model availabilityConfiguration {
   userId         String
-  organizationId String   
+  organizationId String
   timezone       String
-  startTime      DateTime    
-  endTime        DateTime    
-  duration       DateTime
-  workingDay     Int 
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  @@id([userId, organizationId])
+  startTime      DateTime
+  endTime        DateTime
+  duration       Int
+  day            Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@id([userId, organizationId, day])
 }
 
 model userConfiguration {
@@ -79,12 +80,10 @@ model guestUser {
 }
 
 model Booking {
-    id         String   @id @default(uuid())
-    startTime  DateTime
-    endTime    DateTime
-    status     String
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
-

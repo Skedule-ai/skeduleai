@@ -15,12 +15,12 @@ CREATE TABLE "availabilityConfiguration" (
     "timezone" TEXT NOT NULL,
     "startTime" TIMESTAMP(3) NOT NULL,
     "endTime" TIMESTAMP(3) NOT NULL,
-    "duration" TIMESTAMP(3) NOT NULL,
-    "workingDay" INTEGER NOT NULL,
+    "duration" INTEGER NOT NULL,
+    "day" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "availabilityConfiguration_pkey" PRIMARY KEY ("userId","organizationId")
+    CONSTRAINT "availabilityConfiguration_pkey" PRIMARY KEY ("userId","organizationId","day")
 );
 
 -- CreateTable
