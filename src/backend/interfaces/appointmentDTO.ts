@@ -5,4 +5,5 @@ export interface AppointmentDTO {
     phoneNumber: string;
     date: string;
     time: string;
+    duration: string;
 }
