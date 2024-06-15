@@ -1,4 +1,7 @@
 'use client';
+// import React from 'react';
+// import Date from '@/components/atoms/date/Date';
+import TimeZone from '@/components/atoms/date/TimeZone';
 import React, { useEffect } from 'react';
 import Date from '@/components/atoms/date';
 import SideBar from '@/components/organisms/sidebar';
@@ -10,6 +13,7 @@ import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
+import Button from '@/components/atoms/button';
 
 const Home = () => {
     const { data, error, isLoading } = useFetchUserConfigurationQuery();
@@ -29,7 +33,33 @@ const Home = () => {
             <Flex>
                 <SideBar />
                 <Container>
-                    <Date />
+                    <Flex>
+                        <div className='mt-4'>
+                            <Date />
+                        </div>
+                        <div className='ml-2 mt-4'>
+                            <TimeZone />
+                        </div>
+                        <div className='container'>
+                            <Flex className='justify-end'>
+                                <div className='mt-4'>
+                                    <Button size='sm' color='secondary'>
+                                        <span style={{ color: 'black' }}>{'<'}</span>
+                                    </Button>
+                                </div>
+                                <div className='ml-2 mt-4'>
+                                    <Button size='sm' color='secondary'>
+                                        <span style={{ color: 'black' }}>{'>'}</span>
+                                    </Button>
+                                </div>
+                                <div className='ml-2 mr-2 mt-4'>
+                                    <Button size='sm' color='primary'>
+                                        <span>+Add Staff</span>
+                                    </Button>
+                                </div>
+                            </Flex>
+                        </div>
+                    </Flex>
                     <Flex>
                         <Container className='ml-6 mt-20 overflow-x-scroll'>
                             <Header2 className=''>Meeting Proposals</Header2>
