@@ -25,6 +25,31 @@ const OrganizationForm: React.FC<OrganizationFormType> = () => {
     const formFields = getFormFields();
     const initValues = getInitialValues(detailsType);
 
+    // API Integration
+    // const handleSubmit = async (values: any) => {
+    //     const payload = {
+
+    //     };
+    // };
+    // try{
+    //     const response = await fetch('URL',{
+    //         method='POST',
+    //         headers:{
+    //             'Content-type':'application/json',
+    //         },
+    //         body:JSON.stringify(payload),
+    //     });
+    //     if (response.ok){
+    //         console.log(payload);
+    //         toast.success('You are successfully Registered');
+    //         onclose();
+    //     }
+    //     else{
+    //         throw new Error('Failed Register');
+    //     }
+    // }
+    // API Integration
+
     return (
         <Formik
             initialValues={initValues}

@@ -20,9 +20,11 @@ export const GET = async (
     { params }: { params: Partial<Pick<BookingServiceDTO, 'organizationId'>> },
 ) => {
     try {
+        console.log('Request');
         const bookingService = await findBookingServiceController(params);
         return NextResponse.json(bookingService, { status: 201 });
     } catch (error: any) {
+        console.log(error);
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 };

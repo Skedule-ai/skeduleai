@@ -6,19 +6,49 @@ import { GuestForm, SignInForm, SignUpForm } from '@/components/organisms/bookin
 
 const formOptions = ['Guest', 'Sign In', 'Sign Up'];
 
-const BookingModalVariants: React.FC = () => {
+interface BookingModalVariantsProps {
+    formData: any;
+    serviceId: string;
+    availableTimeSlots: any[];
+    serviceProviderName:string;
+    onClose: () => void;
+}
+
+const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
+    formData,
+    serviceId,
+    availableTimeSlots,
+    onClose,
+    serviceProviderName
+}) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
     const renderForm = () => {
         switch (activeForm) {
             case 'Guest':
+<<<<<<< Updated upstream
+                return (
+                    <GuestForm
+                        onSubmit={(values) => console.log(values)}
+                        formData={formData}
+                        serviceId={serviceId}
+                        availableTimeSlots={availableTimeSlots}
+                        onClose={onClose}
+                        serviceProviderName={serviceProviderName}
+                    />
+                );
+
+            case 'Sign In':
+                return <SignInForm formData={formData} serviceId={serviceId} onClose={onClose} />;
+=======
                 return <GuestForm onSubmit={(values) => console.log(values)} />;
 
             case 'Sign In':
                 return <SignInForm onSubmit={(values) => console.log(values)} />;
+>>>>>>> Stashed changes
 
             case 'Sign Up':
-                return <SignUpForm onSubmit={(values) => console.log(values)} />;
+                return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;
             default:
                 return null;
         }
