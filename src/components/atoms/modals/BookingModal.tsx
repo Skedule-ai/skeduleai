@@ -26,9 +26,9 @@ const BookingModal: React.FC<BookingModalProps> = ({
     isOpen,
     onClose,
     formData,
-    serviceId,
-    availableTimeSlots,
-    serviceProviderName,
+    // serviceId,
+    // availableTimeSlots,
+    // serviceProviderName,
 }) => {
     return (
         <Modal show={isOpen} onClose={onClose}>
@@ -48,11 +48,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
             </Flex>
 
             <Flex dir='column' gap={3} className='p-5'>
-<<<<<<< Updated upstream
-                <Header2>{serviceProviderName}(Service provider)</Header2>
-=======
                 <Header2>Host Name(Service provider)</Header2>
->>>>>>> Stashed changes
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
@@ -71,17 +67,15 @@ const BookingModal: React.FC<BookingModalProps> = ({
             </Flex>
 
             {/* the componenet here  */}
-<<<<<<< Updated upstream
             <BookingModalVariants
-                formData={formData}
-                serviceId={serviceId}
-                serviceProviderName={serviceProviderName}
-                availableTimeSlots={availableTimeSlots}
-                onClose={onClose}
+                formData={undefined}
+                serviceId={''}
+                availableTimeSlots={[]}
+                serviceProviderName={''}
+                onClose={function (): void {
+                    throw new Error('Function not implemented.');
+                }}
             />
-=======
-            <BookingModalVariants />
->>>>>>> Stashed changes
         </Modal>
     );
 };

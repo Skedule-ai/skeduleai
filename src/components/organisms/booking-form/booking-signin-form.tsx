@@ -53,13 +53,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ formData, serviceId, onClose })
                 localStorage.setItem('appointmentData', JSON.stringify(payload));
 
                 // Now handle Clerk sign-in
-                const signInResponse = await signIn.create({
+                const signInResponse = await signIn?.create({
                     identifier: values.email,
                     password: values.password,
                 });
 
-                if (signInResponse.status === 'complete') {
-                    localStorage.setItem('userSession', JSON.stringify(signInResponse.session));
+                if (signInResponse?.status === 'complete') {
+                    // localStorage.setItem('userSession', JSON.stringify(signInResponse.session));
                     toast.success('Signed in successfully');
                     onClose();
                 } else {

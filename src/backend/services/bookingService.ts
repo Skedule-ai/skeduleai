@@ -11,7 +11,7 @@ import { getClerkClient as getClient } from '../utils/clerkClient';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { getTimeStops } from '@/libs/utils/datetime-helpers';
 import { findAvailabilityConfigurationService } from './availabilityConfigurationService';
-import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
+// import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
 
 const getBookingPageURL = (id: string) => {
     const appUrl = process.env.APP_URL ?? '';
@@ -152,7 +152,11 @@ export async function findBookingServiceById(id: string) {
 
                 // Step 3: Get time slots
                 // ToDo: To be fixed once availability API configuration is fixed
-                const data = await findAvailabilityConfigurationService();
+                const availabilityConfigurations = await findAvailabilityConfigurationService();
+                const today = new Date();
+                const availabilityConfiguration = availabilityConfigurations.find(
+                    (data) => data.day === today.getDay() + 1,
+                );
 
                 // const timeSlots = getTimeStops(
                 //     data?.availabilityConfiguration?.startTime,
@@ -161,9 +165,9 @@ export async function findBookingServiceById(id: string) {
                 // );
 
                 const timeSlots = getTimeStops(
-                    String(data?.availabilityConfiguration?.startTime),
-                    String(data?.availabilityConfiguration?.endTime),
-                    Number(data?.availabilityConfiguration?.duration),
+                    String(availabilityConfiguration?.startTime),
+                    String(availabilityConfiguration?.endTime),
+                    Number(availabilityConfiguration?.duration),
                 );
 
                 if (user?.id) {

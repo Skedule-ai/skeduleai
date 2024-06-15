@@ -1,9 +1,9 @@
 'use client';
 // import React from 'react';
-// import Date from '@/components/atoms/date/Date';
+import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
 import React, { useEffect } from 'react';
-import Date from '@/components/atoms/date';
+// import Date from '@/components/atoms/date';
 import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
 import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
@@ -52,7 +52,7 @@ const Home = () => {
                                         <span style={{ color: 'black' }}>{'>'}</span>
                                     </Button>
                                 </div>
-                                <div className='ml-2 mr-2 mt-4'>
+                                <div className='mx-2 mt-4'>
                                     <Button size='sm' color='primary'>
                                         <span>+Add Staff</span>
                                     </Button>

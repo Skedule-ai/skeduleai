@@ -6,13 +6,14 @@ export async function createAppoinmentRepository(data: BookingDetailsDTO) {
     return await prisma.bookingDetails.create({ data });
 }
 
-
-export async function findAppointmentRepository(filter: Pick<BookingDetailsDTO, 'id'>,) {
-    return await prisma.bookingDetails.findFirst({ where: filter }); 
+export async function findAppointmentRepository(filter: Pick<BookingDetailsDTO, 'id'>) {
+    return await prisma.bookingDetails.findFirst({ where: filter });
 }
 
-export async function findAllAppointmentRepositoryByServiceId(filter: Pick<BookingDetailsDTO, 'serviceId'>,) {
-    return await prisma.bookingDetails.findMany({ where: filter }); 
+export async function findAllAppointmentRepositoryByServiceId(
+    filter: Pick<BookingDetailsDTO, 'serviceId'>,
+) {
+    return await prisma.bookingDetails.findMany({ where: filter });
 }
 
 export async function findBookingDetails(id: string) {
@@ -29,4 +30,3 @@ export async function updateBookingStatusRepo(id: string, status: AppointmentSta
         data: { status }, // Include related bookingDetails
     });
 }
-

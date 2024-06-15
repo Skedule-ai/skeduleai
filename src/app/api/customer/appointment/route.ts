@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createAppointmentController,findAppointmentController } from '@/backend/controllers/appointmentController';
+import {
+    createAppointmentController,
+    findAppointmentController,
+} from '@/backend/controllers/appointmentController';
 
 export async function POST(request: Request) {
     try {
@@ -11,8 +14,7 @@ export async function POST(request: Request) {
     }
 }
 
-
-export async function GET(request: Request) {
+export async function GET() {
     try {
         const appointment = await findAppointmentController();
         return NextResponse.json(appointment, { status: 201 });

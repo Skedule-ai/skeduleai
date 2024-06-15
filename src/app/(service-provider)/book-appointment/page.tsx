@@ -64,7 +64,7 @@ const BookAppointmentsPage: React.FC = () => {
             <PageHeader
                 logoSrc='https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg'
                 OrganizationName='Organization name'
-                logoAlt='Logo'
+                isUserSignedIn={false} // logoAlt='Logo'
             />
 
             {!isOpenMobile && (
@@ -166,6 +166,9 @@ const BookAppointmentsPage: React.FC = () => {
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     formData={formData}
+                    serviceId={''}
+                    serviceProviderName={''}
+                    availableTimeSlots={[]}
                 />
             )}
 

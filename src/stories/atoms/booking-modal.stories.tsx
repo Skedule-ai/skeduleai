@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+// import { action } from '@storybook/addon-actions';
 import BookingModalVariants from '@/components/atoms/modals/booking-modal-variants';
 import { fireEvent, within } from '@storybook/test';
 
@@ -12,7 +12,7 @@ const meta: Meta<typeof BookingModalVariants> = {
     tags: ['autodocs'],
     argTypes: {},
     args: {
-        onSubmit: action('submitted'),
+        // onSubmit: action('submitted'),
     },
 } satisfies Meta<typeof BookingModalVariants>;
 

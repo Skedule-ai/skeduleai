@@ -1,21 +1,19 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
 
-import { createAppointmentService,getAppointmentService } from '../services/appointmentService';
-
-import { createAppointmentService, updateAppointmentStatusService } from '../services/appointmentService';
-
+import {
+    createAppointmentService,
+    updateAppointmentStatusService,
+    getAppointmentService,
+} from '../services/appointmentService';
 
 export async function createAppointmentController(data: AppointmentDTO) {
     return await createAppointmentService(data);
 }
 
-
 export async function findAppointmentController() {
     return await getAppointmentService();
 }
-
-
 
 export async function updateAppointmentStatusController(id: string, accepted: boolean) {
     const user = await currentUser();
@@ -30,4 +28,3 @@ export async function updateAppointmentStatusController(id: string, accepted: bo
 
     return result.bookingDetails;
 }
-

@@ -1,9 +1,12 @@
 'use client';
-import React, { PropsWithChildren, useState } from 'react';
+import React, {
+    PropsWithChildren,
+    // useState
+} from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
-import Button from '@/components/atoms/button';
+// import Button from '@/components/atoms/button';
 
 type ModalProps = PropsWithChildren & {
     show?: boolean;

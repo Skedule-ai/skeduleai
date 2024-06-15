@@ -6,7 +6,7 @@ import PageHeader from '@/components/atoms/pageheader';
 import { Header2 } from '@/components/atoms/typography';
 import React from 'react';
 
-const BookingConfirmpage = ({ data }) => {
+const BookingConfirmpage = () => {
     return (
         <main>
             <Container center>

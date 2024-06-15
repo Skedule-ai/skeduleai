@@ -5,7 +5,9 @@ import {
     findBookingServiceById,
 } from '../services/bookingService';
 
-export async function createBookingServiceController(data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,) {
+export async function createBookingServiceController(
+    data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,
+) {
     return await createBookingService(data);
 }
 
