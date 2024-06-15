@@ -1,22 +1,22 @@
 import { NextResponse } from 'next/server';
 import {
-    createUserConfiguration,
-    findUserConfiguration,
+    createUserConfigurationController,
+    findUserConfigurationByUserIdController,
 } from '@/backend/controllers/userConfigurationController';
 
-export async function POST(request: Request) {
+export async function GET() {
     try {
-        const data = await request.json();
-        const userConfiguration = await createUserConfiguration(data);
+        const userConfiguration = await findUserConfigurationByUserIdController();
         return NextResponse.json(userConfiguration, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 }
 
-export async function GET() {
+export async function POST(request: Request) {
     try {
-        const userConfiguration = await findUserConfiguration();
+        const data = await request.json();
+        const userConfiguration = await createUserConfigurationController(data);
         return NextResponse.json(userConfiguration, { status: 201 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 400 });

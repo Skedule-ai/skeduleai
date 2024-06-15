@@ -1,10 +1,7 @@
 import { prisma } from '@/backend/utils/db';
-import { CreateUserConfigurationDTO } from '../interfaces/createUserConfigurationInterface';
+import { UserConfigurationDTO } from '../interfaces/userConfigurationDTO';
 
-export async function createUserConfigurationRepository(
-    id: string,
-    data: CreateUserConfigurationDTO,
-) {
+export async function updateUserConfiguration(id: string, data: Partial<UserConfigurationDTO>) {
     return await prisma.userConfiguration.upsert({
         where: {
             userId: id,
@@ -16,15 +13,6 @@ export async function createUserConfigurationRepository(
     });
 }
 
-export async function findUserConfigurationRepository(
-    filter: Pick<CreateUserConfigurationDTO, 'userId'>,
-) {
+export async function findUserConfigurationByUserId(filter: Pick<UserConfigurationDTO, 'userId'>) {
     return await prisma.userConfiguration.findFirst({ where: filter });
-}
-
-export async function updateUserConfigurationRepository(
-    filter: Pick<CreateUserConfigurationDTO, 'userId'>,
-    data: Omit<CreateUserConfigurationDTO, 'userId'>,
-) {
-    return await prisma.userConfiguration.update({ where: filter, data });
 }
