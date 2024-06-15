@@ -3,27 +3,85 @@
 import React from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
+import { useSignIn } from '@clerk/clerk-react';
 import { Flex } from '@/components/atoms/flex';
 import Input from '@/components/atoms/fields';
 import Button from '@/components/atoms/button';
 import { ErrorTitle } from '@/components/atoms/typography';
+import toast from 'react-hot-toast';
 
 const SignInFormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
 });
 
-const SignInForm: React.FC<{ onSubmit: (values: any) => void }> = ({ onSubmit }) => {
+interface SignInFormProps {
+    formData: {
+        selectDate: string;
+        selectTime: string;
+    };
+    serviceId: string;
+    onClose: () => void;
+}
+
+const SignInForm: React.FC<SignInFormProps> = ({ formData, serviceId, onClose }) => {
     const initialValues = {
         email: '',
         password: '',
+    };
+
+    const { signIn } = useSignIn();
+
+    const handleSubmit = async (values: any) => {
+        const payload = {
+            serviceId,
+            date: formData.selectDate,
+            time: formData.selectTime,
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/customer/appointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+                toast.success('Appointment data sent successfully');
+                localStorage.setItem('appointmentData', JSON.stringify(payload));
+
+                // Now handle Clerk sign-in
+                const signInResponse = await signIn.create({
+                    identifier: values.email,
+                    password: values.password,
+                });
+
+                if (signInResponse.status === 'complete') {
+                    localStorage.setItem('userSession', JSON.stringify(signInResponse.session));
+                    toast.success('Signed in successfully');
+                    onClose();
+                } else {
+                    console.error('SignIn response incomplete:', signInResponse);
+                    toast.error('Failed to sign in');
+                }
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to send appointment data:', errorText);
+                throw new Error('Failed to send appointment data');
+            }
+        } catch (error) {
+            console.error('SignIn error:', error);
+            toast.error('Failed to sign in. Please check your credentials.');
+        }
     };
 
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={SignInFormSchema}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
         >
             {({ errors, touched }) => (
                 <Form className='w-full'>

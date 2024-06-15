@@ -1,8 +1,9 @@
-import { QueryHelperResovers, useMutation, useQuery } from '../utils/client';
+import { QueryHelperResolvers, useMutation, useQuery } from '../utils/client';
 import { CreateUserConfigurationArgs } from './types';
 
 const endpoint = '/api/configuration';
-export const useFetchUserConfigurationQuery = (options?: QueryHelperResovers) => {
+
+export const useFetchUserConfigurationQuery = (options?: QueryHelperResolvers) => {
     const { data, error, isLoading } = useQuery(endpoint, options);
     return { data, error, isLoading };
 };
