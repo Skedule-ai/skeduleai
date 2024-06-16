@@ -13,11 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model organization {
-  id        String   @id
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model userConfiguration {
+  userId          String   @id
+  onBoardingModal Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model availabilityConfiguration {
@@ -32,13 +32,6 @@ model availabilityConfiguration {
   updatedAt      DateTime @updatedAt
 
   @@id([userId, organizationId, day])
-}
-
-model userConfiguration {
-  userId          String   @id
-  onBoardingModal Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 }
 
 model bookingService {
@@ -59,10 +52,10 @@ model bookingDetails {
   guestUserId Int?
   service     bookingService? @relation(references: [id], fields: [serviceId])
   serviceId   String
-  date        DateTime
-  time        DateTime
+  timezone    String
+  startTime   DateTime
+  endTime     DateTime
   status      Int
-  duration    DateTime
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 }
@@ -77,13 +70,6 @@ model guestUser {
   bookingDetails      bookingDetails[]
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
-}
 
-model Booking {
-  id        String   @id @default(uuid())
-  startTime DateTime
-  endTime   DateTime
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@unique([email, phoneNumber])
 }

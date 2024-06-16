@@ -10,6 +10,8 @@ import {
 } from '@/backend/repositories/availabilityConfigurationRepository';
 import { ErrorMessages } from '@/libs/message/error';
 import { DaysEnum } from '@/libs/utils/enums';
+import { createBookingService } from './bookingService';
+import { updateUserConfigurationService } from './userConfigurationService';
 
 const ValidDays = [
     DaysEnum.SUNDAY,
@@ -78,7 +80,13 @@ export async function addAvailabilitConfigurationService(
         const availabilityConfiguration =
             await addAvailabilityConfigurationRepository(availabilityConfigArray);
 
-        // Step 6: Return count of availability configuration
+        // Step 6: Create booking url
+        await createBookingService({ organizationId });
+
+        // Step 7: Update onboarding status
+        await updateUserConfigurationService({ onBoardingModal: true });
+
+        // Step 7: Return count of availability configuration
         return availabilityConfiguration;
     } catch (err) {
         // Added error console for server side debugging

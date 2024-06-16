@@ -9,8 +9,8 @@ export async function addAvailabilityConfigurationRepository(
     try {
         return await prisma.availabilityConfiguration.createMany({ data });
     } catch (err) {
-        if (err instanceof PrismaClientKnownRequestError && ErrorMessages[err.code]) {
-            throw new Error(ErrorMessages[err.code]);
+        if (err instanceof PrismaClientKnownRequestError) {
+            throw new Error(ErrorMessages.AVAILABILITY_CONFIG_CREATE_ERROR);
         } else {
             console.log('addAvailabilityConfigurationRepository: ', err);
             throw new Error('Failed to add availabilty configuration.');

@@ -1,7 +1,10 @@
 import { prisma } from '@/backend/utils/db';
-import { UserConfigurationDTO } from '../interfaces/userConfigurationDTO';
+import { Prisma } from '@prisma/client';
 
-export async function updateUserConfiguration(id: string, data: Partial<UserConfigurationDTO>) {
+export async function updateUserConfiguration(
+    id: string,
+    data: Pick<Prisma.userConfigurationCreateInput, 'onBoardingModal'>,
+) {
     return await prisma.userConfiguration.upsert({
         where: {
             userId: id,
@@ -13,6 +16,8 @@ export async function updateUserConfiguration(id: string, data: Partial<UserConf
     });
 }
 
-export async function findUserConfigurationByUserId(filter: Pick<UserConfigurationDTO, 'userId'>) {
+export async function findUserConfigurationByUserId(
+    filter: Pick<Prisma.userConfigurationWhereInput, 'userId'>,
+) {
     return await prisma.userConfiguration.findFirst({ where: filter });
 }

@@ -4,10 +4,10 @@ import {
     findUserConfigurationByUserId,
     updateUserConfiguration,
 } from '@/backend/repositories/userConfigurationRepository';
-import { UserConfigurationDTO } from '../interfaces/userConfigurationDTO';
 import { ErrorMessages } from '@/libs/message/error';
 
 import * as yup from 'yup';
+import { Prisma } from '@prisma/client';
 
 const updateUserConfigurationInput = yup.object({
     onBoardingModal: yup.boolean().default(false),
@@ -23,7 +23,12 @@ export async function findUserConfgurationByUserIdService() {
     return { onBoardingModal: !!userConfiguration?.onBoardingModal };
 }
 
-export async function updateUserConfigurationService(data: UserConfigurationDTO) {
+export type UpdateUserConfigurationDataInput = Pick<
+    Prisma.userConfigurationCreateInput,
+    'onBoardingModal'
+>;
+
+export async function updateUserConfigurationService(data: UpdateUserConfigurationDataInput) {
     const user = await currentUser();
     if (!user?.id) {
         throw new Error(ErrorMessages.UNAUTHORIZED);

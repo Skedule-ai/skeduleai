@@ -1,25 +1,29 @@
 import { prisma } from '@/backend/utils/db';
-import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
 import { AppointmentStatus } from '../utils/enum';
+import { Prisma } from '@prisma/client';
 
-export async function createAppoinmentRepository(data: BookingDetailsDTO) {
+export async function createAppoinmentRepository(data: Prisma.bookingDetailsCreateInput) {
     return await prisma.bookingDetails.create({ data });
 }
 
-export async function findAppointmentRepository(filter: Pick<BookingDetailsDTO, 'id'>) {
+export async function findAppointmentRepository(
+    filter: Pick<Prisma.bookingDetailsCreateInput, 'id'>,
+) {
     return await prisma.bookingDetails.findFirst({ where: filter });
 }
 
-export async function findAllAppointmentRepositoryByServiceId(
-    filter: Pick<BookingDetailsDTO, 'serviceId'>,
-) {
-    return await prisma.bookingDetails.findMany({ where: filter });
+export async function findAppointmentsRepositoryByServiceId(serviceId: string) {
+    return await prisma.bookingDetails.findMany({
+        where: {
+            serviceId,
+        },
+    });
 }
 
-export async function findBookingDetails(id: string) {
+export async function findBookingDetails(id: string, serviceId: string) {
     // Find the booking service
     return await prisma.bookingDetails.findFirst({
-        where: { id, status: AppointmentStatus.PENDING },
+        where: { id, serviceId },
     });
 }
 
