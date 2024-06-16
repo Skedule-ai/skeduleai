@@ -32,7 +32,6 @@ export async function PATCH(request: Request) {
         const data = await request.json().catch(() => {
             throw new Error(ErrorMessages.INVALID_INPUT);
         });
-        console.log('data: ', data);
         const availabilityConfiguration = await updateAvailabilityConfigurationController(data);
         return NextResponse.json(availabilityConfiguration, { status: 201 });
     } catch (error: any) {

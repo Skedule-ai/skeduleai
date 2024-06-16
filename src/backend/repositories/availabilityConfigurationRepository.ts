@@ -1,5 +1,7 @@
 import { prisma } from '@/backend/utils/db';
 import { ErrorMessages } from '@/libs/message/error';
+import { getTodaysDay } from '@/libs/utils/datetime-helpers';
+import { DaysEnum } from '@/libs/utils/enums';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
@@ -19,6 +21,20 @@ export async function addAvailabilityConfigurationRepository(
 }
 
 export async function findAvailabilityConfigurationRepository(
+    userId: string,
+    organizationId = '',
+    day: DaysEnum = getTodaysDay(),
+) {
+    return await prisma.availabilityConfiguration.findFirst({
+        where: {
+            userId,
+            organizationId,
+            day,
+        },
+    });
+}
+
+export async function findAllAvailabilityConfigurationRepository(
     userId: string,
     organizationId?: string,
 ) {

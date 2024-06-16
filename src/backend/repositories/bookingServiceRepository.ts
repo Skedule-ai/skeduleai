@@ -11,6 +11,5 @@ export async function findBookingServiceRepo(id: string) {
 }
 
 export async function findBookingServiceRepoByUser(userId: string, organizationId?: string) {
-    console.log(userId, organizationId);
     return await prisma.bookingService.findFirst({ where: { userId, organizationId } });
 }

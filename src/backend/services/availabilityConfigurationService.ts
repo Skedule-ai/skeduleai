@@ -5,23 +5,14 @@ import pick from 'lodash/pick';
 
 import {
     addAvailabilityConfigurationRepository,
-    findAvailabilityConfigurationRepository,
+    findAllAvailabilityConfigurationRepository,
     updateAvailabilityConfigurationRepository,
 } from '@/backend/repositories/availabilityConfigurationRepository';
 import { ErrorMessages } from '@/libs/message/error';
 import { DaysEnum } from '@/libs/utils/enums';
 import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
-
-const ValidDays = [
-    DaysEnum.SUNDAY,
-    DaysEnum.MONDAY,
-    DaysEnum.TUESDAY,
-    DaysEnum.WEDNESDAY,
-    DaysEnum.THURSDAY,
-    DaysEnum.FRIDAY,
-    DaysEnum.SATURDAY,
-];
+import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 
 const validateCreate = object({
     timezone: string().required(),
@@ -29,7 +20,7 @@ const validateCreate = object({
     endTime: string().required(),
     duration: number().required(),
     days: array(
-        number().oneOf(ValidDays, 'Invalid days input.').required('Days input is required.'),
+        number().oneOf(DAYS_LIST, 'Invalid days input.').required('Days input is required.'),
     ).required('Days input is required.'),
 });
 
@@ -39,7 +30,7 @@ const validateUpdate = object({
     endTime: string().typeError('Invalid endTime input'),
     duration: number().typeError('Invalid duration input'),
     day: number()
-        .oneOf(ValidDays, 'Invalid day input.')
+        .oneOf(DAYS_LIST, 'Invalid day input.')
         .typeError('Invalid day input')
         .required('Missing required input'),
 });
@@ -106,7 +97,7 @@ export async function findAvailabilityConfigurationService(organizationId = '') 
         }
 
         // Step 2: Get list of availability configuration
-        const availabilityConfiguration = await findAvailabilityConfigurationRepository(
+        const availabilityConfiguration = await findAllAvailabilityConfigurationRepository(
             user.id,
             organizationId,
         );

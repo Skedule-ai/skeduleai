@@ -1,5 +1,7 @@
 import { currentUser, User, Organization } from '@clerk/nextjs/server';
 import { nanoid } from 'nanoid';
+import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import {
     createBookingServiceRepo,
@@ -7,11 +9,9 @@ import {
     findBookingServiceRepoByUser,
 } from '@/backend/repositories/bookingServiceRepository';
 import { getClerkClient as getClient } from '../utils/clerkClient';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { getTimeStops } from '@/libs/utils/datetime-helpers';
-import { findAvailabilityConfigurationService } from './availabilityConfigurationService';
+import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
 import { ErrorMessages } from '@/libs/message/error';
-import { Prisma } from '@prisma/client';
+import { findAllAvailabilityConfigurationRepository } from '../repositories/availabilityConfigurationRepository';
 // import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
 
 const getBookingPageURL = (id: string) => {
@@ -146,52 +146,74 @@ export async function findBookingService(data: FindBookingServiceDataType) {
     }
 }
 
-export async function findBookingServiceById(id: string) {
+export async function findBookingServiceById(bookingServiceId: string) {
     try {
-        if (id) {
-            const userBookingServiceInfo = await findBookingServiceRepo(id);
-            let organization: Organization | undefined;
-            if (userBookingServiceInfo) {
-                // Step 1: Get user info
-                const user = await getUser(userBookingServiceInfo.userId);
+        // Step 1: Check for bookin service id input
+        if (!bookingServiceId) {
+            throw new Error(ErrorMessages.REQUIRED_INPUT);
+        }
 
-                // Step 2: Get organization info
-                if (userBookingServiceInfo.organizationId) {
-                    organization = await getUserOrganization(
-                        userBookingServiceInfo.organizationId,
-                        user.id,
-                    );
-                }
+        // Step 2: Get booking service data
+        const userBookingServiceInfo = await findBookingServiceRepo(bookingServiceId);
+        if (!userBookingServiceInfo?.id) {
+            throw new Error(ErrorMessages.INVALID_BOOKING_URL);
+        }
 
-                // Step 3: Get time slots
-                // ToDo: To be fixed once availability API configuration is fixed
-                const availabilityConfigurations = await findAvailabilityConfigurationService();
-                const today = new Date();
-                const availabilityConfiguration = availabilityConfigurations.find(
-                    (data) => data.day === today.getDay() + 1,
-                );
+        // Step 3: Get organization info if organization id is present
+        let organization: Organization | undefined;
+        if (userBookingServiceInfo.organizationId) {
+            organization = await getUserOrganization(
+                userBookingServiceInfo.organizationId,
+                userBookingServiceInfo.id,
+            );
+        }
 
-                // const timeSlots = getTimeStops(
-                //     data?.availabilityConfiguration?.startTime,
-                //     data?.availabilityConfiguration?.endTime,
-                //     data?.availabilityConfiguration?.duration,
-                // );
+        // Step 4: Get user info
+        const user = await getUser(userBookingServiceInfo.userId);
 
-                const timeSlots = getTimeStops(
-                    String(availabilityConfiguration?.startTime),
-                    String(availabilityConfiguration?.endTime),
-                    Number(availabilityConfiguration?.duration),
-                );
+        // Step 5: Get time slots
+        const availabilityConfigurations = await findAllAvailabilityConfigurationRepository(
+            userBookingServiceInfo.userId,
+            userBookingServiceInfo.organizationId,
+        );
+        if (!availabilityConfigurations?.length) {
+            throw new Error(ErrorMessages.MISSING_AVAILABILITY_CONFIGURATION);
+        }
 
-                if (user?.id) {
-                    const formatResponse = await generateBookingServiceResponse(
-                        userBookingServiceInfo,
-                        user,
-                        organization,
-                    );
-                    return { bookingService: { ...formatResponse, timeSlots } };
-                }
+        const timeSlots: {
+            day: number;
+            slots: {
+                startTime: string;
+                endTime: string;
+            }[];
+        }[] = [];
+
+        const availabilityConfigMap = new Map();
+        availabilityConfigurations.forEach((data) => availabilityConfigMap.set(data.day, data));
+
+        DAYS_LIST.forEach((day) => {
+            const availabilityConfiguration = availabilityConfigMap.get(day);
+            if (availabilityConfiguration) {
+                timeSlots.push({
+                    day: availabilityConfiguration.day,
+                    slots: getTimeStops(
+                        availabilityConfiguration.startTime.toISOString() ?? '',
+                        availabilityConfiguration.endTime.toISOString() ?? '',
+                        availabilityConfiguration.duration ?? 0,
+                    ),
+                });
+            } else {
+                timeSlots.push({ day, slots: [] });
             }
+        });
+
+        if (user?.id) {
+            const formatResponse = await generateBookingServiceResponse(
+                userBookingServiceInfo,
+                user,
+                organization,
+            );
+            return { bookingService: { ...formatResponse, timeSlots } };
         }
     } catch (err) {
         console.log('findBookingServiceById: ', err);
