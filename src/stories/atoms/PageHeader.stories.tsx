@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     args: {
         logoSrc: 'https://via.placeholder.com/150',
-        logoAlt: 'Logo',
+        // logoAlt: 'Logo',
         OrganizationName: 'Organization Name',
     },
 };

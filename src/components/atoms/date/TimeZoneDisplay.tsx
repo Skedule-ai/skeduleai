@@ -20,10 +20,10 @@ type TimeZoneProps = {
 };
 
 const TimeZone: React.FC<TimeZoneProps> = ({
-    currentDate,
+    // currentDate,
     timeZone,
     timeZones,
-    onDateChange,
+    // onDateChange,
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,

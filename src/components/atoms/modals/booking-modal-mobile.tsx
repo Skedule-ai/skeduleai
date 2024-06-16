@@ -57,7 +57,15 @@ const BookingModalMobile: React.FC<BookingModalMobileProps> = ({ isOpen, onClose
                 </Flex>
 
                 {/* the sign up componenet here  */}
-                <BookingModalVariants />
+                <BookingModalVariants
+                    formData={undefined}
+                    serviceId={''}
+                    availableTimeSlots={[]}
+                    serviceProviderName={''}
+                    onClose={function (): void {
+                        throw new Error('Function not implemented.');
+                    }}
+                />
             </Container>
         )
     );

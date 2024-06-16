@@ -21,7 +21,11 @@ export const get = async (url: string, queryHelpers?: QueryHelperResolvers) => {
 };
 
 export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
-    const { data, error, isValidating: isLoading } = useSWR([url, queryHelpers], get);
+    const {
+        data,
+        error,
+        isValidating: isLoading,
+    } = useSWR([url, queryHelpers], ([url, queryHelpers]) => get(url, queryHelpers));
     return {
         data,
         error,

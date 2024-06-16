@@ -21,13 +21,13 @@ type DateTimeDisplayProps = {
 
 const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
     currentDate,
-    timeZones,
+    // timeZones,
     onDateChange,
-    searchQuery,
+    // searchQuery,
 }) => {
-    const filteredTimeZones = timeZones.filter((zone) =>
-        zone.label.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    // const filteredTimeZones = timeZones.filter((zone) =>
+    //     zone.label.toLowerCase().includes(searchQuery.toLowerCase()),
+    // );
 
     return (
         <>

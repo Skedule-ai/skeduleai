@@ -1,8 +1,8 @@
 import { prisma } from '@/backend/utils/db';
-import { GuestUserDTO } from '../interfaces/guestUserDTO';
+import { Prisma } from '@prisma/client';
 
 export async function createGuestUserRepository(
-    data: Pick<GuestUserDTO, 'name' | 'email' | 'phoneNumber'>,
+    data: Pick<Prisma.guestUserCreateInput, 'name' | 'email' | 'phoneNumber'>,
 ) {
     return await prisma.guestUser.create({ data });
 }

@@ -1,17 +1,16 @@
-import { BookingServiceDTO } from '../interfaces/bookingServiceDTO';
 import {
+    CreateBookingServiceDataType,
+    FindBookingServiceDataType,
     createBookingService,
     findBookingService,
     findBookingServiceById,
 } from '../services/bookingService';
 
-export async function createBookingServiceController(data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,) {
+export async function createBookingServiceController(data: CreateBookingServiceDataType) {
     return await createBookingService(data);
 }
 
-export async function findBookingServiceController(
-    data: Partial<Pick<BookingServiceDTO, 'organizationId'>>,
-) {
+export async function findBookingServiceController(data: FindBookingServiceDataType) {
     return await findBookingService(data);
 }
 

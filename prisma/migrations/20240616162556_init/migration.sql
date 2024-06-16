@@ -1,29 +1,4 @@
 -- CreateTable
-CREATE TABLE "organization" (
-    "id" TEXT NOT NULL,
-    "name" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "organization_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "availabilityConfiguration" (
-    "userId" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
-    "timezone" TEXT NOT NULL,
-    "startTime" TEXT NOT NULL,
-    "endTime" TEXT NOT NULL,
-    "duration" TIMESTAMP(3) NOT NULL,
-    "workingDay" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "availabilityConfiguration_pkey" PRIMARY KEY ("userId","organizationId")
-);
-
--- CreateTable
 CREATE TABLE "userConfiguration" (
     "userId" TEXT NOT NULL,
     "onBoardingModal" BOOLEAN NOT NULL DEFAULT false,
@@ -31,6 +6,21 @@ CREATE TABLE "userConfiguration" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "userConfiguration_pkey" PRIMARY KEY ("userId")
+);
+
+-- CreateTable
+CREATE TABLE "availabilityConfiguration" (
+    "userId" TEXT NOT NULL,
+    "organizationId" TEXT NOT NULL,
+    "timezone" TEXT NOT NULL,
+    "startTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3) NOT NULL,
+    "duration" INTEGER NOT NULL,
+    "day" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "availabilityConfiguration_pkey" PRIMARY KEY ("userId","organizationId","day")
 );
 
 -- CreateTable
@@ -50,10 +40,10 @@ CREATE TABLE "bookingDetails" (
     "customerId" TEXT NOT NULL,
     "guestUserId" INTEGER,
     "serviceId" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "time" TIMESTAMP(3) NOT NULL,
+    "timezone" TEXT NOT NULL,
+    "startTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3) NOT NULL,
     "status" INTEGER NOT NULL,
-    "duration" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -76,6 +66,9 @@ CREATE TABLE "guestUser" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "bookingService_id_key" ON "bookingService"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "guestUser_email_phoneNumber_key" ON "guestUser"("email", "phoneNumber");
 
 -- AddForeignKey
 ALTER TABLE "bookingDetails" ADD CONSTRAINT "bookingDetails_guestUserId_fkey" FOREIGN KEY ("guestUserId") REFERENCES "guestUser"("id") ON DELETE SET NULL ON UPDATE CASCADE;

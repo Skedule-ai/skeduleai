@@ -15,7 +15,7 @@ const SignUpFormSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .oneOf([Yup.ref('password')], 'Passwords must match')
         .required('Confirm Password is required'),
 });
 
@@ -58,13 +58,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ formData, serviceId, onClose })
                 toast.success('Appointment data sent successfully');
                 localStorage.setItem('appointmentData', JSON.stringify(payload));
 
-                const signUpResponse = await signUp.create({
+                const signUpResponse = await signUp?.create({
                     emailAddress: values.email,
                     password: values.password,
                 });
 
-                if (signUpResponse.status === 'complete') {
-                    localStorage.setItem('userSession', JSON.stringify(signUpResponse.session));
+                if (signUpResponse?.status === 'complete') {
+                    // localStorage.setItem('userSession', JSON.stringify(signUpResponse.session));
                     toast.success('Signed up successfully');
                     onClose();
                 } else {
