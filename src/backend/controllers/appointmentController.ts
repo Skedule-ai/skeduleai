@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import {
     CreateAppointmentInputDataType,
     createAppointmentService,
@@ -24,12 +21,7 @@ export async function updateAppointmentStatusController(data: { id: string; acce
 import { createAppointmentService, getAppointmentService } from '../services/appointmentService';
 
 import { updateAppointmentStatusService } from '../services/appointmentService';
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 import { currentUser } from '@clerk/nextjs/server';
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
 import {
@@ -41,22 +33,12 @@ export async function createAppointmentController(data: AppointmentDTO) {
     return await createAppointmentService(data);
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 export async function findAppointmentController() {
     return await getAppointmentService();
 }
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 export async function updateAppointmentStatusController(id: string, accepted: boolean) {
     const user = await currentUser();
     if (!user?.id) {
