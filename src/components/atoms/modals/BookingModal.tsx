@@ -3,11 +3,17 @@
 import React from 'react';
 import { Flex } from '../flex';
 import Modal from '@/components/molecules/modal';
-import { Header2, Header3, Subtitle } from '../typography';
+import { BookingModalLabels, Header2, Header3, Subtitle } from '../typography';
 import { Cross } from '@strapi/icons';
 import Button from '../button';
 import BookingModalVariants from './booking-modal-variants';
 
+const ModalLabels = [
+    { name: 'Meeting Duration', key: 'meetingDuration' },
+    { name: 'Meeting Date', key: 'selectDate' },
+    { name: 'Meeting Time', key: 'selectTime' },
+    { name: 'Time Zone', key: 'timeZone' },
+];
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -36,7 +42,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 dir='row'
                 alignItems='center'
                 justifyContent='between'
-                className='border-b-2 border-gray-300 p-3'
+                className='border-b-2 border-gray-300 p-2'
             >
                 <Header3>Booking Summary</Header3>
                 <Flex
@@ -47,31 +53,27 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 </Flex>
             </Flex>
 
-            <Flex dir='column' gap={3} className='p-5'>
-<<<<<<< Updated upstream
+            <Flex dir='column' gap={2} className='p-2'>
                 <Header2>{serviceProviderName}(Service provider)</Header2>
-=======
-                <Header2>Host Name(Service provider)</Header2>
->>>>>>> Stashed changes
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
-                    {Object.entries(formData).map(([key, value]) => (
-                        <Button
-                            className='flex justify-center text-xs font-normal'
-                            size='lg'
-                            key={key}
-                            color='disabled'
-                            disabled
-                        >
-                            {value}
-                        </Button>
+                    {ModalLabels.map((label, index) => (
+                        <Flex dir='column' gap={1} key={index}>
+                            <BookingModalLabels>{label.name}</BookingModalLabels>
+                            <Button
+                                className='flex cursor-not-allowed justify-center text-xs font-normal'
+                                size='lg'
+                                color='disabled'
+                                disabled
+                            >
+                                {formData[label.key]}
+                            </Button>
+                        </Flex>
                     ))}
                 </Flex>
             </Flex>
 
-            {/* the componenet here  */}
-<<<<<<< Updated upstream
             <BookingModalVariants
                 formData={formData}
                 serviceId={serviceId}
@@ -79,9 +81,6 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 availableTimeSlots={availableTimeSlots}
                 onClose={onClose}
             />
-=======
-            <BookingModalVariants />
->>>>>>> Stashed changes
         </Modal>
     );
 };

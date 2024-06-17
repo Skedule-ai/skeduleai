@@ -26,7 +26,6 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     const renderForm = () => {
         switch (activeForm) {
             case 'Guest':
-<<<<<<< Updated upstream
                 return (
                     <GuestForm
                         onSubmit={(values) => console.log(values)}
@@ -40,12 +39,6 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
 
             case 'Sign In':
                 return <SignInForm formData={formData} serviceId={serviceId} onClose={onClose} />;
-=======
-                return <GuestForm onSubmit={(values) => console.log(values)} />;
-
-            case 'Sign In':
-                return <SignInForm onSubmit={(values) => console.log(values)} />;
->>>>>>> Stashed changes
 
             case 'Sign Up':
                 return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;

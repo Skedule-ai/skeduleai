@@ -18,7 +18,7 @@ export const Header2 = ({ children }: any) => {
 
 export const Header3 = ({ children }: any) => {
     return (
-        <Text as={'h3'} size='md' weight='medium' color='secondary'>
+        <Text as={'h3'} size='md' weight='medium' className='text-black'>
             {children}
         </Text>
     );
@@ -50,7 +50,7 @@ export const Body = ({ children, color = 'secondary' }: any) => {
 
 export const BodyHighlight = ({ children }: any) => {
     return (
-        <Text as={'p'} weight='semibold'>
+        <Text as={'p'} size='md' weight='medium' className='text-black'>
             {children}
         </Text>
     );
@@ -80,6 +80,13 @@ export const ErrorTitle = ({ children }: any) => {
     );
 };
 
+export const BookingModalLabels = ({ children }: any) => {
+    return (
+        <Text as={'p'} size='xxs' weight='light' className='text-gray-500'>
+            {children}
+        </Text>
+    );
+};
 export const Label: React.FC<
     React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
 > = ({ children, htmlFor }) => {
