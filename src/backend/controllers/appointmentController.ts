@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import {
     CreateAppointmentInputDataType,
     createAppointmentService,
@@ -24,6 +25,8 @@ import { createAppointmentService, getAppointmentService } from '../services/app
 import { updateAppointmentStatusService } from '../services/appointmentService';
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { currentUser } from '@clerk/nextjs/server';
 import { AppointmentDTO } from '../interfaces/appointmentDTO';
 import {
@@ -37,10 +40,13 @@ export async function createAppointmentController(data: AppointmentDTO) {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export async function findAppointmentController() {
     return await getAppointmentService();
 }
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
