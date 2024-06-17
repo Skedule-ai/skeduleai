@@ -17,6 +17,7 @@ export const POST = async (request: Request) => {
 
 export const GET = async (request: Request, { params }: { params: FindBookingServiceDataType }) => {
     try {
+        console.log('Request');
         const bookingService = await findBookingServiceController(params);
         return NextResponse.json(bookingService, { status: 201 });
     } catch (error: any) {

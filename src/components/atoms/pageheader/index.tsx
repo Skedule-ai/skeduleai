@@ -24,10 +24,10 @@ const PageHeader: React.FC<NavbarProps> = ({ logoSrc, OrganizationName, isUserSi
                         <div className='ml-auto flex items-end lg:order-2'>
                             <Flex gap={2}>
                                 <Button size='md' color='tertiary'>
-                                    Sign in
+                                    {'Sign in'}
                                 </Button>
                                 <Button size='md' color='tertiary'>
-                                    Sign up
+                                    {'Sign up'}
                                 </Button>
                             </Flex>
                         </div>

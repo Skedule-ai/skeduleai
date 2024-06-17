@@ -14,10 +14,7 @@ type SidebarProps = {
 
 const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [
-        isCollapsed,
-        // setIsCollapsed
-    ] = useState(collapse);
+    const [isCollapsed, setIsCollapsed] = useState(collapse);
 
     const handleToggle = () => setIsOpen(!isOpen);
 
@@ -43,7 +40,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                         type='button'
                     >
                         <svg
-                            className='size-6'
+                            className='h-6 w-6'
                             fill='none'
                             stroke='currentColor'
                             viewBox='0 0 24 24'
@@ -60,7 +57,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                 </div>
             )}
             <Container
-                className={`fixed inset-y-0 left-0 z-40 h-screen w-64${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 md:relative md:w-64 md:translate-x-0`}
+                className={`fixed inset-y-0 left-0 z-40 h-screen w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:w-64 md:translate-x-0 md:shadow-none`}
             >
                 <Container
                     className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} text-black`}
@@ -70,7 +67,6 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                         <a href='/'>
                             <ScheduleAILogo />
                         </a>
-
                         <Button
                             className='p-2 md:hidden'
                             onClick={handleToggle}
@@ -79,9 +75,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             type='button'
                         >
                             <>
-                                <span className='sr-only' onClick={handleToggle}>
-                                    Close
-                                </span>
+                                <span className='sr-only'>{'Close'}</span>
                                 &#10005;
                             </>
                         </Button>
@@ -91,14 +85,8 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             <Dropdown
                                 color='primary'
                                 items={[
-                                    {
-                                        label: 'Service Provider',
-                                        value: 'account',
-                                    },
-                                    {
-                                        label: 'Consumer',
-                                        value: 'account',
-                                    },
+                                    { label: 'Service Provider', value: 'account' },
+                                    { label: 'Consumer', value: 'account' },
                                 ]}
                                 onChange={() => {}}
                                 placeholder='Service Provider'
@@ -122,7 +110,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                         <li className='flex items-center px-4 py-2 hover:bg-gray-100'>
                             <a href='/' className='flex w-full items-center text-black'>
                                 <Text weight='medium' size='sm'>
-                                    {'Calendar'}
+                                    {' Calendar'}
                                 </Text>
                             </a>
                         </li>
@@ -143,12 +131,12 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                     </ul>
                     <Flex className='shrink-0 items-center justify-center'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>
-                            My Profile
+                            {' My Profile'}
                         </Button>
                     </Flex>
                     <Flex className='shrink-0 items-center justify-center px-4 py-2'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>
-                            LogOut
+                            {'Log Out'}
                         </Button>
                     </Flex>
                 </Container>
