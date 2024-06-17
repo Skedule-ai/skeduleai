@@ -1,4 +1,8 @@
 import { updateAppointmentStatusController } from '@/backend/controllers/appointmentController';
+<<<<<<< Updated upstream
+=======
+import { getClerkClient } from '@/backend/utils/clerkClient';
+>>>>>>> Stashed changes
 import { sendEmail } from '@/backend/utils/emailService';
 import { currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
@@ -25,7 +29,10 @@ export async function POST(req: Request) {
         if (!user?.id) {
             throw new Error('Unauthorized');
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         // Update the status of the appointment
         const bookingDetails = await updateAppointmentStatusController(id, accepted);
 
@@ -60,7 +67,10 @@ export async function POST(req: Request) {
     }
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
 async function fetchCustomerDetails(customerId: string) {
     const client = getClerkClient();
@@ -79,4 +89,7 @@ async function fetchCustomerDetails(customerId: string) {
     //  customerName: 'John Doe',
     // };
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -2,9 +2,12 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Prisma } from '@prisma/client';
 import { object, string } from 'yup';
 =======
+=======
+>>>>>>> Stashed changes
 import {
     createAppoinmentRepository,
     findBookingDetails,
@@ -20,6 +23,11 @@ import { GuestUserDTO } from '../interfaces/guestUserDTO';
 import { createGuestUserRepository } from '../repositories/guestUserRepository';
 import { getClerkClient } from '../utils/clerkClient';
 import { AppointmentStatus } from '../utils/enum';
+<<<<<<< Updated upstream
+=======
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+>>>>>>> Stashed changes
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
 >>>>>>> Stashed changes
@@ -178,6 +186,7 @@ export async function createAppointmentService(data: AppointmentDTO) {
     }
 }
 
+<<<<<<< Updated upstream
 
 export async function getAppointmentsService(organizationId: string | null = '') {
 export async function getAppointmentService() {
@@ -273,6 +282,8 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
     } catch (error) {
         console.error('updateAppointmentStatusService', error);
     }
+=======
+>>>>>>> Stashed changes
 export async function updateAppointmentStatusService(id: string, accepted: boolean) {
     try {
         const bookingDetails = await findBookingDetails(id);
@@ -284,12 +295,15 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
             id,
             accepted ? AppointmentStatus.ACCEPTED : AppointmentStatus.REJECT,
         );
+<<<<<<< Updated upstream
 
 
         return { bookingDetails: updatedBookingDetails };
     } catch (error) {
         console.error('Error updating booking status:', error);
 
+=======
+>>>>>>> Stashed changes
         return { bookingDetails: updatedBookingDetails };
 
         // If accepted, send an email using SendGrid template
@@ -324,7 +338,10 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
         // }
     } catch (error) {
         console.error('Error updating booking status:', error);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (error instanceof Error) {
             throw new Error(error.message);
         }
