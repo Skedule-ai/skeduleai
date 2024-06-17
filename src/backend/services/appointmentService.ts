@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { User, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
@@ -62,6 +63,20 @@ import { AppointmentDTO } from '../interfaces/appointmentDTO';
 import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
 import { GuestUserDTO } from '../interfaces/guestUserDTO';
 
+=======
+import {
+    createAppoinmentRepository,
+    findBookingDetails,
+    updateBookingStatusRepo,
+} from '@/backend/repositories/appointmentRepository';
+import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
+import { User, currentUser } from '@clerk/nextjs/server';
+import { nanoid } from 'nanoid';
+import { AppointmentDTO } from '../interfaces/appointmentDTO';
+import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
+import { GuestUserDTO } from '../interfaces/guestUserDTO';
+
+>>>>>>> Stashed changes
 =======
 import {
     createAppoinmentRepository,
@@ -160,6 +175,7 @@ export async function createAppointmentService(data: AppointmentDTO) {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export async function getAppointmentsService(organizationId: string | null = '') {
 export async function getAppointmentService() {
     try {
@@ -256,6 +272,8 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 export async function updateAppointmentStatusService(id: string, accepted: boolean) {
     try {
         const bookingDetails = await findBookingDetails(id);
@@ -272,6 +290,9 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
     } catch (error) {
         console.error('Error updating booking status:', error);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

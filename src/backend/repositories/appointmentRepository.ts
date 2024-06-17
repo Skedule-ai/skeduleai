@@ -9,6 +9,7 @@ export async function createAppoinmentRepository(data: Prisma.bookingDetailsCrea
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export async function findAppointmentRepository(
     filter: Pick<Prisma.bookingDetailsCreateInput, 'id'>,
 ) {
@@ -35,6 +36,8 @@ export async function findBookingDetails(id: string, serviceId: string) {
     // Find the booking service
     return await prisma.bookingDetails.findFirst({
         where: { id, serviceId },
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
