@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
 import Container from '../container';
+import Text from '../text';
 
 type TimeZoneProps = {
     currentDate: string;
@@ -43,8 +44,8 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                     size='lg'
                     onClick={toggleDropdown}
                 >
-                    <span>{timeZone}</span>
-                    <span className='ml-2'>{showDropdown ? '✖️' : '▼'}</span>
+                    <Text>{timeZone}</Text>
+                    <Text className='ml-2'>{showDropdown ? '✖️' : '▼'}</Text>
                 </Button>
                 {showDropdown && (
                     <div className='absolute mt-2 max-h-60 w-48 overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'>
@@ -56,13 +57,13 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                             className='block w-full border-b border-gray-200 px-4 py-2 text-sm text-gray-900 focus:outline-none'
                         />
                         {filteredTimeZones.map((zone) => (
-                            <button
+                            <Button
                                 key={zone.value}
                                 className='block w-full px-4 py-2 text-sm text-gray-900 hover:bg-gray-100'
                                 onClick={() => onTimeZoneChange(zone.value)}
                             >
                                 {zone.label}
-                            </button>
+                            </Button>
                         ))}
                     </div>
                 )}

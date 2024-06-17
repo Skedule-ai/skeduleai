@@ -7,113 +7,90 @@ import React, { useEffect } from 'react';
 import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
 import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
-import { useRouter } from 'next/router';
 import Container from '@/components/atoms/container'; // Assuming you have a Container component
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
+import { useRouter } from 'next/navigation';
 
 const Home = () => {
-    const { data, error, isLoading } = useFetchUserConfigurationQuery();
-    const router = useRouter();
+    // const { data, error, isLoading } = useFetchUserConfigurationQuery();
+    // const router = useRouter();
 
-    useEffect(() => {
-        if (!isLoading && data?.userConfiguration) {
-            router.push('/dashboard');
-        }
-    }, [data, isLoading, router]);
+    // useEffect(() => {
+    //     if (!isLoading && data?.userConfiguration) {
+    //         router.push('/dashboard');
+    //     }
+    // }, [data, isLoading, router]);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    // if (isLoading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error.message}</div>;
 
     return (
         <>
-            <Flex>
+            <Flex className='flex-col md:flex-row'>
                 <SideBar />
-                <Container>
-                    <Flex>
-                        <div className='mt-4'>
+                <Container className='flex-1 p-4'>
+                    <Flex className='flex-col md:flex-row md:items-center'>
+                        <Grid columns={2} rows={1} gap={2}>
                             <Date />
-                        </div>
-                        <div className='ml-2 mt-4'>
                             <TimeZone />
-                        </div>
-                        <div className='container'>
-                            <Flex className='justify-end'>
-                                <div className='mt-4'>
-                                    <Button size='sm' color='secondary'>
-                                        <span style={{ color: 'black' }}>{'<'}</span>
-                                    </Button>
-                                </div>
-                                <div className='ml-2 mt-4'>
-                                    <Button size='sm' color='secondary'>
-                                        <span style={{ color: 'black' }}>{'>'}</span>
-                                    </Button>
-                                </div>
-                                <div className='mx-2 mt-4'>
-                                    <Button size='sm' color='primary'>
-                                        <span>+Add Staff</span>
-                                    </Button>
-                                </div>
-                            </Flex>
-                        </div>
+                        </Grid>
                     </Flex>
-                    <Flex>
-                        <Container className='ml-6 mt-20 overflow-x-scroll'>
-                            <Header2 className=''>Meeting Proposals</Header2>
+                    <Flex className='mt-6 flex-col'>
+                        <Container className='overflow-x-auto'>
+                            <Header2>{'Meeting Proposals'}</Header2>
                             <Grid className='mt-4' columns={3} gap={4} rows={1}>
-                                <React.Fragment key='.0'>
-                                    <AcceptRejectCard
-                                        fromTime='12:30 PM'
-                                        isFree
-                                        onAccept={() => {}}
-                                        onReject={() => {}}
-                                        title='Brainstorming session'
-                                        toTime='04:36 PM IST'
-                                        userImages={[
-                                            'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                                        ]}
-                                        variant='default'
-                                    >
-                                        <></>
-                                    </AcceptRejectCard>
-                                    <AcceptRejectCard
-                                        fromTime='12:30 PM'
-                                        isFree
-                                        onAccept={() => {}}
-                                        onReject={() => {}}
-                                        title='Brainstorming session'
-                                        toTime='04:36 PM IST'
-                                        userImages={[
-                                            'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                                        ]}
-                                        variant='default'
-                                    >
-                                        <></>
-                                    </AcceptRejectCard>
-                                    <AcceptRejectCard
-                                        fromTime='12:30 PM'
-                                        isFree
-                                        onAccept={() => {}}
-                                        onReject={() => {}}
-                                        title='Brainstorming session'
-                                        toTime='04:36 PM IST'
-                                        userImages={[
-                                            'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                                        ]}
-                                        variant='default'
-                                    >
-                                        <></>
-                                    </AcceptRejectCard>
-                                </React.Fragment>
+                                <AcceptRejectCard
+                                    fromTime='12:30 PM'
+                                    isFree
+                                    onAccept={() => {}}
+                                    onReject={() => {}}
+                                    title='Brainstorming session'
+                                    toTime='04:36 PM IST'
+                                    userImages={[
+                                        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                                    ]}
+                                    variant='default'
+                                >
+                                    <></>
+                                </AcceptRejectCard>
+                                <AcceptRejectCard
+                                    fromTime='12:30 PM'
+                                    isFree
+                                    onAccept={() => {}}
+                                    onReject={() => {}}
+                                    title='Brainstorming session'
+                                    toTime='04:36 PM IST'
+                                    userImages={[
+                                        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                                    ]}
+                                    variant='default'
+                                >
+                                    <></>
+                                </AcceptRejectCard>
+                                <AcceptRejectCard
+                                    fromTime='12:30 PM'
+                                    isFree
+                                    onAccept={() => {}}
+                                    onReject={() => {}}
+                                    title='Brainstorming session'
+                                    toTime='04:36 PM IST'
+                                    userImages={[
+                                        'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                                    ]}
+                                    variant='default'
+                                >
+                                    <></>
+                                </AcceptRejectCard>
                             </Grid>
                         </Container>
                     </Flex>
-                    <Flex>
-                        <Container className='ml-6 mt-6'>
-                            <Header2>Share Appointment Link</Header2>
+                    <Flex className='mt-6 flex-col'>
+                        <Container>
+                            <Header2>{'Share Appointment Link'}</Header2>
                             <Grid className='mt-4' columns={1} gap={4} rows={1}>
                                 <AppointmentLinkCard
                                     isFree

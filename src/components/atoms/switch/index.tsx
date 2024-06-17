@@ -1,6 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 
+import Container from '../container';
+import Text from '../text';
+
 type SwitchProps = {
     label1: string;
     label2: string;
@@ -18,7 +21,7 @@ const Switch: React.FC<SwitchProps> = ({ label1, label2, onToggle }) => {
 
     return (
         <center>
-            <div className='mb-1 w-72 rounded border-gray-200 bg-gray-100 py-1 text-sm'>
+            <Container className='mb-1 w-72 rounded border-gray-200 bg-gray-100 py-1 text-sm'>
                 <label className='themeSwitcherTwo shadow-card bg-gray relative inline-flex cursor-pointer select-none items-center justify-center rounded-md p-1'>
                     <input
                         type='checkbox'
@@ -26,22 +29,22 @@ const Switch: React.FC<SwitchProps> = ({ label1, label2, onToggle }) => {
                         checked={isChecked}
                         onChange={handleCheckboxChange}
                     />
-                    <span
+                    <Text
                         className={`flex items-center rounded border px-[18px] py-2 text-sm font-medium ${
                             isChecked ? 'text-black' : 'body-color bg-white text-blue-600/100'
                         }`}
                     >
                         {label1}
-                    </span>
-                    <span
+                    </Text>
+                    <Text
                         className={`ml-space-x-[6px] ml-2 flex items-center rounded border px-[18px] py-2 text-sm font-medium ${
                             !isChecked ? 'text-black' : 'body-color bg-white text-blue-600/100'
                         }`}
                     >
                         {label2}
-                    </span>
+                    </Text>
                 </label>
-            </div>
+            </Container>
         </center>
     );
 };
