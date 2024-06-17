@@ -1,21 +1,25 @@
+<<<<<<< Updated upstream
 import { User, currentUser } from '@clerk/nextjs/server';
-import { object, string } from 'yup';
-import { nanoid } from 'nanoid';
 import { Prisma } from '@prisma/client';
+import { nanoid } from 'nanoid';
+import { object, string } from 'yup';
 
 import {
-    createAppoinmentRepository,
-    findBookingDetails,
+    createAppoinmentRepository
+} from '@/backend/repositories/appointmentRepository';
+
+import {
     findAppointmentsRepositoryByServiceId,
+    findBookingDetails,
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
 
-import { AppointmentStatus } from '../utils/enum';
 import { formatTime } from '@/libs/utils/datetime-helpers';
 import { findBookingServiceRepoByUser } from '../repositories/bookingServiceRepository';
+import { AppointmentStatus } from '../utils/enum';
 
-import { getClerkClient } from '../utils/clerkClient';
 import { ErrorMessages } from '@/libs/message/error';
+import { getClerkClient } from '../utils/clerkClient';
 
 const validateAppointmentBooking = object({
     timezone: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -25,6 +29,8 @@ const validateAppointmentBooking = object({
     email: string(),
     phoneNumber: string(),
 });
+
+
 
 const validateGuestUserData = object({
     name: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -42,12 +48,32 @@ export async function createAppointmentService(
     serviceId: string,
     data: CreateAppointmentInputDataType,
 ) {
+=======
+import {
+    createAppoinmentRepository,
+    findBookingDetails,
+    updateBookingStatusRepo,
+} from '@/backend/repositories/appointmentRepository';
+import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
+import { User, currentUser } from '@clerk/nextjs/server';
+import { nanoid } from 'nanoid';
+import { AppointmentDTO } from '../interfaces/appointmentDTO';
+import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
+import { GuestUserDTO } from '../interfaces/guestUserDTO';
+
+import { createGuestUserRepository } from '../repositories/guestUserRepository';
+import { getClerkClient } from '../utils/clerkClient';
+import { AppointmentStatus } from '../utils/enum';
+export async function createAppointmentService(data: AppointmentDTO) {
+>>>>>>> Stashed changes
     try {
         // Step 1: Validate input data
         const validatedData = await validateAppointmentBooking.validate(data);
         const { name, email, phoneNumber, ...appointmentData } = validatedData;
 
         // Step 2: Check if user is logged in.
+        const { name, email, phoneNumber, ...appointmentData } = data;
+        // Step 1: Check if user is logged in.
         let user: User | null | undefined = await currentUser();
         const client = getClerkClient();
 
@@ -117,12 +143,30 @@ export async function createAppointmentService(
     }
 }
 
+<<<<<<< Updated upstream
 export async function getAppointmentsService(organizationId: string | null = '') {
+export async function getAppointmentService() {
     try {
         // Step 1: Check if user is logged in.
         const user = await currentUser();
-        if (!user?.id) {
-            throw new Error(ErrorMessages.UNAUTHORIZED);
+        if (user?.id) {
+            const bookingService = await findBookingServiceRepoByUser(user.id);
+            if (bookingService) {
+                const getAppointment = await findAllAppointmentRepositoryByServiceId({
+                    serviceId: bookingService.id,
+                });
+                const formattedAppointments = getAppointment.map((data, inx) => {
+                    return {
+                        id: data.id,
+                        startTime: formatTime(data.time.toISOString()),
+                        endTime: addDuration(data.time.toISOString(), data.duration.toISOString()),
+                    };
+                });
+                return { formattedAppointments, title: 'Appointment' };
+            }
+            return { getAppointment: [] };
+        } else {
+            throw new Error('User not found or missing ID');
         }
 
         // Step 2: Get user bookin service data for service id
@@ -150,11 +194,15 @@ export async function getAppointmentsService(organizationId: string | null = '')
     }
 }
 
+<<<<<<< Updated upstream
 export async function updateAppointmentStatusService(
     bookingId: string,
     accepted: boolean,
     organizationId = '',
 ) {
+=======
+export async function updateAppointmentStatusService(id: string, accepted: boolean) {
+>>>>>>> Stashed changes
     try {
         // Step 1: Check if user is logged in.
         const user = await currentUser();
@@ -189,6 +237,23 @@ export async function updateAppointmentStatusService(
         return { bookingDetails: updatedBookingDetails };
     } catch (error) {
         console.error('updateAppointmentStatusService', error);
+=======
+export async function updateAppointmentStatusService(id: string, accepted: boolean) {
+    try {
+        const bookingDetails = await findBookingDetails(id);
+        if (!bookingDetails) {
+            throw new Error('Invalid update.');
+        }
+
+        const updatedBookingDetails = await updateBookingStatusRepo(
+            id,
+            accepted ? AppointmentStatus.ACCEPTED : AppointmentStatus.REJECT,
+        );
+
+        return { bookingDetails: updatedBookingDetails };
+    } catch (error) {
+        console.error('Error updating booking status:', error);
+>>>>>>> Stashed changes
         if (error instanceof Error) {
             throw new Error(error.message);
         }
