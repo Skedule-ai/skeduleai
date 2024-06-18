@@ -8,7 +8,9 @@ export const fontSize = {
     md: 'text-base',
     lg: 'text-lg',
     xl: 'text-xl',
+    '3xl': 'text-3xl',
     '4xl': 'text-4xl',
+    '7xl': 'text-7xl',
 };
 
 export const fontWeight = {
@@ -25,6 +27,11 @@ export const fontColor = {
     secondary: 'text-neutral-700',
     tertiary: 'text-neutral-400',
     error: 'text-red-500',
+    light: 'text-neutral-50 dark:text-neutral-950',
+};
+
+export const textAlign = {
+    center: 'text-center',
 };
 
 const textVariants = tv({
@@ -33,6 +40,7 @@ const textVariants = tv({
         size: fontSize,
         weight: fontWeight,
         color: fontColor,
+        align: textAlign,
     },
 });
 

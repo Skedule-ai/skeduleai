@@ -26,7 +26,7 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
         navigator.clipboard.writeText(text).then(
             () => {
                 setCopySuccess('Copied!');
-                setTimeout(() => setCopySuccess(''), 2000); // Clear the success message after 2 seconds
+                setTimeout(() => setCopySuccess(''), 2000);
             },
             (err) => {
                 setCopySuccess('Failed to copy!');

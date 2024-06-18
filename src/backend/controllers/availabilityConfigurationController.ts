@@ -1,18 +1,33 @@
 import {
-    registerAvailabilityConfigurationService,
+    addAvailabilitConfigurationService,
+    AvailabilityConfigServiceInput,
     findAvailabilityConfigurationService,
     updateAvailabilityConfigurationService,
 } from '@/backend/services/availabilityConfigurationService';
-import { CreateAvailabilityConfigurationDTO } from '@/backend/interfaces/registerAvailabilityConfigurationInterface';
 
-export async function registerAvailabilityConfiguration(data: CreateAvailabilityConfigurationDTO) {
-    return await registerAvailabilityConfigurationService(data);
+type AvailabilityConfigurationInput = {
+    organizationId: string;
+    availabilityConfiguration: AvailabilityConfigServiceInput;
+};
+
+export async function addAvailabilitConfigurationController(data: AvailabilityConfigurationInput) {
+    const availabilityConfiguration = await addAvailabilitConfigurationService(
+        data.organizationId,
+        data.availabilityConfiguration,
+    );
+    return { availabilityConfiguration };
 }
 
-export async function findAvailabilityConfiguration() {
-    return await findAvailabilityConfigurationService();
+export async function findAvailabilityConfigurationController() {
+    const availabilityConfiguration = await findAvailabilityConfigurationService();
+    return { availabilityConfiguration };
 }
 
-export async function updateAvailabilityConfiguration(data: CreateAvailabilityConfigurationDTO) {
-    return await updateAvailabilityConfigurationService(data);
+export async function updateAvailabilityConfigurationController(
+    data: AvailabilityConfigurationInput,
+) {
+    return await updateAvailabilityConfigurationService(
+        data.organizationId,
+        data.availabilityConfiguration,
+    );
 }

@@ -1,4 +1,5 @@
 import Text from '../text';
+import { TextProps } from '../text/text.variants';
 
 export const Header1 = ({ children }: any) => {
     return (
@@ -92,6 +93,30 @@ export const Label: React.FC<
 > = ({ children, htmlFor }) => {
     return (
         <Text as={'label'} htmlFor={htmlFor} size='sm' weight='medium' color='secondary'>
+            {children}
+        </Text>
+    );
+};
+
+export const LargeHeader1: React.FC<TextProps> = ({ children, ...props }) => {
+    return (
+        <Text as={'h1'} size='7xl' weight='bold' color='light' {...props}>
+            {children}
+        </Text>
+    );
+};
+
+export const SubHeader2: React.FC<TextProps> = ({ children, ...props }) => {
+    return (
+        <Text as={'h2'} size='3xl' weight='bold' color='light' {...props}>
+            {children}
+        </Text>
+    );
+};
+
+export const Paragraph: React.FC<TextProps> = ({ children, ...props }) => {
+    return (
+        <Text as={'p'} size='md' color='light' {...props}>
             {children}
         </Text>
     );

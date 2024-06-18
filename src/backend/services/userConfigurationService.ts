@@ -1,33 +1,43 @@
 import { currentUser } from '@clerk/nextjs/server';
 
 import {
-    createUserConfigurationRepository,
-    findUserConfigurationRepository,
+    findUserConfigurationByUserId,
+    updateUserConfiguration,
 } from '@/backend/repositories/userConfigurationRepository';
-import { CreateUserConfigurationDTO } from '../interfaces/createUserConfigurationInterface';
+import { ErrorMessages } from '@/libs/message/error';
 
-export async function createUserConfigurationService(data: CreateUserConfigurationDTO) {
+import * as yup from 'yup';
+import { Prisma } from '@prisma/client';
+
+const updateUserConfigurationInput = yup.object({
+    onBoardingModal: yup.boolean().default(false),
+});
+
+export async function findUserConfgurationByUserIdService() {
     const user = await currentUser();
     if (!user?.id) {
-        throw new Error('Unauthorized.');
+        throw new Error(ErrorMessages.UNAUTHORIZED);
     }
-    const userConfiguration = await createUserConfigurationRepository(user?.id, data);
-    return { userConfiguration };
+
+    const userConfiguration = await findUserConfigurationByUserId({ userId: user?.id });
+    return { onBoardingModal: !!userConfiguration?.onBoardingModal };
 }
 
-export async function findUserConfigurationService() {
-    const user = await currentUser();
-    if (user?.id) {
-        const userConfiguration = await findUserConfigurationRepository({ userId: user?.id });
-        return { userConfiguration };
-    }
-}
+export type UpdateUserConfigurationDataInput = Pick<
+    Prisma.userConfigurationCreateInput,
+    'onBoardingModal'
+>;
 
-export async function updateUserConfigurationService(data: CreateUserConfigurationDTO) {
+export async function updateUserConfigurationService(data: UpdateUserConfigurationDataInput) {
     const user = await currentUser();
     if (!user?.id) {
-        throw new Error('Unauthorized.');
+        throw new Error(ErrorMessages.UNAUTHORIZED);
     }
-    const userConfiguration = await createUserConfigurationRepository(user?.id, data);
-    return { userConfiguration };
+
+    const isInputValid = await updateUserConfigurationInput.isValid(data);
+    if (!isInputValid) {
+        throw new Error(ErrorMessages.UNAUTHORIZED);
+    }
+    const userConfiguration = await updateUserConfiguration(user?.id, data);
+    return { onBoardingModal: !!userConfiguration?.onBoardingModal };
 }

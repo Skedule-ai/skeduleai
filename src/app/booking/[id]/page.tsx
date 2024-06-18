@@ -38,7 +38,7 @@ const CustomDatePicker = ({ field, form, ...props }: any) => {
 
 const CustomTimezoneSelect = ({ field, form, ...props }: any) => {
     const customStyles = {
-        control: (provided) => ({
+        control: (provided: object) => ({
             ...provided,
             width: '100%',
             padding: '5px',
@@ -62,13 +62,13 @@ const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) =>
     }));
 
     const customStyles = {
-        menu: (provided) => ({
+        menu: (provided: object) => ({
             ...provided,
             display: 'flex',
             justifyContent: 'space-between',
             width: '100%',
         }),
-        option: (provided, state) => ({
+        option: (provided: object, state: { isSelected: boolean }) => ({
             ...provided,
             padding: '10px',
             border: '1px solid gray',
@@ -81,8 +81,12 @@ const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) =>
     return (
         <Select
             options={options}
-            value={options.find((option) => option.value === field.value) || null}
-            onChange={(option) => form.setFieldValue(field.name, option ? option.value : '')}
+            value={
+                options.find((option: { value: string }) => option.value === field.value) || null
+            }
+            onChange={(option: { value?: string }) =>
+                form.setFieldValue(field.name, option ? option.value : '')
+            }
             components={animatedComponents}
             isClearable
             className='w-full rounded-md border p-3'
@@ -165,7 +169,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         const formattedValues = {
             ...values,
             selectDate:
-                values.selectDate instanceof Date
+                typeof values.selectDate === 'object'
                     ? formatDate(values.selectDate)
                     : values.selectDate,
         };
@@ -298,9 +302,9 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                     isOpen={isOpenMobile}
                     onClose={() => setIsOpenMobile(false)}
                     formData={formData}
-                    serviceId={id}
-                    serviceProviderName={serviceProvider?.name}
-                    availableTimeSlots={availableTimeSlots}
+                    // serviceId={id}
+                    // serviceProviderName={serviceProvider?.name}
+                    // availableTimeSlots={availableTimeSlots}
                 />
             )}
         </Container>

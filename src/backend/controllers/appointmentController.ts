@@ -1,6 +1,22 @@
-import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { createAppointmentService } from '../services/appointmentService';
+import {
+    createAppointmentService,
+    updateAppointmentStatusService,
+    getAppointmentsService,
+    CreateAppointmentInputDataType,
+} from '../services/appointmentService';
 
-export async function createAppointmentController(data: AppointmentDTO) {
-    return await createAppointmentService(data);
+export async function createAppointmentController(
+    params: { id: string },
+    data: CreateAppointmentInputDataType,
+) {
+    return await createAppointmentService(params.id, data);
+}
+
+export async function findAppointmentsController(organizationId?: string | null) {
+    return await getAppointmentsService(organizationId);
+}
+
+export async function updateAppointmentStatusController(data: { id: string; accepted: boolean }) {
+    const updatedAppointmentDetails = await updateAppointmentStatusService(data.id, data.accepted);
+    return updatedAppointmentDetails;
 }

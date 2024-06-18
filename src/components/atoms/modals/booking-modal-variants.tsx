@@ -10,7 +10,7 @@ interface BookingModalVariantsProps {
     formData: any;
     serviceId: string;
     availableTimeSlots: any[];
-    serviceProviderName:string;
+    serviceProviderName: string;
     onClose: () => void;
 }
 
@@ -19,7 +19,7 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     serviceId,
     availableTimeSlots,
     onClose,
-    serviceProviderName
+    serviceProviderName,
 }) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
@@ -29,16 +29,30 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                 return (
                     <GuestForm
                         onSubmit={(values) => console.log(values)}
-                        formData={formData}
-                        serviceId={serviceId}
-                        availableTimeSlots={availableTimeSlots}
-                        onClose={onClose}
-                        serviceProviderName={serviceProviderName}
+                        formData={{
+                            selectDate: '',
+                            selectTime: '',
+                        }}
+                        serviceId={''}
+                        onClose={function (): void {
+                            throw new Error('Function not implemented.');
+                        }}
                     />
                 );
 
             case 'Sign In':
-                return <SignInForm formData={formData} serviceId={serviceId} onClose={onClose} />;
+                return (
+                    <SignInForm
+                        formData={{
+                            selectDate: '',
+                            selectTime: '',
+                        }}
+                        serviceId={''}
+                        onClose={function (): void {
+                            throw new Error('Function not implemented.');
+                        }}
+                    />
+                );
 
             case 'Sign Up':
                 return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;

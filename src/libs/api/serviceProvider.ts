@@ -3,7 +3,7 @@ export const getServiceProviderDetails = async (token: string) => {
     const response = await fetch(`${process.env.APP_URL}/api/configuration/booking`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ organizationId: '' }),

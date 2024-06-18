@@ -1,5 +1,5 @@
 'use client';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
@@ -13,7 +13,7 @@ type ModalProps = PropsWithChildren & {
 const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {} }) => {
     return (
         <Transition show={show}>
-            <Dialog className='relative z-10' onClose={onClose}>
+            <Dialog className='relative z-10' onClose={() => onClose(false)}>
                 <TransitionChild
                     enter='ease-out duration-300'
                     enterFrom='opacity-0'
@@ -40,6 +40,16 @@ const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {}
                             leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
                         >
                             <DialogPanel className='relative overflow-hidden rounded-lg bg-white p-8 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg'>
+                                <Button
+                                    size='xs'
+                                    color='tertiary'
+                                    type='button'
+                                    className='absolute right-6 top-5 text-gray-500 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                                    onClick={() => onClose(false)}
+                                >
+                                    <span className='sr-only'>Close</span>
+                                    &#10005;
+                                </Button>
                                 <div className='mt-5'>{children}</div>
                             </DialogPanel>
                         </TransitionChild>
