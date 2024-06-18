@@ -1,41 +1,23 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+import { User, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
+import { nanoid } from 'nanoid';
 import { object, string } from 'yup';
-=======
-=======
->>>>>>> Stashed changes
+
 import {
     createAppoinmentRepository,
+    findAppointmentsRepositoryByServiceId,
     findBookingDetails,
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
-import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
-import { User, currentUser } from '@clerk/nextjs/server';
-import sgMail from '@sendgrid/mail';
-import { nanoid } from 'nanoid';
-import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
-import { GuestUserDTO } from '../interfaces/guestUserDTO';
-import { createGuestUserRepository } from '../repositories/guestUserRepository';
-import { getClerkClient } from '../utils/clerkClient';
+
+import { formatTime } from '@/libs/utils/datetime-helpers';
+import { findBookingServiceRepoByUser } from '../repositories/bookingServiceRepository';
 import { AppointmentStatus } from '../utils/enum';
-<<<<<<< Updated upstream
-=======
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
->>>>>>> Stashed changes
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
->>>>>>> Stashed changes
-
-
-
 
 import { ErrorMessages } from '@/libs/message/error';
+import { findGuestUserData } from '../repositories/guestUserRepository';
+import { getClerkClient } from '../utils/clerkClient';
+import { sendAppointmentAcceptedEmail } from './emailService';
 
 const validateAppointmentBooking = object({
     timezone: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -45,8 +27,6 @@ const validateAppointmentBooking = object({
     email: string(),
     phoneNumber: string(),
 });
-
-
 
 const validateGuestUserData = object({
     name: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -64,59 +44,12 @@ export async function createAppointmentService(
     serviceId: string,
     data: CreateAppointmentInputDataType,
 ) {
-=======
-import {
-    createAppoinmentRepository,
-    findBookingDetails,
-    updateBookingStatusRepo,
-} from '@/backend/repositories/appointmentRepository';
-import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
-import { User, currentUser } from '@clerk/nextjs/server';
-import { nanoid } from 'nanoid';
-import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
-import { GuestUserDTO } from '../interfaces/guestUserDTO';
-
-=======
-import {
-    createAppoinmentRepository,
-    findBookingDetails,
-    updateBookingStatusRepo,
-} from '@/backend/repositories/appointmentRepository';
-import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
-import { User, currentUser } from '@clerk/nextjs/server';
-import { nanoid } from 'nanoid';
-import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
-import { GuestUserDTO } from '../interfaces/guestUserDTO';
-
->>>>>>> Stashed changes
-=======
-import {
-    createAppoinmentRepository,
-    findBookingDetails,
-    updateBookingStatusRepo,
-} from '@/backend/repositories/appointmentRepository';
-import { formatDate, formatTime } from '@/libs/utils/datetime-helpers';
-import { User, currentUser } from '@clerk/nextjs/server';
-import { nanoid } from 'nanoid';
-import { AppointmentDTO } from '../interfaces/appointmentDTO';
-import { BookingDetailsDTO } from '../interfaces/bookingServiceDTO';
-import { GuestUserDTO } from '../interfaces/guestUserDTO';
-
-import { createGuestUserRepository } from '../repositories/guestUserRepository';
-import { getClerkClient } from '../utils/clerkClient';
-import { AppointmentStatus } from '../utils/enum';
-export async function createAppointmentService(data: AppointmentDTO) {
-
     try {
         // Step 1: Validate input data
         const validatedData = await validateAppointmentBooking.validate(data);
         const { name, email, phoneNumber, ...appointmentData } = validatedData;
 
         // Step 2: Check if user is logged in.
-        const { name, email, phoneNumber, ...appointmentData } = data;
-        // Step 1: Check if user is logged in.
         let user: User | null | undefined = await currentUser();
         const client = getClerkClient();
 
@@ -186,31 +119,12 @@ export async function createAppointmentService(data: AppointmentDTO) {
     }
 }
 
-<<<<<<< Updated upstream
-
 export async function getAppointmentsService(organizationId: string | null = '') {
-export async function getAppointmentService() {
     try {
         // Step 1: Check if user is logged in.
         const user = await currentUser();
-        if (user?.id) {
-            const bookingService = await findBookingServiceRepoByUser(user.id);
-            if (bookingService) {
-                const getAppointment = await findAllAppointmentRepositoryByServiceId({
-                    serviceId: bookingService.id,
-                });
-                const formattedAppointments = getAppointment.map((data, inx) => {
-                    return {
-                        id: data.id,
-                        startTime: formatTime(data.time.toISOString()),
-                        endTime: addDuration(data.time.toISOString(), data.duration.toISOString()),
-                    };
-                });
-                return { formattedAppointments, title: 'Appointment' };
-            }
-            return { getAppointment: [] };
-        } else {
-            throw new Error('User not found or missing ID');
+        if (!user?.id) {
+            throw new Error(ErrorMessages.UNAUTHORIZED);
         }
 
         // Step 2: Get user bookin service data for service id
@@ -238,15 +152,11 @@ export async function getAppointmentService() {
     }
 }
 
-
 export async function updateAppointmentStatusService(
     bookingId: string,
     accepted: boolean,
     organizationId = '',
-) 
-
-export async function updateAppointmentStatusService(id: string, accepted: boolean) {
-
+) {
     try {
         // Step 1: Check if user is logged in.
         const user = await currentUser();
@@ -276,72 +186,26 @@ export async function updateAppointmentStatusService(id: string, accepted: boole
         const updatedBookingDetails = await updateBookingStatusRepo(bookingId, acceptStatus);
 
         // Step 6: ToDo: Send email notification.
+        let customerName: string | undefined, customerEmail: string | undefined;
+        if (bookingDetails.guestUserId) {
+            const guestData = await findGuestUserData(bookingDetails.guestUserId);
+            customerName = guestData?.name;
+            customerEmail = guestData?.email;
+        } else if (bookingDetails.customerId) {
+            const client = getClerkClient();
+            const userData = await client.users.getUser(bookingDetails.customerId);
+            customerName = userData.fullName ?? '';
+            const customerEmailObj = userData.emailAddresses.find((email) => email);
+            customerEmail = customerEmailObj?.emailAddress;
+        }
 
+        if (customerEmail && customerName) {
+            await sendAppointmentAcceptedEmail(customerEmail, customerName);
+        }
         // Step 7: Return formatted booking detials.
         return { bookingDetails: updatedBookingDetails };
     } catch (error) {
         console.error('updateAppointmentStatusService', error);
-    }
-=======
->>>>>>> Stashed changes
-export async function updateAppointmentStatusService(id: string, accepted: boolean) {
-    try {
-        const bookingDetails = await findBookingDetails(id);
-        if (!bookingDetails) {
-            throw new Error('Invalid update.');
-        }
-
-        const updatedBookingDetails = await updateBookingStatusRepo(
-            id,
-            accepted ? AppointmentStatus.ACCEPTED : AppointmentStatus.REJECT,
-        );
-<<<<<<< Updated upstream
-
-
-        return { bookingDetails: updatedBookingDetails };
-    } catch (error) {
-        console.error('Error updating booking status:', error);
-
-=======
->>>>>>> Stashed changes
-        return { bookingDetails: updatedBookingDetails };
-
-        // If accepted, send an email using SendGrid template
-        // if (accepted) {
-        //     const { customerEmail, customerName } = bookingDetails;
-        //     if (!customerEmail || !customerName) {
-        //         throw new Error('Missing customer email or name.');
-        //     }
-
-        //     const response = await fetch('/api/acceptmail', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             to: customerEmail,
-        //             from: 'naveen@emoment.in', // Replace with your verified sender
-        //             templateId: ' d-222dd33144744f1e9994f425f0a276e5', // Replace with your SendGrid template ID
-        //             dynamicTemplateData: {
-        //                 subject: 'Appointment Accepted',
-        //                 customerName,
-        //             },
-        //         }),
-        //     });
-
-        //     const data = await response.json();
-        //     console.log('Response from email API:', data);
-
-        //     if (!response.ok) {
-        //         throw new Error('Failed to send email');
-        //     }
-        // }
-    } catch (error) {
-        console.error('Error updating booking status:', error);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (error instanceof Error) {
             throw new Error(error.message);
         }
