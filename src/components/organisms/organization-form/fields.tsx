@@ -16,8 +16,8 @@ const OrgFields = ({
     return (
         <Fragment>
             <FlexItem>
-                <Subtitle>Tell us about </Subtitle>
-                <Header1>Your Organization </Header1>
+                <Subtitle>{'Tell us about '}</Subtitle>
+                <Header1>{'Your Organization '}</Header1>
             </FlexItem>
             {fields.map((field, _inx: number) => {
                 const { type, placeholder, label } = field;

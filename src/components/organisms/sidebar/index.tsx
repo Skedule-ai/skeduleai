@@ -128,6 +128,13 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                                 </Text>
                             </a>
                         </li>
+                        <li className='flex items-center px-4 py-2 hover:bg-gray-100'>
+                            <a href='/' className='flex w-full items-center text-black'>
+                                <Text weight='medium' size='sm'>
+                                    {'Booking History'}
+                                </Text>
+                            </a>
+                        </li>
                     </ul>
                     <Flex className='shrink-0 items-center justify-center'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>

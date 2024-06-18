@@ -84,7 +84,7 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
                                         }
                                     }}
                                 >
-                                    {detailsType === DetailsType.organizationDetails
+                                    {detailsType === DetailsType.individualDetails
                                         ? 'Continue'
                                         : 'Submit'}
                                 </Button>
