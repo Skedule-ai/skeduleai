@@ -26,6 +26,7 @@ interface GuestFormProps {
     };
     serviceId: string;
     onClose: () => void;
+    serviceProviderName: string;
 }
 
 const GuestForm: React.FC<GuestFormProps> = ({
@@ -33,6 +34,7 @@ const GuestForm: React.FC<GuestFormProps> = ({
     formData,
     serviceId,
     onClose,
+    // serviceProviderName,
 }) => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -62,12 +64,10 @@ const GuestForm: React.FC<GuestFormProps> = ({
             });
 
             if (response.ok) {
-                console.log(payload);
                 setLoading(false);
                 toast.success('Appointment scheduled successfully');
-                <BookingConfirmpage
-                // data={payload}
-                />;
+
+                <BookingConfirmpage />;
                 router.push(`/booking/${payload.serviceId}/booking-confirm`);
                 onClose();
             } else {

@@ -1,37 +1,51 @@
 'use client';
-// import React from 'react';
+
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
-import React, { useEffect } from 'react';
-// import Date from '@/components/atoms/date';
-import SideBar from '@/components/organisms/sidebar';
+import React, { useEffect, useState } from 'react';
 import { Flex } from '@/components/atoms/flex';
-import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
-import Container from '@/components/atoms/container'; // Assuming you have a Container component
+import Container from '@/components/atoms/container';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
-import Button from '@/components/atoms/button';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 
-const Home = () => {
-    // const { data, error, isLoading } = useFetchUserConfigurationQuery();
-    // const router = useRouter();
+const DashboardPage = () => {
+    const [bookingUrl, setBookingUrl] = useState('');
+    const { getToken } = useAuth();
 
-    // useEffect(() => {
-    //     if (!isLoading && data?.userConfiguration) {
-    //         router.push('/dashboard');
-    //     }
-    // }, [data, isLoading, router]);
+    useEffect(() => {
+        const fetchBookingData = async () => {
+            const token = await getToken();
+            try {
+                const response = await fetch(
+                    'http://localhost:3000/api/booking_service?organizationId=',
+                    {
+                        method: 'GET',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
+                const data = await response.json();
+                if (data.bookingService && data.bookingService.bookingUrl) {
+                    setBookingUrl(data.bookingService.bookingUrl);
+                }
+            } catch (error) {
+                console.error('Error fetching booking data:', error);
+            }
+        };
 
-    // if (isLoading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error.message}</div>;
+        fetchBookingData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
+    const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
     return (
         <>
             <Flex className='flex-col md:flex-row'>
-                <SideBar />
+                {/* <SideBar /> */}
                 <Container className='flex-1 p-4'>
                     <Flex className='flex-col md:flex-row md:items-center'>
                         <Grid columns={2} rows={1} gap={2}>
@@ -97,7 +111,8 @@ const Home = () => {
                                     size='lg'
                                     title='Add Organization Staff'
                                     subtitle='Service provider page'
-                                    link='www.skedule.io/linkname'
+                                    link={shortUrl}
+                                    fullLink={bookingUrl}
                                     variant='default'
                                 >
                                     <></>
@@ -111,4 +126,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default DashboardPage;

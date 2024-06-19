@@ -34,8 +34,8 @@ export const getFormFields = () => {
                 type: 'time',
             },
             {
-                label: 'Number of slots',
-                name: 'numberOfSlots',
+                label: 'Meeting Duration',
+                name: 'duration',
                 placeholder: 'Select',
                 required: true,
                 type: 'number',
