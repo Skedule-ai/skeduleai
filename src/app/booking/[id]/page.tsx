@@ -127,9 +127,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
     useEffect(() => {
         const fetchServiceProviderDetails = async () => {
             try {
-                const response = await fetch(
-                    `http://localhost:3000/api/customer/appointment/${id}`,
-                );
+                const response = await fetch(`/api/booking_service/appointment/${id}`);
                 const data = await response.json();
                 setServiceProvider(data.bookingService.serviceProvider);
                 setAvailableTimeSlots(data.bookingService.timeSlots);

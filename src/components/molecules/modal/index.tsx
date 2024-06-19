@@ -10,7 +10,7 @@ type ModalProps = PropsWithChildren & {
     onClose?: (value: boolean) => void;
 };
 
-const Modal: React.FC<ModalProps> = ({ children, show = true, onClose = () => {} }) => {
+const Modal: React.FC<ModalProps> = ({ children, show, onClose = () => {} }) => {
     return (
         <Transition show={show}>
             <Dialog className='relative z-10' onClose={() => onClose(false)}>
