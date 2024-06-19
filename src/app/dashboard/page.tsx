@@ -2,18 +2,18 @@
 // import React from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
-import React, { useEffect } from 'react';
+import React from 'react'; // useEffect
 // import Date from '@/components/atoms/date';
 import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
-import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
+// import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
 import Container from '@/components/atoms/container'; // Assuming you have a Container component
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
-import Button from '@/components/atoms/button';
-import { useRouter } from 'next/navigation';
+// import Button from '@/components/atoms/button';
+// import { useRouter } from 'next/navigation';
 
 const Home = () => {
     // const { data, error, isLoading } = useFetchUserConfigurationQuery();
