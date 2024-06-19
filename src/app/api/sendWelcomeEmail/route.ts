@@ -1,4 +1,3 @@
-// pages/api/sendWelcomeEmail.js
 import sgMail from '@sendgrid/mail';
 import { NextResponse } from 'next/server';
 
@@ -6,14 +5,13 @@ export async function POST(req: Request) {
     try {
         const reqData = await req.json();
         const { type, object, data } = reqData;
-
-        // Ensure this is a 'user.created' event
         if (object !== 'event' && type !== 'user.created') {
             return NextResponse.json({ error: 'Invalid event type' }, { status: 400 });
         }
 
         // Ensure SENDGRID_API_KEY is defined and of type string
         const apiKey = process.env.SENDGRID_API_KEY ?? '';
+        const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
         sgMail.setApiKey(apiKey);
 
         const emailDataList: sgMail.MailDataRequired[] = [];
@@ -25,18 +23,13 @@ export async function POST(req: Request) {
 
             emailDataList.push({
                 to: email,
-                from: 'naveen@emoment.in', // Use your verified SendGrid sender email
-                templateId: 'd-a5b4257cbfc6479eb07d50c16de886bb', // Your dynamic template ID
+                from: senderEmail,
+                templateId: 'd-a5b4257cbfc6479eb07d50c16de886bb',
                 dynamic_template_data: {
                     name: `${firstName} ${lastName}`,
                 },
             });
         });
-
-        // if (!email || !firstName || !lastName) {
-        //     console.error('Missing required fields');
-        //     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        // }
 
         const ack = await sgMail.send(emailDataList);
         return NextResponse.json(

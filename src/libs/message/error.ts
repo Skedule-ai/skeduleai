@@ -7,4 +7,5 @@ export const ErrorMessages = {
     REQUIRED_INPUT: 'Missing required input.',
     INVALID_BOOKING_URL: 'Invalid booking url',
     MISSING_AVAILABILITY_CONFIGURATION: 'Availability configuration not found.',
+    FAILED_TO_SEND_EMAIL: 'Failed to send appointment accepted email',
 };
