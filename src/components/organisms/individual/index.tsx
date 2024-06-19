@@ -171,7 +171,7 @@ import AvailabilityFields from '../availability-fields';
 import { availabilityDetailsSchema } from '../validations/organization-form-validation';
 import individualSchema from './individual-form-validation';
 // import { DaysEnum } from '@/libs/utils/enums';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 
 type OrganizationFormType = {
@@ -180,7 +180,6 @@ type OrganizationFormType = {
 };
 
 const IndividualForm: React.FC<OrganizationFormType> = () => {
-    const router = useRouter();
     const { getToken } = useAuth();
     const [detailsType, setDetailsType] = React.useState<DetailsType>(
         DetailsType.individualDetails,
@@ -223,7 +222,6 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
             const result = await response.json();
             console.log('Response data:', result);
             actions.setStatus({ submitSuccess: 'Form submitted successfully!' });
-            router.push('/dashboard');
         } catch (error) {
             console.error('Error:', error);
             actions.setStatus({ submitError: 'Submission failed. Please try again.' });
