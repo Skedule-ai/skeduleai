@@ -14,15 +14,17 @@ const ModalLabels = [
     { name: 'Meeting Time', key: 'selectTime' },
     { name: 'Time Zone', key: 'timeZone' },
 ];
+
+type FormDataType = {
+    meetingDuration: string;
+    selectDate: string;
+    selectTime: string;
+    timeZone: string;
+};
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
-    formData: {
-        meetingDuration: string;
-        selectDate: string;
-        selectTime: string;
-        timeZone: string;
-    };
+    formData: FormDataType;
     serviceId: string;
     serviceProviderName: string;
     availableTimeSlots: any[];
@@ -67,7 +69,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                                 color='disabled'
                                 disabled
                             >
-                                {formData[label.key]}
+                                {formData[label.key as keyof FormDataType]}
                             </Button>
                         </Flex>
                     ))}

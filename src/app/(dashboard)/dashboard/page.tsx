@@ -38,6 +38,7 @@ const DashboardPage = () => {
         };
 
         fetchBookingData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';

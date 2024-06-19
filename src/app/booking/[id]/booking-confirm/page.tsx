@@ -7,7 +7,7 @@ import { BodyHighlight, Header2, Header3, IconTitle } from '@/components/atoms/t
 import { Plus } from '@strapi/icons';
 import React from 'react';
 
-const BookingConfirmpage = ({ serviceProviderName }) => {
+const BookingConfirmpage = () => {
     return (
         <main>
             <Container center>
