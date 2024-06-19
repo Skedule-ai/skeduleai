@@ -6,7 +6,13 @@ const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
 const tempId = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
 const templId = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
 
-export async function sendWelcomeEmails(emailDataList) {
+export async function sendWelcomeEmails(
+    emailDataList: {
+        email: string;
+        firstName: string;
+        lastName: string;
+    }[],
+) {
     sgMail.setApiKey(apiKey);
     const sgMailDataList = emailDataList.map(({ email, firstName, lastName }) => ({
         to: email,
@@ -21,7 +27,9 @@ export async function sendWelcomeEmails(emailDataList) {
         const ack = await sgMail.send(sgMailDataList);
         return ack;
     } catch (error) {
-        throw new Error(`Error sending welcome email: ${error.message}`);
+        if (error instanceof Error) {
+            throw new Error(`Error sending welcome email: ${error.message}`);
+        }
     }
 }
 
