@@ -15,7 +15,7 @@ export const getFormFields = () => {
                 name: 'timezone',
                 placeholder: 'Select your time zone',
                 required: true,
-                type: 'text',
+                type: 'timezone',
             },
             {
                 label: 'Currency',

@@ -1,32 +1,25 @@
 'use client';
-// import React from 'react';
+
+import React, { useState } from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
-import React, { useEffect } from 'react';
-// import Date from '@/components/atoms/date';
 import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
-import { useFetchUserConfigurationQuery } from '@/libs/api/user-configuration';
-import Container from '@/components/atoms/container'; // Assuming you have a Container component
+import Container from '@/components/atoms/container';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
-import Button from '@/components/atoms/button';
-import { useRouter } from 'next/navigation';
+import Notification from '@/components/atoms/notification';
+import { Information } from '@strapi/icons';
 
 const Home = () => {
-    // const { data, error, isLoading } = useFetchUserConfigurationQuery();
-    // const router = useRouter();
+    const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
 
-    // useEffect(() => {
-    //     if (!isLoading && data?.userConfiguration) {
-    //         router.push('/dashboard');
-    //     }
-    // }, [data, isLoading, router]);
-
-    // if (isLoading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error.message}</div>;
+    const showNotification = (message: string) => {
+        setNotificationMessage(message);
+        setTimeout(() => setNotificationMessage(null), 3000); // Display for 3 seconds
+    };
 
     return (
         <>
@@ -38,6 +31,16 @@ const Home = () => {
                             <Date />
                             <TimeZone />
                         </Grid>
+                        {notificationMessage && (
+                            <Notification
+                                className='ml-8 items-center justify-center'
+                                icon={<Information />}
+                                type='info'
+                                width='small'
+                            >
+                                {notificationMessage}
+                            </Notification>
+                        )}
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container className='overflow-x-auto'>
@@ -99,6 +102,7 @@ const Home = () => {
                                     subtitle='Service provider page'
                                     link='www.skedule.io/linkname'
                                     variant='default'
+                                    onCopySuccess={showNotification} // Pass the function
                                 >
                                     <></>
                                 </AppointmentLinkCard>

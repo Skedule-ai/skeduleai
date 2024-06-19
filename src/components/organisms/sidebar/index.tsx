@@ -85,8 +85,8 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             <Dropdown
                                 color='primary'
                                 items={[
-                                    { label: 'Service Provider', value: 'account' },
-                                    { label: 'Consumer', value: 'account' },
+                                    { label: 'Service Provider', value: 'sp' },
+                                    { label: 'Consumer', value: 'customer' },
                                 ]}
                                 onChange={() => {}}
                                 placeholder='Service Provider'
@@ -96,11 +96,11 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                         <li className='mt-8 flex items-center px-4 py-2 hover:bg-gray-100'>
                             <a href='/appointments' className='flex w-full items-center text-black'>
                                 <Text weight='medium' size='sm'>
-                                    {'Booking Page'}
+                                    {'Appointment'}
                                 </Text>
                             </a>
                         </li>
-                        <li className='flex items-center px-4 py-2 hover:bg-gray-100'>
+                        {/* <li className='flex items-center px-4 py-2 hover:bg-gray-100'>
                             <a href='/' className='flex w-full items-center text-black'>
                                 <Text weight='medium' size='sm'>
                                     {'Staff'}
@@ -134,7 +134,7 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                                     {'Booking History'}
                                 </Text>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                     <Flex className='shrink-0 items-center justify-center'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>

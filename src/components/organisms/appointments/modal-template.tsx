@@ -5,6 +5,7 @@ import OrganizationForm from '../organization-form';
 // import IndividualForm from '../individual-form'; // Assuming you have this component
 import Switch from '@/components/atoms/switch';
 import IndividualForm from '@/components/organisms/individual';
+import useOnBoardingModal from '@/libs/hooks/useOnBoardingModal';
 
 const ApponitmentsModalTemplate = () => {
     const [isModalOpen, setIsModalOpen] = useState(true);

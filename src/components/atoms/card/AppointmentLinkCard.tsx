@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
-// import { Copy } from '@strapi/icons';
 import { Subtitle } from '../typography';
 import Button from '../button';
 
@@ -11,25 +10,23 @@ type AppointmentLinkProps = {
     isFree: boolean;
     link: string;
     subtitle: string;
+    onCopySuccess: (message: string) => void; // Add this prop
 } & CardProps;
 
 const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     title,
-    // isFree,
     link,
     subtitle,
+    onCopySuccess,
     ...props
 }) => {
-    const [copySuccess, setCopySuccess] = useState('');
-
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text).then(
             () => {
-                setCopySuccess('Copied!');
-                setTimeout(() => setCopySuccess(''), 2000);
+                onCopySuccess('Link copied successfully!');
             },
             (err) => {
-                setCopySuccess('Failed to copy!');
+                onCopySuccess('Failed to copy!');
                 console.error('Failed to copy text: ', err);
             },
         );
@@ -67,8 +64,6 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                             stroke-linejoin='round'
                         />
                     </svg>
-
-                    {/* <Copy className='size-4' /> */}
                 </Button>
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     <h2 className='mt-4 text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>
@@ -83,7 +78,6 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                     <Subtitle>{subtitle}</Subtitle>
                 </Flex>
                 <span className='text-blue-500'>{link}</span>
-                {copySuccess && <p className='text-xs text-green-500'>{copySuccess}</p>}
             </Flex>
         </Card>
     );

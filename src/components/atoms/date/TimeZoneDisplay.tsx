@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@/components/atoms/button';
 import Container from '../container';
 import Text from '../text';
+import { ChevronDown, Cross } from '@strapi/icons';
 
 type TimeZoneProps = {
     timeZone: string;
@@ -40,7 +41,7 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                 onClick={toggleDropdown}
             >
                 <Text>{timeZone}</Text>
-                <Text className='ml-2'>{showDropdown ? '✖️' : '▼'}</Text>
+                <Text className='ml-2'>{showDropdown ? <Cross /> : <ChevronDown />}</Text>
             </Button>
             {showDropdown && (
                 <div className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'>
