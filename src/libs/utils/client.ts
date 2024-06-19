@@ -25,7 +25,7 @@ export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
         data,
         error,
         isValidating: isLoading,
-    } = useSWR([url, queryHelpers], ([url, queryHelpers]) => get(url, queryHelpers));
+    } = useSWR(url, get, { onSuccess: queryHelpers?.onCompleted, onError: queryHelpers?.onError });
     return {
         data,
         error,
