@@ -110,6 +110,7 @@ export async function findBookingService(data: FindBookingServiceDataType) {
     try {
         // Step 1: Validate if user is authenticated
         const user = await currentUser();
+
         if (!user?.id) {
             throw new Error('Unauthorized');
         }
