@@ -21,6 +21,10 @@ import {
 import { ErrorMessages } from '@/libs/message/error';
 import { findGuestUserData } from '../repositories/guestUserRepository';
 import { getClerkClient } from '../utils/clerkClient';
+<<<<<<< HEAD
+=======
+import { sendAppointmentAcceptedEmailService } from './emailService';
+>>>>>>> 7de29f1736de9de7118b11830302f7d9f7de0c1f
 
 const validateAppointmentBooking = object({
     timezone: string().required(ErrorMessages.REQUIRED_INPUT),

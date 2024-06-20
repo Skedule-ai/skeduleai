@@ -1,10 +1,21 @@
 import { sendWelcomeEmails } from '@/backend/services/emailService';
 import { NextResponse } from 'next/server';
 
-export async function handleWelcomeEmail(req: Request) {
+type SendGridHookRequestData = {
+    type: string;
+    object: string;
+    data: {
+        email_addresses: {
+            email_address: string;
+            first_name: string;
+            last_name: string;
+        }[];
+    };
+};
+
+export async function handleWelcomeEmail(sendGridData: SendGridHookRequestData) {
     try {
-        const reqData = await req.json();
-        const { type, object, data } = reqData;
+        const { type, object, data } = sendGridData;
 
         if (object !== 'event' && type !== 'user.created') {
             return NextResponse.json({ error: 'Invalid event type' }, { status: 400 });
