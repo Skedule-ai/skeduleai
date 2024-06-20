@@ -47,12 +47,6 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 className='border-b-2 border-gray-300 p-2'
             >
                 <Header3>Booking Summary</Header3>
-                <Flex
-                    className='cursor-pointer rounded-lg border-2 border-gray-200 p-2'
-                    onClick={onClose}
-                >
-                    <Cross className='size-3' />
-                </Flex>
             </Flex>
 
             <Flex dir='column' gap={2} className='p-2'>

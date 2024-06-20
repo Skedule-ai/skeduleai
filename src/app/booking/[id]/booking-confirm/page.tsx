@@ -1,20 +1,40 @@
+'use client';
+
 import InfoCard from '@/components/atoms/card/InfoCard';
 import Container from '@/components/atoms/container';
 import { Flex } from '@/components/atoms/flex';
+import { format } from 'date-fns';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 import PageHeader from '@/components/atoms/pageheader';
-import { BodyHighlight, Header2, Header3, IconTitle } from '@/components/atoms/typography';
+import {
+    BodyHighlight,
+    Header2,
+    Header3,
+    IconTitle,
+    Paragraph,
+} from '@/components/atoms/typography';
 import { Plus } from '@strapi/icons';
-import React from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 const BookingConfirmpage = () => {
+    const { isSignedIn } = useUser();
+    const searchParams = useSearchParams();
+    const image = searchParams.get('image');
+    const name = searchParams.get('name');
+    const formData = JSON.parse(searchParams.get('formData'));
+
+    const formattedDate = formData.selectDate
+        ? format(new Date(formData.selectDate), 'dd-MM-yyyy')
+        : '';
+
     return (
         <main>
             <Container center>
                 <PageHeader
                     logoSrc={<ScheduleAILogo />}
                     OrganizationName='Organization Name'
-                    isUserSignedIn={true}
+                    isUserSignedIn={isSignedIn}
                 />
                 <Flex
                     className='mt-20'
@@ -33,7 +53,7 @@ const BookingConfirmpage = () => {
                     >
                         <Flex
                             dir='column'
-                            gap={2}
+                            gap={5}
                             className='w-1/2'
                             justifyContent='center'
                             alignItems='center'
@@ -41,15 +61,29 @@ const BookingConfirmpage = () => {
                             <Flex
                                 className='text-black'
                                 dir='row'
-                                gap={5}
+                                gap={6}
                                 justifyContent='between'
                                 alignItems='center'
                             >
-                                <Header3>Appointment Date</Header3> |
-                                <Header3>Appointment Time</Header3>
+                                <Flex gap={1} dir='column' alignItems='center'>
+                                    <Paragraph>(Appointment Date)</Paragraph>
+                                    <Header3>{formattedDate}</Header3>
+                                </Flex>
+                                |
+                                <Flex gap={1} dir='column' alignItems='center'>
+                                    <Paragraph>(Appointment Time)</Paragraph>
+                                    <Header3>{formData.selectTime}</Header3>
+                                </Flex>
                             </Flex>
-                            <BodyHighlight>Appointment Duration</BodyHighlight>
-                            <BodyHighlight>Asia/Kolkata-IST(+05:30)</BodyHighlight>
+                            <Flex gap={1} dir='column' alignItems='center'>
+                                <Paragraph>(Meeting Duration)</Paragraph>
+                                <BodyHighlight>{formData.meetingDuration} minutes</BodyHighlight>
+                            </Flex>
+
+                            <Flex gap={1} dir='column' alignItems='center'>
+                                <Paragraph>(TimeZone)</Paragraph>
+                                <BodyHighlight>{formData.timeZone}</BodyHighlight>
+                            </Flex>
 
                             <Flex
                                 className='mt-10 underline decoration-blue-600 underline-offset-4'
@@ -71,9 +105,9 @@ const BookingConfirmpage = () => {
                                 batchColor='green'
                                 batchState='default'
                                 buttonText='designation'
-                                imageUrl={'default-image.jpg'}
+                                imageUrl={image || ''}
                                 subtitle='Service Provider'
-                                title={'Service Provider Name'}
+                                title={name || 'Service Provider Name'}
                                 variant='default'
                             >
                                 <p></p>

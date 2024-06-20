@@ -21,14 +21,24 @@ import TimezoneSelect from 'react-timezone-select';
 import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
 import { Loader } from '@strapi/icons';
+import { useAuth, useUser } from '@clerk/nextjs';
+import BookingConfirmpage from './booking-confirm/page';
 
 const animatedComponents = makeAnimated();
 
-const CustomDatePicker = ({ field, form, ...props }: any) => {
+const CustomDatePicker = ({ field, form, availableTimeSlots, setAvailableTimeSlots, ...props }) => {
+    const handleDateChange = (val) => {
+        form.setFieldValue(field.name, val);
+        const selectedDay = val.getDay() + 1; // Get the day of the week (1-7)
+        const timeSlotsForDay =
+            availableTimeSlots.find((slot) => slot.day === selectedDay)?.slots || [];
+        setAvailableTimeSlots(timeSlotsForDay);
+    };
+
     return (
         <DatePicker
             selected={field.value}
-            onChange={(val) => form.setFieldValue(field.name, val)}
+            onChange={handleDateChange}
             minDate={new Date()}
             {...props}
             className='w-full rounded-md border p-3'
@@ -36,9 +46,9 @@ const CustomDatePicker = ({ field, form, ...props }: any) => {
     );
 };
 
-const CustomTimezoneSelect = ({ field, form, ...props }: any) => {
+const CustomTimezoneSelect = ({ field, form, ...props }) => {
     const customStyles = {
-        control: (provided: object) => ({
+        control: (provided) => ({
             ...provided,
             width: '100%',
             padding: '5px',
@@ -55,20 +65,20 @@ const CustomTimezoneSelect = ({ field, form, ...props }: any) => {
     );
 };
 
-const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) => {
-    const options = availableTimeSlots.map((slot: any) => ({
+const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }) => {
+    const options = availableTimeSlots.map((slot) => ({
         value: slot.startTime,
         label: slot.startTime,
     }));
 
     const customStyles = {
-        menu: (provided: object) => ({
+        menu: (provided) => ({
             ...provided,
             display: 'flex',
             justifyContent: 'space-between',
             width: '100%',
         }),
-        option: (provided: object, state: { isSelected: boolean }) => ({
+        option: (provided, state) => ({
             ...provided,
             padding: '10px',
             border: '1px solid gray',
@@ -81,12 +91,8 @@ const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) =>
     return (
         <Select
             options={options}
-            value={
-                options.find((option: { value: string }) => option.value === field.value) || null
-            }
-            onChange={(option: { value?: string }) =>
-                form.setFieldValue(field.name, option ? option.value : '')
-            }
+            value={options.find((option) => option.value === field.value) || null}
+            onChange={(option) => form.setFieldValue(field.name, option ? option.value : '')}
             components={animatedComponents}
             isClearable
             className='w-full rounded-md border p-3'
@@ -96,7 +102,9 @@ const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }: any) =>
     );
 };
 
-const BookAppointmentsPage: React.FC = ({ params }: any) => {
+const BookAppointmentsPage = ({ params }) => {
+    const { getToken } = useAuth();
+    const { isLoaded, isSignedIn } = useUser();
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenMobile, setIsOpenMobile] = useState(false);
@@ -107,7 +115,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         selectTime: '',
         timeZone: '',
     });
-    const [serviceProvider, setServiceProvider] = useState<any>(null);
+    const [serviceProvider, setServiceProvider] = useState(null);
+    const [allTimeSlots, setAllTimeSlots] = useState([]);
     const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
     const id = params.id;
     const router = useRouter();
@@ -130,7 +139,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                 const response = await fetch(`/api/booking_service/appointment/${id}`);
                 const data = await response.json();
                 setServiceProvider(data.bookingService.serviceProvider);
-                setAvailableTimeSlots(data.bookingService.timeSlots);
+                setAllTimeSlots(data.bookingService.timeSlots);
                 toast.success('Successfully fetched the Service Provider Details');
             } catch (error) {
                 console.error('Error fetching service provider details:', error);
@@ -146,7 +155,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         }
     }, [id, router]);
 
-    if (loading) {
+    if (loading || !isLoaded) {
         return (
             <div className='flex items-center justify-center'>
                 <div className='animate-spin'>
@@ -156,26 +165,79 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
         );
     }
 
-    const handleSubmit = (values: typeof formData) => {
-        const formatDate = (date: Date) => {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        };
+    const handleSubmit = async (values) => {
+        console.log('Selected Date:', values.selectDate);
+        console.log('Selected Time:', values.selectTime);
+        console.log('Selected Timezone:', values.timeZone);
 
         const formattedValues = {
             ...values,
-            selectDate:
-                typeof values.selectDate === 'object'
-                    ? formatDate(values.selectDate)
-                    : values.selectDate,
+            selectDate: values.selectDate,
+            selectTime: values.selectTime,
+            timeZone: values.timeZone,
         };
+
         setFormData(formattedValues);
-        if (isMediumOrLarger) {
-            setIsOpen(true);
+
+        // const addMinutesToTime = (time, minutes) => {
+        //     const [hours, mins] = time.split(':').map(Number);
+        //     const date = new Date();
+        //     date.setHours(hours, mins, 0, 0);
+        //     date.setMinutes(date.getMinutes() + minutes);
+        //     const newHours = String(date.getHours()).padStart(2, '0');
+        //     const newMinutes = String(date.getMinutes()).padStart(2, '0');
+        //     return `${newHours}:${newMinutes}`;
+        // };
+
+        // const endTime = addMinutesToTime(formattedValues.selectTime, 30);
+
+        if (isSignedIn) {
+            const token = await getToken();
+            try {
+                const payload = {
+                    timezone: formattedValues.timeZone,
+                    startTime: '2024-06-25T08:00:00Z',
+                    endTime: '2024-06-25T09:00:00Z',
+                };
+
+                console.log('Payload:', JSON.stringify(payload));
+
+                const response = await fetch(
+                    `http://localhost:3000/api/booking_service/appointment/${id}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(payload),
+                    },
+                );
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                toast.success('Appointment booked successfully!');
+                const queryParams = new URLSearchParams({
+                    data: JSON.stringify(responseData),
+                    image: serviceProvider?.image,
+                    name: serviceProvider?.name,
+                    formData: JSON.stringify(formattedValues)
+                }).toString();
+
+                router.push(`/booking/${id}/booking-confirm?${queryParams}`);
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                toast.error('Failed to book the appointment.');
+            }
         } else {
-            setIsOpenMobile(true);
+            if (isMediumOrLarger) {
+                setIsOpen(true);
+            } else {
+                setIsOpenMobile(true);
+            }
         }
     };
 
@@ -185,7 +247,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
             <PageHeader
                 logoSrc={<ScheduleAILogo />}
                 OrganizationName='Organization name'
-                isUserSignedIn={true}
+                isUserSignedIn={isSignedIn}
             />
 
             {!isOpenMobile && (
@@ -221,6 +283,8 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                                         <Field
                                             name='selectDate'
                                             component={CustomDatePicker}
+                                            availableTimeSlots={allTimeSlots}
+                                            setAvailableTimeSlots={setAvailableTimeSlots}
                                             placeholderText='Select date'
                                         />
                                         {errors.selectDate && touched.selectDate ? (
@@ -229,12 +293,16 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                                             </ErrorTitle>
                                         ) : null}
 
-                                        <Field
-                                            name='selectTime'
-                                            component={CustomTimeSelect}
-                                            availableTimeSlots={availableTimeSlots}
-                                            placeholder='Select time'
-                                        />
+                                        {availableTimeSlots.length > 0 ? (
+                                            <Field
+                                                name='selectTime'
+                                                component={CustomTimeSelect}
+                                                availableTimeSlots={availableTimeSlots}
+                                                placeholder='Select time'
+                                            />
+                                        ) : (
+                                            <ErrorTitle>No available time slots</ErrorTitle>
+                                        )}
 
                                         {errors.selectTime && touched.selectTime ? (
                                             <ErrorTitle>{errors.selectTime}</ErrorTitle>
@@ -260,7 +328,7 @@ const BookAppointmentsPage: React.FC = ({ params }: any) => {
                                             size='lg'
                                             color='outline'
                                         >
-                                            Book Appointment
+                                            {'Book Appointment'}
                                         </Button>
                                     </Flex>
                                 </Form>

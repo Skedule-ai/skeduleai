@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
-// import { Copy } from '@strapi/icons';
 import { Subtitle } from '../typography';
 import Button from '../button';
 
@@ -16,22 +15,20 @@ type AppointmentLinkProps = {
 
 const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     title,
-    // isFree,
     link,
     subtitle,
     fullLink,
+    onCopySuccess,
     ...props
 }) => {
-    const [copySuccess, setCopySuccess] = useState('');
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text).then(
             () => {
-                setCopySuccess('Copied!');
-                setTimeout(() => setCopySuccess(''), 2000);
+                onCopySuccess('Link copied successfully!');
             },
             (err) => {
-                setCopySuccess('Failed to copy!');
+                onCopySuccess('Failed to copy!');
                 console.error('Failed to copy text: ', err);
             },
         );
@@ -70,7 +67,6 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                         />
                     </svg>
 
-                    {/* <Copy className='size-4' /> */}
                 </Button>
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     <h2 className='mt-4 text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>
@@ -85,7 +81,6 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                     <Subtitle>{subtitle}</Subtitle>
                 </Flex>
                 <span className='text-blue-500'>{link}</span>
-                {copySuccess && <p className='text-xs text-green-500'>{copySuccess}</p>}
             </Flex>
         </Card>
     );

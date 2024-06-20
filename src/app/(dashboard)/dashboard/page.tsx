@@ -9,11 +9,19 @@ import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
+import Notification from '@/components/atoms/notification';
 import { useAuth } from '@clerk/nextjs';
+import { Information } from '@strapi/icons';
 
 const DashboardPage = () => {
     const [bookingUrl, setBookingUrl] = useState('');
     const { getToken } = useAuth();
+    const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
+
+    const showNotification = (message: string) => {
+        setNotificationMessage(message);
+        setTimeout(() => setNotificationMessage(null), 3000);
+    };
 
     useEffect(() => {
         const fetchBookingData = async () => {
@@ -38,7 +46,6 @@ const DashboardPage = () => {
         };
 
         fetchBookingData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
@@ -52,6 +59,16 @@ const DashboardPage = () => {
                             <Date />
                             <TimeZone />
                         </Grid>
+                        {notificationMessage && (
+                            <Notification
+                                className='ml-8 items-center justify-center'
+                                icon={<Information />}
+                                type='info'
+                            >
+                                {notificationMessage}
+                            </Notification>
+                        )}
+
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container className='overflow-x-auto'>
@@ -112,6 +129,7 @@ const DashboardPage = () => {
                                     title='Add Organization Staff'
                                     subtitle='Service provider page'
                                     link={shortUrl}
+                                    onCopySuccess={showNotification}
                                     fullLink={bookingUrl}
                                     variant='default'
                                 >
