@@ -13,10 +13,10 @@ const LandingPageHeader = () => {
                 <ScheduleAILogo />
                 <SignedOut>
                     <Flex dir='row' gapX={4}>
-                        <SignInButton>
+                        <SignInButton forceRedirectUrl={'/appointments'}>
                             <PrimaryOutlineButton>Sign in</PrimaryOutlineButton>
                         </SignInButton>
-                        <SignUpButton>
+                        <SignUpButton signInForceRedirectUrl={'/appointments'}>
                             <PrimaryButton>Sign up</PrimaryButton>
                         </SignUpButton>
                     </Flex>

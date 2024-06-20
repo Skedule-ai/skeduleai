@@ -8,7 +8,7 @@ import IndividualForm from '@/components/organisms/individual';
 import useOnBoardingModal from '@/libs/hooks/useOnBoardingModal';
 
 const ApponitmentsModalTemplate = () => {
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const { isOpen, setIsOpen } = useOnBoardingModal();
 
     const [isOrganization, setIsOrganization] = useState(true);
 
@@ -17,7 +17,7 @@ const ApponitmentsModalTemplate = () => {
     };
 
     return (
-        <Modal show={isModalOpen} onClose={setIsModalOpen}>
+        <Modal show={isOpen} onClose={setIsOpen}>
             <Switch label1='Organization' label2='Individual' onToggle={handleToggle} />
             {isOrganization ? <OrganizationForm /> : <IndividualForm />}
         </Modal>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FieldProps } from 'formik';
 import Button from '@/components/atoms/button';
 import Container from '../container';
 import Text from '../text';
 import { ChevronDown, Cross } from '@strapi/icons';
 
-type TimeZoneProps = {
+type TimeZoneProps = FieldProps & {
     timeZone: string;
     timeZones: {
         label: string;
@@ -19,6 +20,8 @@ type TimeZoneProps = {
 };
 
 const TimeZone: React.FC<TimeZoneProps> = ({
+    field,
+    form,
     timeZone,
     timeZones,
     onTimeZoneChange,
@@ -28,9 +31,22 @@ const TimeZone: React.FC<TimeZoneProps> = ({
     onSearchQueryChange,
     className = '',
 }) => {
+    const [inputValue, setInputValue] = useState('');
+
     const filteredTimeZones = timeZones.filter((zone) =>
-        zone.label.toLowerCase().includes(searchQuery.toLowerCase()),
+        zone.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+        form.setFieldValue(field.name, e.target.value);
+    };
+
+    const handleTimeZoneSelect = (zoneValue: string) => {
+        onTimeZoneChange(zoneValue);
+        form.setFieldValue(field.name, zoneValue);
+        toggleDropdown();
+    };
 
     return (
         <Container className={`relative ${className}`}>
@@ -48,15 +64,15 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                     <input
                         type='text'
                         placeholder='Search...'
-                        value={searchQuery}
-                        onChange={(e) => onSearchQueryChange(e.target.value)}
+                        value={inputValue}
+                        onChange={handleChange}
                         className='block w-full border-b border-gray-200 px-4 py-2 text-sm text-gray-900 focus:outline-none'
                     />
                     {filteredTimeZones.map((zone) => (
                         <Text
                             key={zone.value}
-                            className='block w-full px-4 py-2 text-sm text-gray-900 hover:bg-gray-100'
-                            onClick={() => onTimeZoneChange(zone.value)}
+                            className='block w-full cursor-pointer px-4 py-2 text-sm text-gray-900 hover:bg-gray-100'
+                            onClick={() => handleTimeZoneSelect(zone.value)}
                         >
                             {zone.label}
                         </Text>

@@ -1,8 +1,8 @@
 import {
-    createAppointmentService,
-    updateAppointmentStatusService,
-    getAppointmentsService,
     CreateAppointmentInputDataType,
+    createAppointmentService,
+    getAppointmentsService,
+    updateAppointmentStatusService,
 } from '../services/appointmentService';
 
 export async function createAppointmentController(

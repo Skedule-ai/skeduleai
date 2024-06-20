@@ -41,8 +41,8 @@ export const getFormFields = () => {
                 type: 'WorkingHoursSelector',
             },
             {
-                label: 'Number of slots',
-                name: 'numberOfSlots',
+                label: 'Meeting Duration',
+                name: 'duration',
                 placeholder: 'Select',
                 required: true,
                 type: 'number',

@@ -25,9 +25,9 @@ const IndividualFields = ({
                 let Field = Input;
 
                 switch (type) {
-                    case 'timezone':
-                        Field = TimeZone;
-                        break;
+                    // case 'timezone':
+                    //     Field = TimeZone;
+                    //     break;
 
                     default:
                         Field = Input;

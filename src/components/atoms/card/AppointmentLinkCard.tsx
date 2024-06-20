@@ -11,6 +11,7 @@ type AppointmentLinkProps = {
     link: string;
     subtitle: string;
     onCopySuccess: (message: string) => void; // Add this prop
+    fullLink: string;
 } & CardProps;
 
 const AppointmentLink: React.FC<AppointmentLinkProps> = ({
@@ -18,6 +19,7 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     link,
     subtitle,
     onCopySuccess,
+    fullLink,
     ...props
 }) => {
     const copyToClipboard = (text: string) => {
@@ -37,7 +39,7 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
             <Flex dir='column' className='relative p-4'>
                 <Button
                     className='absolute right-4 top-4 p-1'
-                    onClick={() => copyToClipboard(link)}
+                    onClick={() => copyToClipboard(fullLink)}
                     size='xs'
                     color='tertiary'
                     type='button'
