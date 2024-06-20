@@ -1,9 +1,9 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
 // import SideBar from '@/components/organisms/sidebar';
+
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
@@ -22,6 +22,9 @@ const DashboardPage = () => {
         setTimeout(() => setNotificationMessage(null), 3000); // Display for 3 seconds
     };
 
+import { useAuth } from '@clerk/nextjs';
+
+const DashboardPage = () => {
     const [bookingUrl, setBookingUrl] = useState('');
     const { getToken } = useAuth();
 
@@ -72,6 +75,8 @@ const DashboardPage = () => {
                                 {notificationMessage}
                             </Notification>
                         )}
+                            <TimeZone />
+                        </Grid>
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container className='overflow-x-auto'>
