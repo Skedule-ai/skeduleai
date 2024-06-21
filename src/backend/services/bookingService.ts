@@ -149,7 +149,7 @@ export async function findBookingService(data: FindBookingServiceDataType) {
 
 export async function findBookingServiceById(bookingServiceId: string) {
     try {
-        // Step 1: Check for bookin service id input
+        // Step 1: Check for booking service id input
         if (!bookingServiceId) {
             throw new Error(ErrorMessages.REQUIRED_INPUT);
         }

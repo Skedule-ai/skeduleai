@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
+import { currentOrganization } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { object, string, number, array } from 'yup';
 import pick from 'lodash/pick';
@@ -125,19 +126,26 @@ export async function updateAvailabilityConfigurationService(
             throw new Error(ErrorMessages.UNAUTHORIZED);
         }
 
+        // Step 2: Validate if organization is authenticated
+        const organization = await currentOrganization();
+        if (!organization?.id) {
+            throw new Error(ErrorMessages.UNAUTHORIZED);
+        }
+
         // Step 2: Pick required data from JSON
         const inputData = pick(data, ['organizationName','timezone', 'startTime', 'endTime', 'duration', 'day']);
 
         // Step 3: Validate input data
-        const { day, ...updateData } = await validateUpdate.validate(inputData);
+        const { day, ...updateData } = await validateUpdate.validate(inputData);      
 
-        // Step 4: Update availability configuration for given user, organization and day
+
+        // Step 5: Update availability configuration for given user, organization and day
         const availabilityConfiguration = await updateAvailabilityConfigurationRepository(
             { userId: user?.id, organizationId, day },
             updateData,
         );
 
-        // Step 5: Return updated configuration.
+        // Step 6: Return updated configuration.
         return { availabilityConfiguration };
     } catch (err) {
         console.error('Error updating availability configuration:', err);
