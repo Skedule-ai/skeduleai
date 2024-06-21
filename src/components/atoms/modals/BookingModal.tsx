@@ -4,7 +4,6 @@ import React from 'react';
 import { Flex } from '../flex';
 import Modal from '@/components/molecules/modal';
 import { BookingModalLabels, Header2, Header3, Subtitle } from '../typography';
-import { Cross } from '@strapi/icons';
 import Button from '../button';
 import BookingModalVariants from './booking-modal-variants';
 
@@ -17,10 +16,11 @@ const ModalLabels = [
 
 type FormDataType = {
     meetingDuration: string;
-    selectDate: string;
+    selectDate: string | Date;
     selectTime: string;
     timeZone: string;
 };
+
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -28,6 +28,7 @@ interface BookingModalProps {
     serviceId: string;
     serviceProviderName: string;
     availableTimeSlots: any[];
+    image: string;
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({
@@ -37,7 +38,16 @@ const BookingModal: React.FC<BookingModalProps> = ({
     serviceId,
     availableTimeSlots,
     serviceProviderName,
+    image,
 }) => {
+    const formattedFormData = {
+        ...formData,
+        selectDate:
+            formData.selectDate instanceof Date
+                ? formData.selectDate.toLocaleDateString()
+                : formData.selectDate,
+    };
+
     return (
         <Modal show={isOpen} onClose={onClose}>
             <Flex
@@ -63,7 +73,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                                 color='disabled'
                                 disabled
                             >
-                                {formData[label.key as keyof FormDataType]}
+                                {formattedFormData[label.key as keyof FormDataType]}
                             </Button>
                         </Flex>
                     ))}
@@ -71,11 +81,12 @@ const BookingModal: React.FC<BookingModalProps> = ({
             </Flex>
 
             <BookingModalVariants
-                formData={formData}
+                formData={formattedFormData}
                 serviceId={serviceId}
                 serviceProviderName={serviceProviderName}
                 availableTimeSlots={availableTimeSlots}
                 onClose={onClose}
+                image={image}
             />
         </Modal>
     );

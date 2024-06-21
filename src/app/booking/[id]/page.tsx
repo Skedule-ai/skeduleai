@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -22,14 +22,13 @@ import makeAnimated from 'react-select/animated';
 import Select from 'react-select';
 import { Loader } from '@strapi/icons';
 import { useAuth, useUser } from '@clerk/nextjs';
-import BookingConfirmpage from './booking-confirm/page';
 
 const animatedComponents = makeAnimated();
 
 const CustomDatePicker = ({ field, form, availableTimeSlots, setAvailableTimeSlots, ...props }) => {
     const handleDateChange = (val) => {
         form.setFieldValue(field.name, val);
-        const selectedDay = val.getDay() + 1; // Get the day of the week (1-7)
+        const selectedDay = val.getDay() + 1;
         const timeSlotsForDay =
             availableTimeSlots.find((slot) => slot.day === selectedDay)?.slots || [];
         setAvailableTimeSlots(timeSlotsForDay);
@@ -118,6 +117,7 @@ const BookAppointmentsPage = ({ params }) => {
     const [serviceProvider, setServiceProvider] = useState(null);
     const [allTimeSlots, setAllTimeSlots] = useState([]);
     const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const id = params.id;
     const router = useRouter();
 
@@ -166,6 +166,7 @@ const BookAppointmentsPage = ({ params }) => {
     }
 
     const handleSubmit = async (values) => {
+        setIsSubmitting(true);
         console.log('Selected Date:', values.selectDate);
         console.log('Selected Time:', values.selectTime);
         console.log('Selected Timezone:', values.timeZone);
@@ -178,18 +179,6 @@ const BookAppointmentsPage = ({ params }) => {
         };
 
         setFormData(formattedValues);
-
-        // const addMinutesToTime = (time, minutes) => {
-        //     const [hours, mins] = time.split(':').map(Number);
-        //     const date = new Date();
-        //     date.setHours(hours, mins, 0, 0);
-        //     date.setMinutes(date.getMinutes() + minutes);
-        //     const newHours = String(date.getHours()).padStart(2, '0');
-        //     const newMinutes = String(date.getMinutes()).padStart(2, '0');
-        //     return `${newHours}:${newMinutes}`;
-        // };
-
-        // const endTime = addMinutesToTime(formattedValues.selectTime, 30);
 
         if (isSignedIn) {
             const token = await getToken();
@@ -224,13 +213,15 @@ const BookAppointmentsPage = ({ params }) => {
                     data: JSON.stringify(responseData),
                     image: serviceProvider?.image,
                     name: serviceProvider?.name,
-                    formData: JSON.stringify(formattedValues)
+                    formData: JSON.stringify(formattedValues),
                 }).toString();
 
                 router.push(`/booking/${id}/booking-confirm?${queryParams}`);
             } catch (error) {
                 console.error('Error booking appointment:', error);
                 toast.error('Failed to book the appointment.');
+            } finally {
+                setIsSubmitting(false);
             }
         } else {
             if (isMediumOrLarger) {
@@ -238,17 +229,14 @@ const BookAppointmentsPage = ({ params }) => {
             } else {
                 setIsOpenMobile(true);
             }
+            setIsSubmitting(false);
         }
     };
 
     return (
         <Container fullWidth>
             <Toaster />
-            <PageHeader
-                logoSrc={<ScheduleAILogo />}
-                OrganizationName='Organization name'
-                isUserSignedIn={isSignedIn}
-            />
+            <PageHeader logoSrc={<ScheduleAILogo />} OrganizationName='Organization name' />
 
             {!isOpenMobile && (
                 <Flex
@@ -327,8 +315,18 @@ const BookAppointmentsPage = ({ params }) => {
                                             type='submit'
                                             size='lg'
                                             color='outline'
+                                            disabled={isSubmitting}
                                         >
-                                            {'Book Appointment'}
+                                            {isSubmitting ? (
+                                                <div className='flex items-center gap-2'>
+                                                    <div className='animate-spin'>
+                                                        <Loader fontSize={16} />
+                                                    </div>
+                                                    {'Booking...'}
+                                                </div>
+                                            ) : (
+                                                'Book Appointment'
+                                            )}
                                         </Button>
                                     </Flex>
                                 </Form>
@@ -360,6 +358,7 @@ const BookAppointmentsPage = ({ params }) => {
                     serviceId={id}
                     serviceProviderName={serviceProvider?.name}
                     availableTimeSlots={availableTimeSlots}
+                    image={serviceProvider?.image}
                 />
             )}
 
@@ -368,9 +367,6 @@ const BookAppointmentsPage = ({ params }) => {
                     isOpen={isOpenMobile}
                     onClose={() => setIsOpenMobile(false)}
                     formData={formData}
-                    // serviceId={id}
-                    // serviceProviderName={serviceProvider?.name}
-                    // availableTimeSlots={availableTimeSlots}
                 />
             )}
         </Container>

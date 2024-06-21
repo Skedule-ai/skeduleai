@@ -12,6 +12,13 @@ import { Header2 } from '@/components/atoms/typography';
 import Notification from '@/components/atoms/notification';
 import { useAuth } from '@clerk/nextjs';
 import { Information, Loader } from '@strapi/icons';
+import toast, { Toaster } from 'react-hot-toast';
+
+export enum AppointmentStatus {
+    PENDING = 1,
+    ACCEPTED = 2,
+    REJECT = 3,
+}
 
 const DashboardPage = () => {
     const { getToken } = useAuth();
@@ -24,6 +31,40 @@ const DashboardPage = () => {
     const showNotification = (message: string) => {
         setNotificationMessage(message);
         setTimeout(() => setNotificationMessage(null), 3000);
+    };
+
+    const handleStatusChange = async (id, accepted) => {
+        const token = await getToken();
+        try {
+            const response = await fetch('http://localhost:3000/api/booking_service/status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ id, accepted }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            const updatedStatus = responseData.bookingDetails.status;
+
+            setAppointments((prevAppointments) =>
+                prevAppointments.map((appointment) =>
+                    appointment.id === id ? { ...appointment, status: updatedStatus } : appointment,
+                ),
+            );
+
+            accepted
+                ? toast.success('Appointment accepted successfully')
+                : toast.error('Appointment rejected successfully');
+        } catch (error) {
+            console.error('Error updating appointment status:', error);
+            toast.error('Failed to update appointment status.');
+        }
     };
 
     useEffect(() => {
@@ -80,6 +121,7 @@ const DashboardPage = () => {
 
     return (
         <>
+            <Toaster />
             <Flex className='flex-col md:flex-row'>
                 <Container className='flex-1 p-4'>
                     <Flex className='flex-col md:flex-row md:items-center'>
@@ -100,9 +142,7 @@ const DashboardPage = () => {
                     <Flex className='mt-6 flex-col'>
                         <Container className='overflow-x-auto'>
                             <Header2>{'Meeting Proposals'}</Header2>
-                            {loading ? (
-                                <Loader className='animate-spin' />
-                            ) : error ? (
+                            {error ? (
                                 <p>{error}</p>
                             ) : appointments.length === 0 ? (
                                 <p>No meeting proposals yet.</p>
@@ -116,11 +156,17 @@ const DashboardPage = () => {
                                     {appointments.map((appointment) => (
                                         <AcceptRejectCard
                                             key={appointment.id}
+                                            id={appointment.id}
                                             fromTime={appointment.startTime}
                                             toTime={appointment.endTime}
                                             isFree
-                                            onAccept={() => {}}
-                                            onReject={() => {}}
+                                            status={appointment.status}
+                                            onAccept={() =>
+                                                handleStatusChange(appointment.id, true)
+                                            }
+                                            onReject={() =>
+                                                handleStatusChange(appointment.id, false)
+                                            }
                                             title='Brainstorming session'
                                             userImages={[
                                                 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
@@ -137,7 +183,7 @@ const DashboardPage = () => {
                     <Flex className='mt-6 flex-col'>
                         <Container>
                             <Header2>{'Share Appointment Link'}</Header2>
-                            <Grid className='mt-4' columns={1} gap={4} rows={1}>
+                            <Grid className='mt-2' columns={1} gap={4} rows={1}>
                                 <AppointmentLinkCard
                                     isFree
                                     size='lg'
