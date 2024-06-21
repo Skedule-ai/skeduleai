@@ -9,7 +9,6 @@ import useOnBoardingModal from '@/libs/hooks/useOnBoardingModal';
 
 const ApponitmentsModalTemplate = () => {
     const { isOpen, setIsOpen } = useOnBoardingModal();
-
     const [isOrganization, setIsOrganization] = useState(true);
 
     const handleToggle = (isChecked: boolean) => {
