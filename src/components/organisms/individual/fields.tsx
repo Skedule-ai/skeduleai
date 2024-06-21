@@ -3,7 +3,9 @@ import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label, Subtitle } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import React, { Fragment } from 'react';
-import TimeZone from '@/components/atoms/date/TimeZone';
+import TimeZone from '@/components/atoms/date/TimeZone'; // Import TimeZone component
+import Currency from '@/components/atoms/currency/currency';
+
 const IndividualFields = ({
     fields,
     errors,
@@ -25,33 +27,62 @@ const IndividualFields = ({
                 let Field = Input;
 
                 switch (type) {
-                    // case 'timezone':
-                    //     Field = TimeZone;
-                    //     break;
-
+                    case 'timezone':
+                        return (
+                            <Flex key={_inx} dir='column' gap={1}>
+                                <Label htmlFor={name}>{label}</Label>
+                                <FlexItem>
+                                    <TimeZone
+                                        className='lg'
+                                        field={{
+                                            name: 'timeZone',
+                                            onBlur: () => {},
+                                            onChange: () => {},
+                                            value: '',
+                                        }}
+                                        form={{
+                                            setFieldValue: () => {},
+                                        }}
+                                        onSearchQueryChange={() => {}}
+                                        onTimeZoneChange={() => {}}
+                                        searchQuery=''
+                                        toggleDropdown={() => {}}
+                                    />
+                                </FlexItem>
+                            </Flex>
+                        );
+                    case 'currency':
+                        return (
+                            <Flex key={_inx} dir='column' gap={1}>
+                                <Label htmlFor={name}>{label}</Label>
+                                <FlexItem>
+                                    <Currency
+                                        id='currency'
+                                        name='currency'
+                                        onChange={() => {}}
+                                        placeholder='Select a currency'
+                                        size='md'
+                                    />
+                                </FlexItem>
+                            </Flex>
+                        );
                     default:
-                        Field = Input;
-                        break;
+                        return (
+                            <Flex key={_inx} dir='column' gap={1}>
+                                <Label htmlFor={name}>{label}</Label>
+                                <FlexItem>
+                                    <Field
+                                        type={type}
+                                        name={name}
+                                        placeholder={placeholder}
+                                        onChange={handleChange}
+                                        className='w-full'
+                                    />
+                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
+                                </FlexItem>
+                            </Flex>
+                        );
                 }
-                return (
-                    <Flex key={_inx} dir='column' gap={1}>
-                        <Label htmlFor={name}>{label}</Label>
-                        <FlexItem>
-                            {type === 'timezone' ? (
-                                <Field name={name} onChange={handleChange} className='w-full' />
-                            ) : (
-                                <Field
-                                    type={type}
-                                    name={name}
-                                    placeholder={placeholder}
-                                    onChange={handleChange}
-                                    className='w-full'
-                                />
-                            )}
-                            {errors[name] && <FormSubmitMessage type='error' name={name} />}
-                        </FlexItem>
-                    </Flex>
-                );
             })}
         </Fragment>
     );

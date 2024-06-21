@@ -5,9 +5,9 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
 import { FieldProps } from 'formik';
-type DateContainerProps = FieldProps & {};
+type TimeZoneProps = FieldProps & {};
 
-const DateContainer = ({ field, form, meta }: DateContainerProps) => {
+const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
     const [currentDay, setCurrentDay] = useState('');
     const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
     const [currentTime, setCurrentTime] = useState('');
@@ -70,4 +70,4 @@ const DateContainer = ({ field, form, meta }: DateContainerProps) => {
     );
 };
 
-export default DateContainer;
+export default TimeZone;

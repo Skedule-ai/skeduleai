@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { sidebarVariants } from './sidebar.variants';
+import { sidebarVariants, SidebarVariants } from './sidebar.variants';
 import Container from '@/components/atoms/container';
 import Button from '@/components/atoms/button';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
@@ -8,16 +8,13 @@ import Dropdown from '@/components/atoms/dropdown';
 import Text from '@/components/atoms/text';
 import { Flex } from '@/components/atoms/flex';
 
-type SidebarProps = {
+type SidebarProps = SidebarVariants & {
     collapse?: boolean;
 };
 
 const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [
-        isCollapsed,
-        // setIsCollapsed
-    ] = useState(collapse);
+    const [isCollapsed] = useState(collapse);
 
     const handleToggle = () => setIsOpen(!isOpen);
 
@@ -60,10 +57,11 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                 </div>
             )}
             <Container
-                className={`fixed inset-y-0 left-0 z-40 h-screen w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:w-64 md:translate-x-0 md:shadow-none`}
+                className={`fixed inset-y-0 left-0 z-40 h-screen w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:w-64 md:translate-x-0 md:shadow-none`}
+                style={{ position: 'sticky', top: '0' }}
             >
                 <Container
-                    className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} text-black`}
+                    className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} overflow-hidden text-black`}
                     {...props}
                 >
                     <Flex className='items-center justify-between p-4'>
@@ -77,10 +75,8 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             color='tertiary'
                             type='button'
                         >
-                            <>
-                                <span className='sr-only'>{'Close'}</span>
-                                &#10005;
-                            </>
+                            <span className='sr-only'>{'Close'}</span>
+                            &#10005;
                         </Button>
                     </Flex>
                     <ul className='ml-1 mt-4 w-full grow'>
@@ -104,9 +100,9 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                             </a>
                         </li>
                     </ul>
-                    <Flex className='shrink-0 items-center justify-center'>
+                    <Flex className='shrink-0 items-center justify-center p-4'>
                         <Button color='outline' size='md' className='flex w-24 justify-center'>
-                            {' My Profile'}
+                            {'My Profile'}
                         </Button>
                     </Flex>
                     <Flex className='shrink-0 items-center justify-center px-4 py-2'>
