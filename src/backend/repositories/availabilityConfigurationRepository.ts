@@ -48,7 +48,7 @@ export async function findAllAvailabilityConfigurationRepository(
 
 export async function updateAvailabilityConfigurationRepository(
     filter: Prisma.availabilityConfigurationUserIdOrganizationIdDayCompoundUniqueInput,
-    data: Prisma.availabilityConfigurationUpdateInput,
+    data: Prisma.availabilityConfigurationUpdateInput & { organizationName?: string },
 ) {
     return await prisma.availabilityConfiguration.update({
         where: {

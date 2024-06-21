@@ -15,6 +15,7 @@ import { updateUserConfigurationService } from './userConfigurationService';
 import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 
 const validateCreate = object({
+    // organizationId: string().required(),
     timezone: string().required(),
     startTime: string().required(),
     endTime: string().required(),
@@ -25,6 +26,7 @@ const validateCreate = object({
 });
 
 const validateUpdate = object({
+    organizationName: string().typeError('Invalid organization name input'),
     timezone: string().typeError('Invalid timezone input'),
     startTime: string().typeError('Invalid startTime input'),
     endTime: string().typeError('Invalid endTime input'),
@@ -124,7 +126,7 @@ export async function updateAvailabilityConfigurationService(
         }
 
         // Step 2: Pick required data from JSON
-        const inputData = pick(data, ['timezone', 'startTime', 'endTime', 'duration', 'day']);
+        const inputData = pick(data, ['organizationName','timezone', 'startTime', 'endTime', 'duration', 'day']);
 
         // Step 3: Validate input data
         const { day, ...updateData } = await validateUpdate.validate(inputData);

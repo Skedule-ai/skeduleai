@@ -6,3 +6,7 @@ export async function createGuestUserRepository(
 ) {
     return await prisma.guestUser.create({ data });
 }
+
+export async function findGuestUserData(id: number) {
+    return await prisma.guestUser.findFirst({ where: { id } });
+}

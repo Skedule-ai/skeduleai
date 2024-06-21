@@ -19,7 +19,7 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     serviceId,
     // availableTimeSlots,
     onClose,
-    // serviceProviderName,
+    serviceProviderName,
 }) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
@@ -37,6 +37,7 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                         onClose={function (): void {
                             throw new Error('Function not implemented.');
                         }}
+                        serviceProviderName={serviceProviderName}
                     />
                 );
 
