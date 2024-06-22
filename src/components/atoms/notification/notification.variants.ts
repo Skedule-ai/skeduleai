@@ -15,7 +15,7 @@ export const notificationWidth = {
 };
 
 const notificationVariants = tv({
-    base: 'p-4 w-68 rounded-md shadow-md flex items-center',
+    base: 'w-68 flex items-center rounded-md p-4 shadow-md',
     variants: {
         type: notificationTypes,
         width: notificationWidth,

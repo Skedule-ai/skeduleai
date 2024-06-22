@@ -20,6 +20,9 @@ const buttonVariants = tv({
     },
 });
 
-type DaySelectorProps = VariantProps<typeof daySelectorVariants>;
+type DaySelectorProps = VariantProps<typeof daySelectorVariants> & {
+    value: number[];
+    onChange: (value: number[]) => void;
+};
 
 export { type DaySelectorProps, daySelectorVariants, buttonVariants };

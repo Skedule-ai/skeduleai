@@ -10,10 +10,14 @@ const AvailabilityFields = ({
     fields,
     errors,
     handleChange,
+    values,
+    setFieldValue,
 }: {
     fields: any[];
     errors: any;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    values: any;
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
 }) => {
     return (
         <Fragment>
@@ -59,7 +63,10 @@ const AvailabilityFields = ({
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     {/* Replace with your DaySelector component or other multi-select implementation */}
-                                    <DaySelector />
+                                    <DaySelector
+                                        value={values[name]}
+                                        onChange={(value) => setFieldValue(name, value)}
+                                    />
                                     {errors[name] && <FormSubmitMessage type='error' name={name} />}
                                 </FlexItem>
                             </Flex>
