@@ -5,15 +5,18 @@ import { Header1, Label } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import DaySelector from '@/components/atoms/dayselector';
 
-// ToDo: Requires component refactoring.
 const AvailabilityFields = ({
     fields,
     errors,
     handleChange,
+    values,
+    setFieldValue,
 }: {
     fields: any[];
     errors: any;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    values: any;
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
 }) => {
     return (
         <Fragment>
@@ -21,25 +24,19 @@ const AvailabilityFields = ({
                 <Header1>Your Availability </Header1>
             </FlexItem>
             {fields.map((field, _inx: number) => {
-                const { type, placeholder, label } = field;
-                const name = field.name;
-                // let Field = Input;
+                const { type, placeholder, label, name } = field;
 
                 switch (type) {
-                    // TODO: Implement multi-select field: Create a pure component for this
                     case 'multi-select':
                         return (
                             <Flex key={_inx} dir='column' gap={1}>
-                                <Label htmlFor={field.name}>{label}</Label>
+                                <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
-                                    {/* ToDo: Bugged component requires fixes */}
                                     <DaySelector
-                                    // type={type}
-                                    // name={name}
-                                    // placeholder={placeholder}
-                                    // onChange={handleChange}
+                                        value={values[name]}
+                                        onChange={(value) => setFieldValue(name, value)}
                                     />
-                                    {errors[name] && <FormSubmitMessage type='error' name='name' />}
+                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
                                 </FlexItem>
                             </Flex>
                         );
@@ -47,7 +44,7 @@ const AvailabilityFields = ({
                     default:
                         return (
                             <Flex key={_inx} dir='column' gap={1}>
-                                <Label htmlFor={field.name}>{label}</Label>
+                                <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Input
                                         type={type}
@@ -55,7 +52,7 @@ const AvailabilityFields = ({
                                         placeholder={placeholder}
                                         onChange={handleChange}
                                     />
-                                    {errors[name] && <FormSubmitMessage type='error' name='name' />}
+                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
                                 </FlexItem>
                             </Flex>
                         );
