@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -9,8 +7,9 @@ import Button from '@/components/atoms/button';
 import { ErrorTitle } from '@/components/atoms/typography';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import BookingConfirmpage from '@/app/booking/[id]/booking-confirm/page';
+// import BookingConfirmpage from '@/app/booking/[id]/booking-confirm/page';
 import { Loader } from '@strapi/icons';
+import { useAuth } from '@clerk/nextjs';
 
 const GuestFormSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -21,12 +20,14 @@ const GuestFormSchema = Yup.object().shape({
 interface GuestFormProps {
     onSubmit: (values: any) => void;
     formData: {
+        timeZone: string;
         selectDate: string;
         selectTime: string;
     };
     serviceId: string;
     onClose: () => void;
     serviceProviderName: string;
+    image: string;
 }
 
 const GuestForm: React.FC<GuestFormProps> = ({
@@ -34,8 +35,10 @@ const GuestForm: React.FC<GuestFormProps> = ({
     formData,
     serviceId,
     onClose,
-    // serviceProviderName,
+    serviceProviderName,
+    image,
 }) => {
+    const { getToken } = useAuth();
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const initialValues = {
@@ -46,33 +49,50 @@ const GuestForm: React.FC<GuestFormProps> = ({
 
     const handleSubmit = async (values: any) => {
         setLoading(true);
+        const formattedValues = {
+            ...values,
+            selectDate: values.selectDate,
+            selectTime: values.selectTime,
+            timeZone: values.timeZone,
+        };
         const payload = {
             serviceId,
+            timezone: formData.timeZone,
+            startTime: '2024-06-25T08:00:00Z',
+            endTime: '2024-06-25T09:00:00Z',
             name: values.name,
             email: values.email,
             phoneNumber: values.contactNumber,
-            date: formData.selectDate,
-            time: formData.selectTime,
         };
         try {
-            const response = await fetch('http://localhost:3000/api/customer/appointment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+            const token = await getToken();
+            const response = await fetch(
+                `http://localhost:3000/api/booking_service/appointment/${serviceId}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
                 },
-                body: JSON.stringify(payload),
-            });
-
-            if (response.ok) {
-                setLoading(false);
-                toast.success('Appointment scheduled successfully');
-
-                <BookingConfirmpage />;
-                router.push(`/booking/${payload.serviceId}/booking-confirm`);
-                onClose();
-            } else {
-                throw new Error('Failed to schedule appointment');
+            );
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
+
+            const responseData = await response.json();
+            toast.success('Appointment booked successfully!');
+
+            const queryParams = new URLSearchParams({
+                data: JSON.stringify(responseData),
+                image: image,
+                name: serviceProviderName,
+                formData: JSON.stringify(formattedValues),
+            }).toString();
+
+            router.push(`/booking/${payload.serviceId}/booking-confirm?${queryParams}`);
+            onClose();
         } catch (error) {
             setLoading(false);
             toast.error('Failed to schedule appointment. Please try again later.');

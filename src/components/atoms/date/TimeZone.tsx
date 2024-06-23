@@ -5,12 +5,12 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
 import { FieldProps } from 'formik';
-type DateContainerProps = FieldProps & {};
+type TimeZoneProps = FieldProps;
 
-const DateContainer = ({ field, form, meta }: DateContainerProps) => {
-    const [currentDay, setCurrentDay] = useState('');
-    const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
-    const [currentTime, setCurrentTime] = useState('');
+const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
+    const [, setCurrentDay] = useState('');
+    // const [, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
+    const [, setCurrentTime] = useState('');
     const [timeZone, setTimeZone] = useState(moment.tz.guess());
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -33,9 +33,9 @@ const DateContainer = ({ field, form, meta }: DateContainerProps) => {
         return () => clearInterval(interval);
     }, [timeZone]);
 
-    const handleDateChange = (date: string) => {
-        setCurrentDate(date);
-    };
+    // const handleDateChange = (date: string) => {
+    //     setCurrentDate(date);
+    // };
 
     const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
@@ -70,4 +70,4 @@ const DateContainer = ({ field, form, meta }: DateContainerProps) => {
     );
 };
 
-export default DateContainer;
+export default TimeZone;

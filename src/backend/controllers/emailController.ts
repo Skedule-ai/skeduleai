@@ -1,7 +1,4 @@
-import {
-    sendAppointmentAcceptedEmailService,
-    sendWelcomeEmails,
-} from '@/backend/services/emailService';
+import { sendWelcomeEmails } from '@/backend/services/emailService';
 import { NextResponse } from 'next/server';
 
 type SendGridHookRequestData = {
@@ -38,23 +35,6 @@ export async function handleWelcomeEmail(sendGridData: SendGridHookRequestData) 
         );
     } catch (error) {
         console.error('Error sending welcome email:', error);
-        if (error instanceof Error) {
-            return NextResponse.json({ error: error.message }, { status: 400 });
-        }
-    }
-}
-
-export async function sendAppointmentAcceptedEmailController(data: {
-    customerEmail: string;
-    customerName: string;
-}) {
-    try {
-        const { customerEmail, customerName } = data;
-        const result = await sendAppointmentAcceptedEmailService(customerEmail, customerName);
-
-        return NextResponse.json(result, { status: 200 });
-    } catch (error) {
-        console.error('Error sending appointment accepted email:', error);
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }

@@ -5,6 +5,7 @@ import Container from '../container';
 import Text from '../text';
 import { ChevronDown, Cross } from '@strapi/icons';
 
+// Define the props for the TimeZone component
 type TimeZoneProps = FieldProps & {
     timeZone: string;
     timeZones: {
@@ -21,30 +22,37 @@ type TimeZoneProps = FieldProps & {
 
 const TimeZone: React.FC<TimeZoneProps> = ({
     field,
-    form,
+    form, // Ensure 'form' is correctly received in props
     timeZone,
     timeZones,
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,
-    searchQuery,
+    // searchQuery,
     onSearchQueryChange,
     className = '',
 }) => {
     const [inputValue, setInputValue] = useState('');
 
+    // Filter time zones based on the input value
     const filteredTimeZones = timeZones.filter((zone) =>
         zone.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
 
+    // Handle input change and set form field value
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-        form.setFieldValue(field.name, e.target.value);
+        const value = e.target.value;
+        setInputValue(value);
+        onSearchQueryChange(value);
+        form.setFieldValue(field.name, value); // Ensure form is correctly passed and destructured
     };
 
+    // Handle time zone selection
     const handleTimeZoneSelect = (zoneValue: string) => {
         onTimeZoneChange(zoneValue);
-        form.setFieldValue(field.name, zoneValue);
+        if (form) {
+            form.setFieldValue(field.name, zoneValue); // Check if form is defined before using it
+        }
         toggleDropdown();
     };
 
