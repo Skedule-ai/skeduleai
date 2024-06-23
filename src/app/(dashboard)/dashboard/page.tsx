@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
@@ -160,17 +159,19 @@ const DashboardPage = () => {
                                     />
                                 )}
                             </Formik>
+
+                            {notificationMessage && (
+                                <Notification
+                                    className='ml-8 items-center justify-center'
+                                    icon={<Information />}
+                                    type='info'
+                                    width='small'
+                                >
+                                    {notificationMessage}
+                                </Notification>
+                            )}
+                            {/* <TimeZone field={undefined} form={undefined} meta={undefined} /> */}
                         </Grid>
-                        {notificationMessage && (
-                            <Notification
-                                className='ml-8 items-center justify-center'
-                                icon={<Information />}
-                                type='info'
-                                width='small'
-                            >
-                                {notificationMessage}
-                            </Notification>
-                        )}
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container className='overflow-x-auto'>
