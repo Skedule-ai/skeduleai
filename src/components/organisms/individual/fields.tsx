@@ -6,15 +6,12 @@ import React, { Fragment } from 'react';
 import TimeZone from '@/components/atoms/date/TimeZone'; // Import TimeZone component
 import Currency from '@/components/atoms/currency/currency';
 
-const IndividualFields = ({
-    fields,
-    errors,
-    handleChange,
-}: {
+const IndividualFields = (props: {
     fields: any[];
     errors: any;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
 }) => {
+    const { fields, errors, handleChange } = props;
     return (
         <Fragment>
             <FlexItem>
@@ -24,7 +21,7 @@ const IndividualFields = ({
             {fields.map((field, _inx: number) => {
                 const { type, placeholder, label } = field;
                 const name = field.name;
-                let Field = Input;
+                const Field = Input;
 
                 switch (type) {
                     case 'timezone':
@@ -33,20 +30,19 @@ const IndividualFields = ({
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <TimeZone
-                                        className='lg'
+                                        // className='lg'
                                         field={{
                                             name: 'timeZone',
                                             onBlur: () => {},
                                             onChange: () => {},
                                             value: '',
                                         }}
-                                        form={{
-                                            setFieldValue: () => {},
-                                        }}
-                                        onSearchQueryChange={() => {}}
-                                        onTimeZoneChange={() => {}}
-                                        searchQuery=''
-                                        toggleDropdown={() => {}}
+                                        meta={field}
+                                        form={field.form}
+                                        // onSearchQueryChange={() => {}}
+                                        // onTimeZoneChange={() => {}}
+                                        // searchQuery=''
+                                        // toggleDropdown={() => {}}
                                     />
                                 </FlexItem>
                             </Flex>
@@ -57,11 +53,11 @@ const IndividualFields = ({
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Currency
-                                        id='currency'
-                                        name='currency'
-                                        onChange={() => {}}
-                                        placeholder='Select a currency'
-                                        size='md'
+                                    // id='currency'
+                                    // name='currency'
+                                    // onChange={() => {}}
+                                    // placeholder='Select a currency'
+                                    // size='md'
                                     />
                                 </FlexItem>
                             </Flex>

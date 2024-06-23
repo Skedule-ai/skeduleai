@@ -28,7 +28,7 @@ const TimeZone: React.FC<TimeZoneProps> = ({
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,
-    searchQuery,
+    // searchQuery,
     onSearchQueryChange,
     className = '',
 }) => {

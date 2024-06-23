@@ -33,20 +33,18 @@ const OrgFields = ({
                                 <Label htmlFor={field.name}>{label}</Label>
                                 <FlexItem>
                                     <TimeZone
-                                        className='lg'
+                                        // className='lg'
                                         field={{
                                             name: 'timeZone',
                                             onBlur: () => {},
                                             onChange: () => {},
                                             value: '',
                                         }}
-                                        form={{
-                                            setFieldValue: () => {},
-                                        }}
-                                        onSearchQueryChange={() => {}}
-                                        onTimeZoneChange={() => {}}
-                                        searchQuery=''
-                                        toggleDropdown={() => {}}
+                                        form={field.form}
+                                        meta={field} // onSearchQueryChange={() => {}}
+                                        // onTimeZoneChange={() => {}}
+                                        // searchQuery=''
+                                        // toggleDropdown={() => {}}
                                     />
                                 </FlexItem>
                             </Flex>
@@ -57,11 +55,11 @@ const OrgFields = ({
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Currency
-                                        id='currency'
-                                        name='currency'
-                                        onChange={() => {}}
-                                        placeholder='Select a currency'
-                                        size='md'
+                                    // id='currency'
+                                    // name='currency'
+                                    // onChange={() => {}}
+                                    // placeholder='Select a currency'
+                                    // size='md'
                                     />
                                 </FlexItem>
                             </Flex>

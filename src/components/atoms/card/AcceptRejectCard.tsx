@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
@@ -6,6 +6,7 @@ import { Clock } from '@strapi/icons';
 import Image from 'next/image';
 
 type AcceptRejectCardProps = {
+    id: string;
     title: string;
     fromTime: string;
     toTime: string;
@@ -13,9 +14,11 @@ type AcceptRejectCardProps = {
     userImages: string[];
     onAccept: () => void;
     onReject: () => void;
+    status: number;
 } & CardProps;
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
+    // id,
     title,
     fromTime,
     toTime,
@@ -23,8 +26,21 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     userImages,
     onAccept,
     onReject,
+    // status,
     ...props
 }) => {
+    const [localStatus, setLocalStatus] = useState<number | null>(null);
+
+    const handleAccept = () => {
+        onAccept();
+        setLocalStatus(2);
+    };
+
+    const handleReject = () => {
+        onReject();
+        setLocalStatus(3);
+    };
+
     return (
         <Card {...props}>
             <Flex dir='column' className='p-4'>
@@ -38,7 +54,9 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                                     key={index}
                                     src={image}
                                     alt={`User ${index + 1}`}
-                                    className={`size-5 rounded-full object-cover md:size-6 ${index !== 0 && '-ml-2'}`}
+                                    className={`size-5 rounded-full object-cover md:size-6 ${
+                                        index !== 0 && '-ml-2'
+                                    }`}
                                     style={{ zIndex: 5 - index }}
                                     width={50}
                                     height={50}
@@ -65,23 +83,34 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
 
                 <hr className='my-4' />
 
-                <Flex dir='row' justifyContent='between'>
-                    <button
-                        onClick={onAccept}
-                        className='w-full rounded bg-white px-4 text-sm font-medium text-green-600 md:text-base'
+                {localStatus === null ? (
+                    <Flex dir='row' justifyContent='between'>
+                        <button
+                            onClick={handleAccept}
+                            className='w-full rounded bg-white px-4 text-sm font-medium text-green-600 md:text-base'
+                        >
+                            Accept
+                        </button>
+                        <div className='w-1 border-l-2 border-gray-100'></div>
+                        <button
+                            onClick={handleReject}
+                            className='w-full rounded bg-white px-4 text-sm font-medium text-red-500 md:text-base'
+                        >
+                            Reject
+                        </button>
+                    </Flex>
+                ) : (
+                    <p
+                        className={`text-center font-medium ${
+                            localStatus === 2 ? 'text-green-600' : 'text-red-500'
+                        }`}
                     >
-                        Accept
-                    </button>
-                    <div className='w-1 border-l-2 border-gray-100'></div>
-                    <button
-                        onClick={onReject}
-                        className='w-full rounded bg-white px-4 text-sm font-medium text-red-500 md:text-base'
-                    >
-                        Reject
-                    </button>
-                </Flex>
+                        {localStatus === 2 ? 'Accepted' : 'Rejected'}
+                    </p>
+                )}
             </Flex>
         </Card>
     );
 };
+
 export default AcceptRejectCard;

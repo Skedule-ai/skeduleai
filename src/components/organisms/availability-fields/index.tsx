@@ -4,7 +4,7 @@ import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import DaySelector from '@/components/atoms/dayselector';
-import WorkingHoursSelector from '@/components/atoms/timeInput';
+// import WorkingHoursSelector from '@/components/atoms/timeInput';
 
 const AvailabilityFields = ({
     fields,

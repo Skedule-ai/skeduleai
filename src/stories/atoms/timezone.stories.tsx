@@ -12,19 +12,19 @@ const meta: Meta<typeof TimeZone> = {
     // This component will have an automatically generated Autodocs entry
     tags: ['autodocs'],
     args: {
-        className: '',
+        // className: '',
         // Add default args for other required props
-        onTimeZoneChange: (zone: string) => {
-            console.log('TimeZone changed to:', zone);
-        },
-        showDropdown: false,
-        toggleDropdown: () => {
-            console.log('Dropdown toggled');
-        },
-        searchQuery: '',
-        onSearchQueryChange: (query: string) => {
-            console.log('Search query changed to:', query);
-        },
+        // onTimeZoneChange: (zone: string) => {
+        //     console.log('TimeZone changed to:', zone);
+        // },
+        // showDropdown: false,
+        // toggleDropdown: () => {
+        //     console.log('Dropdown toggled');
+        // },
+        // searchQuery: '',
+        // onSearchQueryChange: (query: string) => {
+        //     console.log('Search query changed to:', query);
+        // },
         field: { name: 'timeZone', value: '', onChange: () => {}, onBlur: () => {} },
         form: { setFieldValue: () => {} } as any,
     },
@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 // Define a story for the TimeZone component
 export const TimeZoneComponent: Story = {
     args: {
-        className: 'lg',
+        // className: 'lg',
         // Optionally, override any default args here if necessary
     },
 };
