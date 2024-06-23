@@ -4,6 +4,7 @@ import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import DaySelector from '@/components/atoms/dayselector';
+// import WorkingHoursSelector from '@/components/atoms/timeInput';
 
 const AvailabilityFields = ({
     fields,
@@ -21,7 +22,7 @@ const AvailabilityFields = ({
     return (
         <Fragment>
             <FlexItem>
-                <Header1>Your Availability </Header1>
+                <Header1>{'Your Availability '}</Header1>
             </FlexItem>
             {fields.map((field, _inx: number) => {
                 const { type, placeholder, label, name } = field;

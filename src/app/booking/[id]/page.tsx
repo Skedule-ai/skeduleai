@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,26 +17,44 @@ import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimezoneSelect from 'react-timezone-select';
+import TimezoneSelect, { ITimezone } from 'react-timezone-select';
 import makeAnimated from 'react-select/animated';
-import Select from 'react-select';
+import Select, { GroupBase, StylesConfig } from 'react-select';
 import { Loader } from '@strapi/icons';
 import { useAuth, useUser } from '@clerk/nextjs';
 
 const animatedComponents = makeAnimated();
 
-const CustomDatePicker = ({ field, form, availableTimeSlots, setAvailableTimeSlots, ...props }) => {
-    const handleDateChange = (val) => {
+type SlotType = { startTime: string; endTime: string };
+type FieldType = { name: string; value: Date | string };
+
+type AvailabilityFormInputType = {
+    field: FieldType;
+    form: any;
+    availableTimeSlots: { day: number; slots: SlotType[] }[];
+    setAvailableTimeSlots: (val: SlotType[]) => void;
+};
+
+const CustomDatePicker: React.FC<AvailabilityFormInputType> = ({
+    field,
+    form,
+    availableTimeSlots,
+    setAvailableTimeSlots,
+    ...props
+}) => {
+    const handleDateChange = (val: Date | null) => {
         form.setFieldValue(field.name, val);
-        const selectedDay = val.getDay() + 1;
-        const timeSlotsForDay =
-            availableTimeSlots.find((slot) => slot.day === selectedDay)?.slots || [];
-        setAvailableTimeSlots(timeSlotsForDay);
+        if (val) {
+            const selectedDay = val.getDay() + 1;
+            const timeSlotsForDay =
+                availableTimeSlots.find((slot) => slot.day === selectedDay)?.slots || [];
+            setAvailableTimeSlots(timeSlotsForDay);
+        }
     };
 
     return (
         <DatePicker
-            selected={field.value}
+            selected={field.value as Date}
             onChange={handleDateChange}
             minDate={new Date()}
             {...props}
@@ -45,8 +63,12 @@ const CustomDatePicker = ({ field, form, availableTimeSlots, setAvailableTimeSlo
     );
 };
 
-const CustomTimezoneSelect = ({ field, form, ...props }) => {
-    const customStyles = {
+const CustomTimezoneSelect: React.FC<{ field: FieldType; form: any }> = ({
+    field,
+    form,
+    ...props
+}) => {
+    const customStyles: StylesConfig<ITimezone, false, GroupBase<ITimezone>> | undefined = {
         control: (provided) => ({
             ...provided,
             width: '100%',
@@ -56,7 +78,7 @@ const CustomTimezoneSelect = ({ field, form, ...props }) => {
 
     return (
         <TimezoneSelect
-            value={field.value}
+            value={field.value.toString()}
             onChange={(option) => form.setFieldValue(field.name, option.value)}
             styles={customStyles}
             {...props}
@@ -64,20 +86,24 @@ const CustomTimezoneSelect = ({ field, form, ...props }) => {
     );
 };
 
-const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }) => {
+const CustomTimeSelect: React.FC<
+    Omit<AvailabilityFormInputType, 'setAvailableTimeSlots' | 'availableTimeSlots'> & {
+        availableTimeSlots: SlotType[];
+    }
+> = ({ field, form, availableTimeSlots, ...props }) => {
     const options = availableTimeSlots.map((slot) => ({
         value: slot.startTime,
         label: slot.startTime,
     }));
 
     const customStyles = {
-        menu: (provided) => ({
+        menu: (provided: any) => ({
             ...provided,
             display: 'flex',
             justifyContent: 'space-between',
             width: '100%',
         }),
-        option: (provided, state) => ({
+        option: (provided: any, state: { isSelected: boolean }) => ({
             ...provided,
             padding: '10px',
             border: '1px solid gray',
@@ -91,17 +117,18 @@ const CustomTimeSelect = ({ field, form, availableTimeSlots, ...props }) => {
         <Select
             options={options}
             value={options.find((option) => option.value === field.value) || null}
-            onChange={(option) => form.setFieldValue(field.name, option ? option.value : '')}
+            onChange={(option) => form.setFieldValue(field.name, option?.value ?? '')}
             components={animatedComponents}
             isClearable
             className='w-full rounded-md border p-3'
             styles={customStyles}
+            isMulti={false}
             {...props}
         />
     );
 };
 
-const BookAppointmentsPage = ({ params }) => {
+const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     const { getToken } = useAuth();
     const { isLoaded, isSignedIn } = useUser();
     const [loading, setLoading] = useState(true);
@@ -114,7 +141,9 @@ const BookAppointmentsPage = ({ params }) => {
         selectTime: '',
         timeZone: '',
     });
-    const [serviceProvider, setServiceProvider] = useState(null);
+    const [serviceProvider, setServiceProvider] = useState<{ name: string; image: string } | null>(
+        null,
+    );
     const [allTimeSlots, setAllTimeSlots] = useState([]);
     const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -165,7 +194,12 @@ const BookAppointmentsPage = ({ params }) => {
         );
     }
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values: {
+        meetingDuration: string;
+        selectDate: string;
+        selectTime: string;
+        timeZone: string;
+    }) => {
         setIsSubmitting(true);
         console.log('Selected Date:', values.selectDate);
         console.log('Selected Time:', values.selectTime);
@@ -211,8 +245,8 @@ const BookAppointmentsPage = ({ params }) => {
                 toast.success('Appointment booked successfully!');
                 const queryParams = new URLSearchParams({
                     data: JSON.stringify(responseData),
-                    image: serviceProvider?.image,
-                    name: serviceProvider?.name,
+                    image: serviceProvider?.image ?? '',
+                    name: serviceProvider?.name ?? '',
                     formData: JSON.stringify(formattedValues),
                 }).toString();
 
@@ -356,9 +390,9 @@ const BookAppointmentsPage = ({ params }) => {
                     onClose={() => setIsOpen(false)}
                     formData={formData}
                     serviceId={id}
-                    serviceProviderName={serviceProvider?.name}
+                    serviceProviderName={serviceProvider?.name ?? ''}
                     availableTimeSlots={availableTimeSlots}
-                    image={serviceProvider?.image}
+                    image={serviceProvider?.image ?? ''}
                 />
             )}
 

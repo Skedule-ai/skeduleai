@@ -18,7 +18,7 @@ interface BookingModalVariantsProps {
 const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     formData,
     serviceId,
-    availableTimeSlots,
+    // availableTimeSlots,
     onClose,
     serviceProviderName,
     image,

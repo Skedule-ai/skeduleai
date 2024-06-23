@@ -44,7 +44,7 @@ export const WarningNotification: Story = {
 export const InfoNotification: Story = {
     args: {
         type: 'info',
-        // width: 'small',
+        width: 'medium',
         icon: <Information />, // Using Strapi icon
         children: 'This is an info notification.',
     },

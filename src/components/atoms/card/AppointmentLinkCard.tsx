@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
@@ -10,6 +10,7 @@ type AppointmentLinkProps = {
     isFree: boolean;
     link: string;
     subtitle: string;
+    onCopySuccess: (message: string) => void; // Add this prop
     fullLink: string;
 } & CardProps;
 
@@ -17,11 +18,10 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     title,
     link,
     subtitle,
-    fullLink,
     onCopySuccess,
+    fullLink,
     ...props
 }) => {
-
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text).then(
             () => {
@@ -66,7 +66,6 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                             stroke-linejoin='round'
                         />
                     </svg>
-
                 </Button>
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     <h2 className='mt-4 text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>

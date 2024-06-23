@@ -1,8 +1,9 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
-import React, { useEffect, useState } from 'react';
+// import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
@@ -10,30 +11,34 @@ import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
 import Notification from '@/components/atoms/notification';
+import { Information } from '@strapi/icons';
 import { useAuth } from '@clerk/nextjs';
-import { Information, Loader } from '@strapi/icons';
+import { Field, Formik } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
+import { RowType } from '@/components/atoms/grid/grid.variants';
 
-export enum AppointmentStatus {
-    PENDING = 1,
-    ACCEPTED = 2,
-    REJECT = 3,
-}
+// export enum AppointmentStatus {
+//     PENDING = 1,
+//     ACCEPTED = 2,
+//     REJECT = 3,
+// }
 
 const DashboardPage = () => {
     const { getToken } = useAuth();
     const [bookingUrl, setBookingUrl] = useState('');
-    const [appointments, setAppointments] = useState([]);
+    const [appointments, setAppointments] = useState<
+        {
+            id: string;
+            startTime: string;
+            endTime: string;
+            status: number;
+        }[]
+    >([]);
     const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const showNotification = (message: string) => {
-        setNotificationMessage(message);
-        setTimeout(() => setNotificationMessage(null), 3000);
-    };
-
-    const handleStatusChange = async (id, accepted) => {
+    const handleStatusChange = async (id: string, accepted: boolean) => {
         const token = await getToken();
         try {
             const response = await fetch('http://localhost:3000/api/booking_service/status', {
@@ -65,6 +70,11 @@ const DashboardPage = () => {
             console.error('Error updating appointment status:', error);
             toast.error('Failed to update appointment status.');
         }
+    };
+
+    const showNotification = (message: string) => {
+        setNotificationMessage(message);
+        setTimeout(() => setNotificationMessage(null), 3000); // Display for 3 seconds
     };
 
     useEffect(() => {
@@ -127,13 +137,36 @@ const DashboardPage = () => {
                     <Flex className='flex-col md:flex-row md:items-center'>
                         <Grid columns={2} rows={1} gap={2}>
                             <Date />
-                            <TimeZone />
+                            <Formik
+                                initialValues={{ timeZone: 'UTC' }}
+                                onSubmit={(values) => {
+                                    console.log('Form values:', values);
+                                }}
+                            >
+                                {({ values, setFieldValue }) => (
+                                    <Field
+                                        name='timeZone'
+                                        component={TimeZone}
+                                        timeZone={values.timeZone}
+                                        onTimeZoneChange={(zone: string) =>
+                                            setFieldValue('timeZone', zone)
+                                        }
+                                        showDropdown={false}
+                                        toggleDropdown={() => console.log('Toggle Dropdown')}
+                                        searchQuery=''
+                                        onSearchQueryChange={(query: string) =>
+                                            console.log('Search Query:', query)
+                                        }
+                                    />
+                                )}
+                            </Formik>
                         </Grid>
                         {notificationMessage && (
                             <Notification
                                 className='ml-8 items-center justify-center'
                                 icon={<Information />}
                                 type='info'
+                                width='small'
                             >
                                 {notificationMessage}
                             </Notification>
@@ -151,7 +184,7 @@ const DashboardPage = () => {
                                     className='mt-4'
                                     columns={4}
                                     gap={4}
-                                    rows={Math.ceil(appointments.length / 3)}
+                                    rows={Math.ceil(appointments.length / 3) as RowType}
                                 >
                                     {appointments.map((appointment) => (
                                         <AcceptRejectCard
@@ -190,9 +223,9 @@ const DashboardPage = () => {
                                     title='Add Organization Staff'
                                     subtitle='Service provider page'
                                     link={shortUrl}
-                                    onCopySuccess={showNotification}
                                     fullLink={bookingUrl}
                                     variant='default'
+                                    onCopySuccess={showNotification} // Pass the function
                                 >
                                     <></>
                                 </AppointmentLinkCard>

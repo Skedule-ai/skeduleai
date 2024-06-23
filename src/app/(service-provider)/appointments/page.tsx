@@ -15,7 +15,7 @@ export default function Page() {
     }, []);
 
     if (loading) {
-        return <Loader fontSize={25} className='animate-spin'/>;
+        return <Loader fontSize={25} className='animate-spin' />;
     }
 
     return (

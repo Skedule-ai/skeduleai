@@ -8,11 +8,11 @@ interface Props extends TimeInputProps {
 
 const WorkingHoursSelector: React.FC<Props> = ({ size, onStartChange, onEndChange, ...rest }) => {
     return (
-        <div className='flex items-center justify-center space-x-8'>
+        <div className='flex items-center space-x-8'>
             <div className={timeInputVariants({ size, ...rest })}>
                 <div>
                     <label htmlFor='startHour' className='block text-gray-700'>
-                        Start Hour
+                        {'Start Hour'}
                     </label>
                     <input
                         type='time'
@@ -24,7 +24,7 @@ const WorkingHoursSelector: React.FC<Props> = ({ size, onStartChange, onEndChang
 
                 <div>
                     <label htmlFor='endHour' className='block text-gray-700'>
-                        End Hour
+                        {'End Hour'}
                     </label>
                     <input
                         type='time'

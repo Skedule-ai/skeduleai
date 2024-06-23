@@ -1,6 +1,6 @@
 import React from 'react';
 import { SignInButton, SignUpButton, useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import Button from '@/components/atoms/button';
 import { Flex } from '../flex';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ interface NavbarProps {
 const PageHeader: React.FC<NavbarProps> = ({ logoSrc, OrganizationName }) => {
     const { isSignedIn } = useUser();
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-    console.log(currentUrl)
+    console.log(currentUrl);
 
     return (
         <>

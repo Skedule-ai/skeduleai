@@ -14,14 +14,18 @@ import {
     Paragraph,
 } from '@/components/atoms/typography';
 import { Plus } from '@strapi/icons';
-import { useSearchParams, useRouter } from 'next/navigation';
+import {
+    useSearchParams,
+    // useRouter
+} from 'next/navigation';
 
 const BookingConfirmpage = () => {
     const searchParams = useSearchParams();
-    const router = useRouter();
+    // const router = useRouter();
     const image = searchParams.get('image');
     const name = searchParams.get('name');
-    const formData = JSON.parse(searchParams.get('formData'));
+    const formDataString = searchParams.get('formData');
+    const formData = formDataString ? JSON.parse(formDataString) : {};
 
     const formattedDate = formData.selectDate
         ? format(new Date(formData.selectDate), 'yyyy-MM-dd')
@@ -36,6 +40,13 @@ const BookingConfirmpage = () => {
         duration,
         timeZone,
         description = '',
+    }: {
+        title: string;
+        startDate: string;
+        startTime: string;
+        duration: number;
+        timeZone: string;
+        description?: string;
     }) => {
         try {
             if (!startDate || !startTime || isNaN(Date.parse(startDate))) {
@@ -64,7 +75,9 @@ const BookingConfirmpage = () => {
 
             return url.toString();
         } catch (error) {
-            console.error('Error generating Google Calendar link:', error.message);
+            if (error instanceof Error) {
+                console.error('Error generating Google Calendar link:', error.message);
+            }
             return null;
         }
     };

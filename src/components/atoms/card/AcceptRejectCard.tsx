@@ -18,7 +18,7 @@ type AcceptRejectCardProps = {
 } & CardProps;
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
-    id,
+    // id,
     title,
     fromTime,
     toTime,
@@ -26,7 +26,7 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     userImages,
     onAccept,
     onReject,
-    status,
+    // status,
     ...props
 }) => {
     const [localStatus, setLocalStatus] = useState<number | null>(null);
