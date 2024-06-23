@@ -4,7 +4,7 @@ import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
 import DaySelector from '@/components/atoms/dayselector';
-// import WorkingHoursSelector from '@/components/atoms/timeInput';
+import WorkingHoursSelector from '@/components/atoms/timeInput';
 
 const AvailabilityFields = ({
     fields,
@@ -24,15 +24,45 @@ const AvailabilityFields = ({
             <FlexItem>
                 <Header1>{'Your Availability '}</Header1>
             </FlexItem>
-            {fields.map((field, _inx: number) => {
+            {fields.map((field, index) => {
                 const { type, placeholder, label, name } = field;
 
                 switch (type) {
-                    case 'multi-select':
+                    case 'WorkingHoursSelector':
                         return (
-                            <Flex key={_inx} dir='column' gap={1}>
+                            <Flex key={index} dir='column'>
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
+                                    <WorkingHoursSelector
+                                        onStartChange={(value) =>
+                                            handleChange({
+                                                target: {
+                                                    name,
+                                                    value,
+                                                },
+                                            } as React.ChangeEvent<HTMLInputElement>)
+                                        }
+                                        onEndChange={(value) =>
+                                            handleChange({
+                                                target: {
+                                                    name,
+                                                    value,
+                                                },
+                                            } as React.ChangeEvent<HTMLInputElement>)
+                                        }
+                                        size='md'
+                                    />
+                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
+                                </FlexItem>
+                            </Flex>
+                        );
+
+                    case 'multi-select':
+                        return (
+                            <Flex key={index} dir='column' gap={1}>
+                                <Label htmlFor={name}>{label}</Label>
+                                <FlexItem>
+                                    {/* Replace with your DaySelector component or other multi-select implementation */}
                                     <DaySelector
                                         value={values[name]}
                                         onChange={(value) => setFieldValue(name, value)}
@@ -44,7 +74,7 @@ const AvailabilityFields = ({
 
                     default:
                         return (
-                            <Flex key={_inx} dir='column' gap={1}>
+                            <Flex key={index} dir='column' gap={1}>
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Input
