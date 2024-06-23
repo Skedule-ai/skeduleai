@@ -1,5 +1,5 @@
 import { tv, type VariantProps } from 'tailwind-variants';
-
+export type RowType = 1 | 2 | 3 | 4 | 5 | 6 | undefined;
 const gridVariants = tv({
     base: 'grid',
     variants: {

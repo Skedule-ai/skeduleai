@@ -3,78 +3,90 @@
 import React from 'react';
 import { Flex } from '../flex';
 import Modal from '@/components/molecules/modal';
-import { Header2, Header3, Subtitle } from '../typography';
-import { Cross } from '@strapi/icons';
+import { BookingModalLabels, Header2, Header3, Subtitle } from '../typography';
 import Button from '../button';
 import BookingModalVariants from './booking-modal-variants';
+
+const ModalLabels = [
+    { name: 'Meeting Duration', key: 'meetingDuration' },
+    { name: 'Meeting Date', key: 'selectDate' },
+    { name: 'Meeting Time', key: 'selectTime' },
+    { name: 'Time Zone', key: 'timeZone' },
+];
+
+type FormDataType = {
+    meetingDuration: string;
+    selectDate: string | Date;
+    selectTime: string;
+    timeZone: string;
+};
 
 interface BookingModalProps {
     isOpen: boolean;
     onClose: () => void;
-    formData: {
-        meetingDuration: string;
-        selectDate: string;
-        selectTime: string;
-        timeZone: string;
-    };
+    formData: FormDataType;
     serviceId: string;
     serviceProviderName: string;
     availableTimeSlots: any[];
+    image: string;
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({
     isOpen,
     onClose,
     formData,
-    // serviceId,
-    // availableTimeSlots,
-    // serviceProviderName,
+    serviceId,
+    availableTimeSlots,
+    serviceProviderName,
+    image,
 }) => {
+    const formattedFormData = {
+        ...formData,
+        selectDate:
+            formData.selectDate instanceof Date
+                ? formData.selectDate.toLocaleDateString()
+                : formData.selectDate,
+    };
+
     return (
         <Modal show={isOpen} onClose={onClose}>
             <Flex
                 dir='row'
                 alignItems='center'
                 justifyContent='between'
-                className='border-b-2 border-gray-300 p-3'
+                className='border-b-2 border-gray-300 p-2'
             >
                 <Header3>Booking Summary</Header3>
-                <Flex
-                    className='cursor-pointer rounded-lg border-2 border-gray-200 p-2'
-                    onClick={onClose}
-                >
-                    <Cross className='size-3' />
-                </Flex>
             </Flex>
 
-            <Flex dir='column' gap={3} className='p-5'>
-                <Header2>Host Name(Service provider)</Header2>
+            <Flex dir='column' gap={2} className='p-2'>
+                <Header2>{serviceProviderName}(Service provider)</Header2>
                 <Subtitle>Designation</Subtitle>
 
                 <Flex dir='row' justifyContent='between' alignItems='center'>
-                    {Object.entries(formData).map(([key, value]) => (
-                        <Button
-                            className='flex justify-center text-xs font-normal'
-                            size='lg'
-                            key={key}
-                            color='disabled'
-                            disabled
-                        >
-                            {value}
-                        </Button>
+                    {ModalLabels.map((label, index) => (
+                        <Flex dir='column' gap={1} key={index}>
+                            <BookingModalLabels>{label.name}</BookingModalLabels>
+                            <Button
+                                className='flex cursor-not-allowed justify-center text-xs font-normal'
+                                size='lg'
+                                color='disabled'
+                                disabled
+                            >
+                                {formattedFormData[label.key as keyof FormDataType]}
+                            </Button>
+                        </Flex>
                     ))}
                 </Flex>
             </Flex>
 
-            {/* the componenet here  */}
             <BookingModalVariants
-                formData={undefined}
-                serviceId={''}
-                availableTimeSlots={[]}
-                serviceProviderName={''}
-                onClose={function (): void {
-                    throw new Error('Function not implemented.');
-                }}
+                formData={formattedFormData}
+                serviceId={serviceId}
+                serviceProviderName={serviceProviderName}
+                availableTimeSlots={availableTimeSlots}
+                onClose={onClose}
+                image={image}
             />
         </Modal>
     );

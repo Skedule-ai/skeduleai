@@ -1,11 +1,12 @@
 import React from 'react';
 import { ButtonProps, buttonVariants } from './button.variants';
+import { Loader } from '@strapi/icons';
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ({ size, color = 'primary', className, loading, children, ...rest }, ref) => {
         return (
             <button ref={ref} className={buttonVariants({ size, color, className })} {...rest}>
-                {loading && 'Loading...'}
+                {loading && <Loader className='animate-spin' />}
                 {children}
             </button>
         );
