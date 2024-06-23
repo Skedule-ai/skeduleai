@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FieldProps } from 'formik';
 import Button from '@/components/atoms/button';
 import Container from '../container';
 import Text from '../text';
 import { ChevronDown, Cross } from '@strapi/icons';
 
-type TimeZoneProps = {
+// Define the props for the TimeZone component
+type TimeZoneProps = FieldProps & {
     timeZone: string;
     timeZones: {
         label: string;
@@ -19,18 +21,40 @@ type TimeZoneProps = {
 };
 
 const TimeZone: React.FC<TimeZoneProps> = ({
+    field,
+    form, // Ensure 'form' is correctly received in props
     timeZone,
     timeZones,
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,
-    searchQuery,
+    // searchQuery,
     onSearchQueryChange,
     className = '',
 }) => {
+    const [inputValue, setInputValue] = useState('');
+
+    // Filter time zones based on the input value
     const filteredTimeZones = timeZones.filter((zone) =>
-        zone.label.toLowerCase().includes(searchQuery.toLowerCase()),
+        zone.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
+
+    // Handle input change and set form field value
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputValue(value);
+        onSearchQueryChange(value);
+        form.setFieldValue(field.name, value); // Ensure form is correctly passed and destructured
+    };
+
+    // Handle time zone selection
+    const handleTimeZoneSelect = (zoneValue: string) => {
+        onTimeZoneChange(zoneValue);
+        if (form) {
+            form.setFieldValue(field.name, zoneValue); // Check if form is defined before using it
+        }
+        toggleDropdown();
+    };
 
     return (
         <Container className={`relative ${className}`}>
@@ -48,15 +72,15 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                     <input
                         type='text'
                         placeholder='Search...'
-                        value={searchQuery}
-                        onChange={(e) => onSearchQueryChange(e.target.value)}
+                        value={inputValue}
+                        onChange={handleChange}
                         className='block w-full border-b border-gray-200 px-4 py-2 text-sm text-gray-900 focus:outline-none'
                     />
                     {filteredTimeZones.map((zone) => (
                         <Text
                             key={zone.value}
-                            className='block w-full px-4 py-2 text-sm text-gray-900 hover:bg-gray-100'
-                            onClick={() => onTimeZoneChange(zone.value)}
+                            className='block w-full cursor-pointer px-4 py-2 text-sm text-gray-900 hover:bg-gray-100'
+                            onClick={() => handleTimeZoneSelect(zone.value)}
                         >
                             {zone.label}
                         </Text>

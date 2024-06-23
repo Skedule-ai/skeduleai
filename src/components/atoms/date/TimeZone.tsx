@@ -1,17 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
+import { FieldProps } from 'formik';
+type TimeZoneProps = FieldProps;
 
-const DateContainer = () => {
+const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
     const [, setCurrentDay] = useState('');
-    // const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
+    // const [, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
     const [, setCurrentTime] = useState('');
     const [timeZone, setTimeZone] = useState(moment.tz.guess());
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
     // Fetch the list of time zones from moment-timezone
     const timeZones = moment.tz.names().map((zone) => ({
         label: zone.replace('_', ' '),
@@ -57,12 +59,15 @@ const DateContainer = () => {
             timeZones={timeZones}
             // onDateChange={handleDateChange}
             onTimeZoneChange={handleTimeZoneChange}
-            showDropdown={showDropdown}
-            toggleDropdown={toggleDropdown}
             searchQuery={searchQuery}
             onSearchQueryChange={handleSearchQueryChange}
+            field={field}
+            form={form}
+            meta={meta}
+            showDropdown={showDropdown}
+            toggleDropdown={toggleDropdown}
         />
     );
 };
 
-export default DateContainer;
+export default TimeZone;

@@ -29,7 +29,7 @@ export const getFormFields = () => {
                 name: 'currency',
                 placeholder: 'Select your currency',
                 required: true,
-                type: 'text',
+                type: 'currency',
             },
         ],
         availability: [

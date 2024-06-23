@@ -65,6 +65,7 @@ const BookingModalMobile: React.FC<BookingModalMobileProps> = ({ isOpen, onClose
                     onClose={function (): void {
                         throw new Error('Function not implemented.');
                     }}
+                    image={''}
                 />
             </Container>
         )

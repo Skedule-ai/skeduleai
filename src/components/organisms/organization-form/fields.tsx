@@ -1,3 +1,5 @@
+import Currency from '@/components/atoms/currency/currency';
+import TimeZone from '@/components/atoms/date/TimeZone';
 import Input from '@/components/atoms/fields';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label, Subtitle } from '@/components/atoms/typography';
@@ -25,6 +27,43 @@ const OrgFields = ({
                 let Field = Input;
 
                 switch (type) {
+                    case 'timezone':
+                        return (
+                            <Flex key={_inx} dir='column' gap={1}>
+                                <Label htmlFor={field.name}>{label}</Label>
+                                <FlexItem>
+                                    <TimeZone
+                                        // className='lg'
+                                        field={{
+                                            name: 'timeZone',
+                                            onBlur: () => {},
+                                            onChange: () => {},
+                                            value: '',
+                                        }}
+                                        form={field.form}
+                                        meta={field} // onSearchQueryChange={() => {}}
+                                        // onTimeZoneChange={() => {}}
+                                        // searchQuery=''
+                                        // toggleDropdown={() => {}}
+                                    />
+                                </FlexItem>
+                            </Flex>
+                        );
+                    case 'currency':
+                        return (
+                            <Flex key={_inx} dir='column' gap={1}>
+                                <Label htmlFor={name}>{label}</Label>
+                                <FlexItem>
+                                    <Currency
+                                    // id='currency'
+                                    // name='currency'
+                                    // onChange={() => {}}
+                                    // placeholder='Select a currency'
+                                    // size='md'
+                                    />
+                                </FlexItem>
+                            </Flex>
+                        );
                     default:
                         Field = Input;
                         break;
