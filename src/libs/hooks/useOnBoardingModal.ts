@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
     useUpdateUserConfigurationMutation,
     useFetchUserConfigurationQuery,
-} from '../api/user-configuration';
+} from '../api/userConfiguration';
 
 const useOnBoardingModal = () => {
     const [isOpen, setIsOpen] = useState(false);

@@ -5,7 +5,6 @@ import TimeZone from '@/components/atoms/date/TimeZone';
 // import SideBar from '@/components/organisms/sidebar';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
-import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
 import { Header2 } from '@/components/atoms/typography';
@@ -13,63 +12,13 @@ import Notification from '@/components/atoms/notification';
 import { Information } from '@strapi/icons';
 import { useAuth } from '@clerk/nextjs';
 import { Field, Formik } from 'formik';
-import toast, { Toaster } from 'react-hot-toast';
-import { RowType } from '@/components/atoms/grid/grid.variants';
-
-// export enum AppointmentStatus {
-//     PENDING = 1,
-//     ACCEPTED = 2,
-//     REJECT = 3,
-// }
+import { Toaster } from 'react-hot-toast';
+import ManageAppointment from '@/components/organisms/appointments/manage-appointment';
 
 const DashboardPage = () => {
     const { getToken } = useAuth();
     const [bookingUrl, setBookingUrl] = useState('');
-    const [appointments, setAppointments] = useState<
-        {
-            id: string;
-            startTime: string;
-            endTime: string;
-            status: number;
-        }[]
-    >([]);
     const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
-    const [, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const handleStatusChange = async (id: string, accepted: boolean) => {
-        const token = await getToken();
-        try {
-            const response = await fetch('http://localhost:3000/api/booking_service/status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ id, accepted }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const responseData = await response.json();
-            const updatedStatus = responseData.bookingDetails.status;
-
-            setAppointments((prevAppointments) =>
-                prevAppointments.map((appointment) =>
-                    appointment.id === id ? { ...appointment, status: updatedStatus } : appointment,
-                ),
-            );
-
-            accepted
-                ? toast.success('Appointment accepted successfully')
-                : toast.error('Appointment rejected successfully');
-        } catch (error) {
-            console.error('Error updating appointment status:', error);
-            toast.error('Failed to update appointment status.');
-        }
-    };
 
     const showNotification = (message: string) => {
         setNotificationMessage(message);
@@ -98,32 +47,7 @@ const DashboardPage = () => {
             }
         };
 
-        const fetchAppointments = async () => {
-            const token = await getToken();
-            try {
-                const response = await fetch(
-                    'http://localhost:3000/api/booking_service/appointment',
-                    {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                );
-                const data = await response.json();
-                if (data.appointments) {
-                    setAppointments(data.appointments);
-                }
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-                setError('Failed to fetch appointments.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchBookingData();
-        fetchAppointments();
     }, [getToken]);
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
@@ -174,45 +98,7 @@ const DashboardPage = () => {
                         </Grid>
                     </Flex>
                     <Flex className='mt-6 flex-col'>
-                        <Container className='overflow-x-auto'>
-                            <Header2>{'Meeting Proposals'}</Header2>
-                            {error ? (
-                                <p>{error}</p>
-                            ) : appointments.length === 0 ? (
-                                <p>No meeting proposals yet.</p>
-                            ) : (
-                                <Grid
-                                    className='mt-4'
-                                    columns={4}
-                                    gap={4}
-                                    rows={Math.ceil(appointments.length / 3) as RowType}
-                                >
-                                    {appointments.map((appointment) => (
-                                        <AcceptRejectCard
-                                            key={appointment.id}
-                                            id={appointment.id}
-                                            fromTime={appointment.startTime}
-                                            toTime={appointment.endTime}
-                                            isFree
-                                            status={appointment.status}
-                                            onAccept={() =>
-                                                handleStatusChange(appointment.id, true)
-                                            }
-                                            onReject={() =>
-                                                handleStatusChange(appointment.id, false)
-                                            }
-                                            title='Brainstorming session'
-                                            userImages={[
-                                                'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                                            ]}
-                                            variant='default'
-                                        >
-                                            <></>
-                                        </AcceptRejectCard>
-                                    ))}
-                                </Grid>
-                            )}
-                        </Container>
+                        <ManageAppointment />
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container>
