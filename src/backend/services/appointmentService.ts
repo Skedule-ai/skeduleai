@@ -19,6 +19,7 @@ import {
     sendAppointmentRejectEmailService,
 } from '@/backend/services/emailService';
 import { ErrorMessages } from '@/libs/message/error';
+import moment from 'moment';
 import { findGuestUserData } from '../repositories/guestUserRepository';
 import { getClerkClient } from '../utils/clerkClient';
 
@@ -190,25 +191,36 @@ export async function updateAppointmentStatusService(
 
         // Step 6: ToDo: Send email notification.
 
-        let customerName: string | undefined, customerEmail: string | undefined;
+        let serviceProviderName: string | undefined, customerEmail: string | undefined;
+        let appointmentDate: string | undefined, appointmentTime: string | undefined;
         if (bookingDetails.guestUserId) {
             const guestData = await findGuestUserData(bookingDetails.guestUserId);
-            customerName = guestData?.name;
+            serviceProviderName = guestData?.name;
             customerEmail = guestData?.email;
+            appointmentDate = moment(guestData?.createdAt).format('YYYY-MM-DD');
+            appointmentTime = moment(guestData?.createdAt).format('HH:mm');
         } else if (bookingDetails.customerId) {
             const client = getClerkClient();
             const userData = await client.users.getUser(bookingDetails.customerId);
-            customerName = userData.fullName ?? '';
+            serviceProviderName = userData.fullName ?? '';
             const customerEmailObj = userData.emailAddresses.find((email) => email);
             customerEmail = customerEmailObj?.emailAddress;
+            appointmentDate = moment(userData.createdAt).format('YYYY-MM-DD');
+            appointmentTime = moment(userData.createdAt).format('HH:mm');
         }
+        console.log(acceptStatus, customerEmail, serviceProviderName);
         if (acceptStatus === AppointmentStatus.ACCEPTED) {
-            if (customerEmail && customerName) {
-                await sendAppointmentAcceptedEmailService(customerEmail, customerName);
+            if (customerEmail && serviceProviderName && appointmentDate && appointmentTime) {
+                await sendAppointmentAcceptedEmailService(
+                    customerEmail,
+                    serviceProviderName,
+                    appointmentDate,
+                    appointmentTime,
+                );
             }
         } else if (acceptStatus === AppointmentStatus.REJECT) {
-            if (customerEmail && customerName) {
-                await sendAppointmentRejectEmailService(customerEmail, customerName);
+            if (customerEmail && serviceProviderName) {
+                await sendAppointmentRejectEmailService(customerEmail, serviceProviderName);
             }
         }
         // Step 7: Return formatted booking detials.
