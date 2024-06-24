@@ -59,9 +59,15 @@ interface PostData {
     [key: string]: any;
 }
 
+export type MutationHelperResolvers = {
+    initialData?: any;
+    onCompleted?: (data: any) => void;
+    onError?: (err: any) => void;
+};
+
 export function useMutation(
     url: string,
-    initialData: PostData | null = null,
+    queryHelpers?: MutationHelperResolvers,
 ): [
     (data: PostData) => Promise<any>,
     {
@@ -70,14 +76,16 @@ export function useMutation(
         isLoading: boolean;
     },
 ] {
-    const { data, error, isValidating } = useSWR(url, { fallbackData: initialData });
+    const { data, error, isValidating } = useSWR(url, { fallbackData: queryHelpers?.initialData });
 
     const postData = async (data: PostData) => {
         try {
             const response = await post(url, data);
             mutate(url, response, false); // Update the local data immediately, but revalidate in the background
+            queryHelpers?.onCompleted?.(data);
             return response;
         } catch (error) {
+            queryHelpers?.onError?.(error);
             throw error;
         }
     };
