@@ -1,4 +1,9 @@
-import { QueryHelperResolvers, useMutation, useQuery } from '../utils/client';
+import {
+    MutationHelperResolvers,
+    QueryHelperResolvers,
+    useMutation,
+    useQuery,
+} from '../utils/client';
 import { CreateUserConfigurationArgs } from './types';
 
 const endpoint = '/api/user_configuration';
@@ -9,7 +14,7 @@ export const useFetchUserConfigurationQuery = (options?: QueryHelperResolvers) =
 };
 
 export const useUpdateUserConfigurationMutation = (
-    initialData?: CreateUserConfigurationArgs,
+    queryHelpers?: MutationHelperResolvers,
 ): [
     (data: CreateUserConfigurationArgs) => Promise<any>,
     {
@@ -18,6 +23,6 @@ export const useUpdateUserConfigurationMutation = (
         isLoading: boolean;
     },
 ] => {
-    const [createUserConfiguration, swrResponse] = useMutation(endpoint, initialData);
+    const [createUserConfiguration, swrResponse] = useMutation(endpoint, queryHelpers);
     return [createUserConfiguration, swrResponse];
 };
