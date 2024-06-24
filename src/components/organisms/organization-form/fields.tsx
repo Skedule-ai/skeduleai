@@ -33,7 +33,6 @@ const OrgFields = ({
                                 <Label htmlFor={field.name}>{label}</Label>
                                 <FlexItem>
                                     <TimeZone
-                                        // className='lg'
                                         field={{
                                             name: 'timeZone',
                                             onBlur: () => {},

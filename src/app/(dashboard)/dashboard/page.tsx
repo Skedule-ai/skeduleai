@@ -1,8 +1,8 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
-// import SideBar from '@/components/organisms/sidebar';
+import React, { useEffect, useState } from 'react';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
@@ -94,7 +94,6 @@ const DashboardPage = () => {
                                     {notificationMessage}
                                 </Notification>
                             )}
-                            {/* <TimeZone field={undefined} form={undefined} meta={undefined} /> */}
                         </Grid>
                     </Flex>
                     <Flex className='mt-6 flex-col'>

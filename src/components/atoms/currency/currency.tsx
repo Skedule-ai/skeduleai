@@ -23,6 +23,7 @@ const Currency: React.FC = () => {
                         <Grid>
                             <Grid>
                                 <Field
+                                    className='font-semibold'
                                     name='currency'
                                     as={Dropdown}
                                     color='primary'
@@ -31,7 +32,7 @@ const Currency: React.FC = () => {
                                         { label: '₹', value: 'inr' },
                                     ]}
                                     onChange={handleChange}
-                                    placeholder='Select a currency'
+                                    placeholder='Select a Currency'
                                     size='medium'
                                     value={values.currency}
                                 />
