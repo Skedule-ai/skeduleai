@@ -3,9 +3,9 @@ import sgMail from '@sendgrid/mail';
 
 const apiKey = process.env.SENDGRID_API_KEY ?? '';
 const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
-const tempId = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
-const templId = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
-const templId1 = process.env.REJECTMAIL_TEMPLATE_ID ?? '';
+const acceptMailTemp = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
+const welcomeMailTemp = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
+const rejectMailTemp = process.env.REJECTMAIL_TEMPLATE_ID ?? '';
 
 export async function sendWelcomeEmails(
     emailDataList: {
@@ -17,7 +17,7 @@ export async function sendWelcomeEmails(
     const sgMailDataList = emailDataList.map(({ email, userName }) => ({
         to: email,
         from: senderEmail,
-        templateId: templId,
+        templateId: welcomeMailTemp,
         dynamic_template_data: {
             firstName: userName,
         },
@@ -45,7 +45,7 @@ export async function sendAppointmentAcceptedEmailService(
         const emailData = {
             to: customerEmail,
             from: senderEmail,
-            templateId: tempId,
+            templateId: acceptMailTemp,
             dynamicTemplateData: {
                 serviceProviderName: customerName,
                 date: appointmentDate,
@@ -71,9 +71,9 @@ export async function sendAppointmentRejectEmailService(
         const emailData1 = {
             to: customerEmail,
             from: senderEmail,
-            templateId: templId1,
+            templateId: rejectMailTemp,
             dynamicTemplateData: {
-                User: customerName,
+                ser: customerName,
             },
         };
 
@@ -81,7 +81,7 @@ export async function sendAppointmentRejectEmailService(
 
         return { ack, message: 'Appointment reject email sent successfully' };
     } catch (error) {
-        console.error('sendAppointmentRejectMail', error.response.body.errors);
+        console.error('sendAppointmentRejectMail', error);
         throw new Error(ErrorMessages.FAILED_TO_SEND_EMAIL);
     }
 }
