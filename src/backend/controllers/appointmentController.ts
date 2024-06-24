@@ -2,6 +2,7 @@ import {
     CreateAppointmentInputDataType,
     createAppointmentService,
     getAppointmentsService,
+    getBookingDetailsByBookingIdService,
     updateAppointmentStatusService,
 } from '../services/appointmentService';
 
@@ -19,4 +20,8 @@ export async function findAppointmentsController(organizationId?: string | null)
 export async function updateAppointmentStatusController(data: { id: string; accepted: boolean }) {
     const updatedAppointmentDetails = await updateAppointmentStatusService(data.id, data.accepted);
     return updatedAppointmentDetails;
+}
+
+export async function findBookingDetailsByBookingIdController(bookingId?: string) {
+    return await getBookingDetailsByBookingIdService(bookingId);
 }
