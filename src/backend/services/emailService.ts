@@ -5,8 +5,15 @@ const apiKey = process.env.SENDGRID_API_KEY ?? '';
 const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
 const tempId = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
 const templId = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
+const templId1 = process.env.REJECTMAIL_TENPLATE_ID ?? '';
 
-export async function sendWelcomeEmails(emailDataList) {
+export async function sendWelcomeEmails(
+    emailDataList: {
+        email: string;
+        firstName: string;
+        lastName: string;
+    }[],
+) {
     sgMail.setApiKey(apiKey);
     const sgMailDataList = emailDataList.map(({ email, firstName, lastName }) => ({
         to: email,
@@ -21,7 +28,9 @@ export async function sendWelcomeEmails(emailDataList) {
         const ack = await sgMail.send(sgMailDataList);
         return ack;
     } catch (error) {
-        throw new Error(`Error sending welcome email: ${error.message}`);
+        if (error instanceof Error) {
+            throw new Error(`Error sending welcome email: ${error.message}`);
+        }
     }
 }
 
@@ -46,6 +55,31 @@ export async function sendAppointmentAcceptedEmailService(
         return { ack, message: 'Appointment accepted email sent successfully' };
     } catch (error) {
         console.error('sendAppointmentAcceptedMail', error);
+        throw new Error(ErrorMessages.FAILED_TO_SEND_EMAIL);
+    }
+}
+
+export async function sendAppointmentRejectEmailService(
+    customerEmail: string,
+    customerName: string,
+) {
+    try {
+        sgMail.setApiKey(apiKey);
+
+        const emailData = {
+            to: customerEmail,
+            from: senderEmail,
+            templateId: templId1,
+            dynamicTemplateData: {
+                customerName,
+            },
+        };
+
+        const ack = await sgMail.send(emailData);
+
+        return { ack, message: 'Appointment reject email sent successfully' };
+    } catch (error) {
+        console.error('sendAppointmentRejectMail', error);
         throw new Error(ErrorMessages.FAILED_TO_SEND_EMAIL);
     }
 }

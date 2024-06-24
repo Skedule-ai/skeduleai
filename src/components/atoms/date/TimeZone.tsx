@@ -1,17 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
+import { FieldProps } from 'formik';
+type TimeZoneProps = FieldProps;
 
-const DateContainer = () => {
-    const [currentDay, setCurrentDay] = useState('');
-    const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
-    const [currentTime, setCurrentTime] = useState('');
+const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
+    const [, setCurrentDay] = useState('');
+    // const [, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
+    const [, setCurrentTime] = useState('');
     const [timeZone, setTimeZone] = useState(moment.tz.guess());
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
     // Fetch the list of time zones from moment-timezone
     const timeZones = moment.tz.names().map((zone) => ({
         label: zone.replace('_', ' '),
@@ -31,9 +33,9 @@ const DateContainer = () => {
         return () => clearInterval(interval);
     }, [timeZone]);
 
-    const handleDateChange = (date: string) => {
-        setCurrentDate(date);
-    };
+    // const handleDateChange = (date: string) => {
+    //     setCurrentDate(date);
+    // };
 
     const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
@@ -50,19 +52,22 @@ const DateContainer = () => {
 
     return (
         <TimeZoneDisplay
-            currentDay={currentDay}
-            currentDate={currentDate}
-            currentTime={currentTime}
+            // currentDay={currentDay}
+            // currentDate={currentDate}
+            // currentTime={currentTime}
             timeZone={timeZone}
             timeZones={timeZones}
-            onDateChange={handleDateChange}
+            // onDateChange={handleDateChange}
             onTimeZoneChange={handleTimeZoneChange}
-            showDropdown={showDropdown}
-            toggleDropdown={toggleDropdown}
             searchQuery={searchQuery}
             onSearchQueryChange={handleSearchQueryChange}
+            field={field}
+            form={form}
+            meta={meta}
+            showDropdown={showDropdown}
+            toggleDropdown={toggleDropdown}
         />
     );
 };
 
-export default DateContainer;
+export default TimeZone;

@@ -12,6 +12,7 @@ interface BookingModalVariantsProps {
     availableTimeSlots: any[];
     serviceProviderName: string;
     onClose: () => void;
+    image: string;
 }
 
 const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
@@ -19,7 +20,8 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
     serviceId,
     // availableTimeSlots,
     onClose,
-    // serviceProviderName,
+    serviceProviderName,
+    image,
 }) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
@@ -29,30 +31,16 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                 return (
                     <GuestForm
                         onSubmit={(values) => console.log(values)}
-                        formData={{
-                            selectDate: '',
-                            selectTime: '',
-                        }}
-                        serviceId={''}
-                        onClose={function (): void {
-                            throw new Error('Function not implemented.');
-                        }}
+                        formData={formData}
+                        serviceId={serviceId}
+                        onClose={onClose}
+                        serviceProviderName={serviceProviderName}
+                        image={image}
                     />
                 );
 
             case 'Sign In':
-                return (
-                    <SignInForm
-                        formData={{
-                            selectDate: '',
-                            selectTime: '',
-                        }}
-                        serviceId={''}
-                        onClose={function (): void {
-                            throw new Error('Function not implemented.');
-                        }}
-                    />
-                );
+                return <SignInForm formData={formData} serviceId={serviceId} onClose={onClose} />;
 
             case 'Sign Up':
                 return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;
@@ -68,7 +56,11 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                     <div
                         key={option}
                         onClick={() => setActiveForm(option)}
-                        className={`cursor-pointer px-4 py-2 text-sm font-bold md:text-base ${activeForm === option ? 'border-b-2 border-blue-500 text-blue-500' : 'border-b-2 border-white text-gray-500'}`}
+                        className={`cursor-pointer px-4 py-2 text-sm font-bold md:text-base ${
+                            activeForm === option
+                                ? 'border-b-2 border-blue-500 text-blue-500'
+                                : 'border-b-2 border-white text-gray-500'
+                        }`}
                     >
                         {option}
                     </div>

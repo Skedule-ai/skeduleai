@@ -1,21 +1,26 @@
 import { User, currentUser } from '@clerk/nextjs/server';
-import { object, string } from 'yup';
-import { nanoid } from 'nanoid';
 import { Prisma } from '@prisma/client';
+import { nanoid } from 'nanoid';
+import { object, string } from 'yup';
 
 import {
     createAppoinmentRepository,
-    findBookingDetails,
     findAppointmentsRepositoryByServiceId,
+    findBookingDetails,
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
 
-import { AppointmentStatus } from '../utils/enum';
 import { formatTime } from '@/libs/utils/datetime-helpers';
 import { findBookingServiceRepoByUser } from '../repositories/bookingServiceRepository';
+import { AppointmentStatus } from '../utils/enum';
 
-import { getClerkClient } from '../utils/clerkClient';
+import {
+    sendAppointmentAcceptedEmailService,
+    sendAppointmentRejectEmailService,
+} from '@/backend/services/emailService';
 import { ErrorMessages } from '@/libs/message/error';
+import { findGuestUserData } from '../repositories/guestUserRepository';
+import { getClerkClient } from '../utils/clerkClient';
 
 const validateAppointmentBooking = object({
     timezone: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -185,6 +190,27 @@ export async function updateAppointmentStatusService(
 
         // Step 6: ToDo: Send email notification.
 
+        let customerName: string | undefined, customerEmail: string | undefined;
+        if (bookingDetails.guestUserId) {
+            const guestData = await findGuestUserData(bookingDetails.guestUserId);
+            customerName = guestData?.name;
+            customerEmail = guestData?.email;
+        } else if (bookingDetails.customerId) {
+            const client = getClerkClient();
+            const userData = await client.users.getUser(bookingDetails.customerId);
+            customerName = userData.fullName ?? '';
+            const customerEmailObj = userData.emailAddresses.find((email) => email);
+            customerEmail = customerEmailObj?.emailAddress;
+        }
+        if (acceptStatus === AppointmentStatus.ACCEPTED) {
+            if (customerEmail && customerName) {
+                await sendAppointmentAcceptedEmailService(customerEmail, customerName);
+            }
+        } else if (acceptStatus === AppointmentStatus.REJECT) {
+            if (customerEmail && customerName) {
+                await sendAppointmentRejectEmailService(customerEmail, customerName);
+            }
+        }
         // Step 7: Return formatted booking detials.
         return { bookingDetails: updatedBookingDetails };
     } catch (error) {

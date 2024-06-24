@@ -15,14 +15,14 @@ export const getFormFields = () => {
                 name: 'timezone',
                 placeholder: 'Select your time zone',
                 required: true,
-                type: 'text',
+                type: 'timezone',
             },
             {
                 label: 'Currency',
                 name: 'currency',
                 placeholder: 'Select your currency',
                 required: true,
-                type: 'text',
+                type: 'currency',
             },
         ],
         availability: [
@@ -34,8 +34,8 @@ export const getFormFields = () => {
                 type: 'time',
             },
             {
-                label: 'Number of slots',
-                name: 'numberOfSlots',
+                label: 'Meeting Duration',
+                name: 'duration',
                 placeholder: 'Select',
                 required: true,
                 type: 'number',
