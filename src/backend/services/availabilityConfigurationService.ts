@@ -1,9 +1,8 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { currentOrganization } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { object, string, number, array } from 'yup';
 import pick from 'lodash/pick';
-
 import {
     addAvailabilityConfigurationRepository,
     findAllAvailabilityConfigurationRepository,
@@ -15,8 +14,24 @@ import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
 import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 
-const validateCreate = object({
-    // organizationId: string().required(),
+
+// Define the type for organization membership
+interface OrganizationMembership {
+    organizationId: string;
+}
+
+// Define the type for the organization
+interface Organization {
+    name: string;
+}
+
+// Define the type for the paginated response
+interface PaginatedResourceResponse<T> {
+    data: T;
+    totalCount: number;
+}
+
+const validateCreate = object({ 
     timezone: string().required(),
     startTime: string().required(),
     endTime: string().required(),
@@ -126,12 +141,6 @@ export async function updateAvailabilityConfigurationService(
             throw new Error(ErrorMessages.UNAUTHORIZED);
         }
 
-        // Step 2: Validate if organization is authenticated
-        const organization = await currentOrganization();
-        if (!organization?.id) {
-            throw new Error(ErrorMessages.UNAUTHORIZED);
-        }
-
         // Step 2: Pick required data from JSON
         const inputData = pick(data, ['organizationName','timezone', 'startTime', 'endTime', 'duration', 'day']);
 
@@ -139,16 +148,49 @@ export async function updateAvailabilityConfigurationService(
         const { day, ...updateData } = await validateUpdate.validate(inputData);      
 
 
-        // Step 5: Update availability configuration for given user, organization and day
+        // Step 4: Update availability configuration for given user, organization and day
         const availabilityConfiguration = await updateAvailabilityConfigurationRepository(
             { userId: user?.id, organizationId, day },
             updateData,
         );
-
-        // Step 6: Return updated configuration.
+        
+        // Step 5: Return updated configuration.
         return { availabilityConfiguration };
     } catch (err) {
         console.error('Error updating availability configuration:', err);
+        if (err instanceof Error) {
+            throw new Error(err.message);
+        }
+    }
+}
+
+
+// New function to fetch organization name
+export async function fetchOrganizationsByUserId(userId: string) {
+    try {
+        // Log the userId to debug
+        console.log('Fetching organizations for userId:', userId);
+        // Fetch the organization memberships for the user
+        const response: PaginatedResourceResponse<OrganizationMembership[]> = await clerkClient.users.getOrganizationMembershipList({ userId });
+
+        // Log the response to understand its structure
+        console.log('Organization Membership Response:', response);
+
+        // Access the array of memberships from the paginated response
+        const memberships = response.data;
+
+        // Map through the memberships and fetch the organization details
+        const organizationNames: string[] = await Promise.all(
+            memberships.map(async (membership) => {
+                const organization: Organization = await clerkClient.organizations.getOrganization({ organizationId: membership.organizationId });
+                return organization.name;
+            })
+        );
+
+        // Return the organization names
+        return organizationNames;
+    } catch (err) {
+        console.error('Error fetching organizations by user ID:', err);
         if (err instanceof Error) {
             throw new Error(err.message);
         }
