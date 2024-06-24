@@ -11,22 +11,12 @@ import {
 import { ErrorMessages } from '@/libs/message/error';
 import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
 import { findAllAvailabilityConfigurationRepository } from '../repositories/availabilityConfigurationRepository';
-import { getClerkClient as getClient } from '../utils/clerkClient';
+import { getFormattedImagePath, getUser, getUserOrganization } from './clerkService';
 // import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
 
 const getBookingPageURL = (id: string) => {
     const appUrl = process.env.APP_URL ?? '';
     return appUrl.concat('/booking/', id);
-};
-
-const getClerkImagePath = (imageUrl: string = '') => {
-    const path = imageUrl.split('https://img.clerk.com').find((path, inx) => inx === 1) ?? '';
-    return path;
-};
-
-const getFormattedImagePath = (imageUrl: string = '') => {
-    const path = getClerkImagePath(imageUrl);
-    return imageUrl ? '/profile'.concat(path) : '';
 };
 
 const generateBookingServiceResponse = async (
@@ -43,27 +33,9 @@ const generateBookingServiceResponse = async (
         },
         organization: {
             name: organization?.name,
-            img: getFormattedImagePath(organization?.imageUrl),
+            image: getFormattedImagePath(organization?.imageUrl),
         },
     };
-};
-
-const getUser = async (id: string) => {
-    const client = getClient();
-    const user = await client.users.getUser(id);
-    return user;
-};
-
-const getUserOrganization = async (organizationId: string, userId: string) => {
-    const client = getClient();
-    const organizationMembers = await client.users.getOrganizationMembershipList({ userId });
-    const organizationMembership = organizationMembers.data.find(
-        (data) => data.id === organizationId,
-    );
-    if (!organizationMembership) {
-        throw new Error('Invalid organization');
-    }
-    return organizationMembership.organization;
 };
 
 export type CreateBookingServiceDataType = Partial<
