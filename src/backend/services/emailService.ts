@@ -3,24 +3,23 @@ import sgMail from '@sendgrid/mail';
 
 const apiKey = process.env.SENDGRID_API_KEY ?? '';
 const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
-const tempId = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
-const templId = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
-const templId1 = process.env.REJECTMAIL_TENPLATE_ID ?? '';
+const acceptMailTemp = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
+const welcomeMailTemp = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
+const rejectMailTemp = process.env.REJECTMAIL_TEMPLATE_ID ?? '';
 
 export async function sendWelcomeEmails(
     emailDataList: {
         email: string;
-        firstName: string;
-        lastName: string;
+        userName: string;
     }[],
 ) {
     sgMail.setApiKey(apiKey);
-    const sgMailDataList = emailDataList.map(({ email, firstName, lastName }) => ({
+    const sgMailDataList = emailDataList.map(({ email, userName }) => ({
         to: email,
         from: senderEmail,
-        templateId: templId,
+        templateId: welcomeMailTemp,
         dynamic_template_data: {
-            name: `${firstName} ${lastName}`,
+            firstName: userName,
         },
     }));
 
@@ -37,6 +36,8 @@ export async function sendWelcomeEmails(
 export async function sendAppointmentAcceptedEmailService(
     customerEmail: string,
     customerName: string,
+    appointmentDate: string,
+    appointmentTime: string,
 ) {
     try {
         sgMail.setApiKey(apiKey);
@@ -44,14 +45,15 @@ export async function sendAppointmentAcceptedEmailService(
         const emailData = {
             to: customerEmail,
             from: senderEmail,
-            templateId: tempId,
+            templateId: acceptMailTemp,
             dynamicTemplateData: {
-                customerName,
+                serviceProviderName: customerName,
+                date: appointmentDate,
+                time: appointmentTime,
             },
         };
-
+        console.log(emailData);
         const ack = await sgMail.send(emailData);
-
         return { ack, message: 'Appointment accepted email sent successfully' };
     } catch (error) {
         console.error('sendAppointmentAcceptedMail', error);
@@ -66,16 +68,16 @@ export async function sendAppointmentRejectEmailService(
     try {
         sgMail.setApiKey(apiKey);
 
-        const emailData = {
+        const emailData1 = {
             to: customerEmail,
             from: senderEmail,
-            templateId: templId1,
+            templateId: rejectMailTemp,
             dynamicTemplateData: {
-                customerName,
+                ser: customerName,
             },
         };
 
-        const ack = await sgMail.send(emailData);
+        const ack = await sgMail.send(emailData1);
 
         return { ack, message: 'Appointment reject email sent successfully' };
     } catch (error) {

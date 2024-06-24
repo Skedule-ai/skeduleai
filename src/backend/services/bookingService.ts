@@ -1,17 +1,17 @@
-import { currentUser, User, Organization } from '@clerk/nextjs/server';
-import { nanoid } from 'nanoid';
+import { Organization, User, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { nanoid } from 'nanoid';
 
 import {
     createBookingServiceRepo,
     findBookingServiceRepo,
     findBookingServiceRepoByUser,
 } from '@/backend/repositories/bookingServiceRepository';
-import { getClerkClient as getClient } from '../utils/clerkClient';
-import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
 import { ErrorMessages } from '@/libs/message/error';
+import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
 import { findAllAvailabilityConfigurationRepository } from '../repositories/availabilityConfigurationRepository';
+import { getClerkClient as getClient } from '../utils/clerkClient';
 // import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
 
 const getBookingPageURL = (id: string) => {
