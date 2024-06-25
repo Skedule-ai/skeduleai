@@ -142,7 +142,7 @@ export async function updateAvailabilityConfigurationService(
         }
 
         // Step 2: Pick required data from JSON
-        const inputData = pick(data, ['organizationName','timezone', 'startTime', 'endTime', 'duration', 'day']);
+        const inputData = pick(data, ['timezone','startTime', 'endTime', 'duration', 'day']);
 
         // Step 3: Validate input data
         const { day, ...updateData } = await validateUpdate.validate(inputData);      
