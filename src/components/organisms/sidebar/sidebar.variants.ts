@@ -5,7 +5,7 @@ export const sidebarVariants = tv({
     variants: {
         collapse: {
             true: 'w-14',
-            false: 'w-auto',
+            false: 'w-52',
         },
         hide: {
             true: 'hidden',

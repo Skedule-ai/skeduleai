@@ -40,10 +40,7 @@ const OrgFields = ({
                                             value: '',
                                         }}
                                         form={field.form}
-                                        meta={field} // onSearchQueryChange={() => {}}
-                                        // onTimeZoneChange={() => {}}
-                                        // searchQuery=''
-                                        // toggleDropdown={() => {}}
+                                        meta={field}
                                     />
                                 </FlexItem>
                             </Flex>
@@ -53,13 +50,7 @@ const OrgFields = ({
                             <Flex key={_inx} dir='column' gap={1}>
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
-                                    <Currency
-                                    // id='currency'
-                                    // name='currency'
-                                    // onChange={() => {}}
-                                    // placeholder='Select a currency'
-                                    // size='md'
-                                    />
+                                    <Currency />
                                 </FlexItem>
                             </Flex>
                         );
