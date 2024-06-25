@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useEffect, useState, useCallback } from 'react';
 import InfoCard from '@/components/atoms/card/InfoCard';
 import Container from '@/components/atoms/container';
 import { Flex } from '@/components/atoms/flex';
@@ -14,89 +15,131 @@ import {
     Paragraph,
 } from '@/components/atoms/typography';
 import { Plus } from '@strapi/icons';
-import {
-    useSearchParams,
-    // useRouter
-} from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
-const BookingConfirmpage = () => {
+interface FormData {
+    selectDate?: string;
+    selectTime?: string;
+    meetingDuration?: string;
+    timeZone?: string;
+}
+
+const BookingConfirmationPage: React.FC = () => {
     const searchParams = useSearchParams();
-    // const router = useRouter();
     const image = searchParams.get('image');
     const name = searchParams.get('name');
     const formDataString = searchParams.get('formData');
-    const formData = formDataString ? JSON.parse(formDataString) : {};
+    const formData: FormData = formDataString ? JSON.parse(formDataString) : {};
 
     const formattedDate = formData.selectDate
         ? format(new Date(formData.selectDate), 'yyyy-MM-dd')
         : '';
-
     const formattedTime = formData.selectTime || '';
 
-    const generateGoogleCalendarLink = ({
-        title,
-        startDate,
-        startTime,
-        duration,
-        timeZone,
-        description = '',
-    }: {
-        title: string;
-        startDate: string;
-        startTime: string;
-        duration: number;
-        timeZone: string;
-        description?: string;
-    }) => {
-        try {
-            if (!startDate || !startTime || isNaN(Date.parse(startDate))) {
-                throw new Error('Invalid date or time');
-            }
+    const [gapiLoaded, setGapiLoaded] = useState(false);
+    const [gisLoaded, setGisLoaded] = useState(false);
+    const [tokenClient, setTokenClient] = useState<any>(null);
+    
+    useEffect(() => {
+        const loadGapiScript = () => {
+            const script = document.createElement('script');
+            script.src = 'https://apis.google.com/js/api.js';
+            script.onload = () => {
+                gapi.load('client', initializeGapiClient);
+            };
+            document.body.appendChild(script);
+        };
 
-            const startDateTime = new Date(`${startDate}T${startTime}:00`);
-            if (isNaN(startDateTime.getTime())) {
-                throw new Error('Invalid date or time');
-            }
+        const initializeGapiClient = async () => {
+            await gapi.client.init({
+                apiKey: 'AIzaSyBi_iy0gtHRvVpAt4xCQ6T5ddZ9cjkk4Rw',
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+            });
+            setGapiLoaded(true);
+        };
 
-            const endDateTime = new Date(startDateTime);
-            endDateTime.setMinutes(endDateTime.getMinutes() + duration);
+        const loadGisScript = () => {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.onload = () => {
+                const client = google.accounts.oauth2.initTokenClient({
+                    client_id:
+                        '36053781201-56m5fs2ua6l145nt2eef34eqie75712n.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/calendar.events',
+                    callback: '', // defined later
+                });
+                setTokenClient(client);
+                setGisLoaded(true);
+            };
+            document.body.appendChild(script);
+        };
 
-            const start = startDateTime.toISOString().replace(/-|:|\.\d+/g, '');
-            const end = endDateTime.toISOString().replace(/-|:|\.\d+/g, '');
+        loadGapiScript();
+        loadGisScript();
+    }, []);
 
-            const url = new URL('https://www.google.com/calendar/render');
-            url.searchParams.append('action', 'TEMPLATE');
-            url.searchParams.append('text', title);
-            url.searchParams.append('dates', `${start}/${end}`);
-            url.searchParams.append('ctz', timeZone);
-            if (description) {
-                url.searchParams.append('details', description);
-            }
-
-            return url.toString();
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error('Error generating Google Calendar link:', error.message);
-            }
-            return null;
+    const handleAddToCalendarClick = useCallback(async () => {
+        if (!gapiLoaded || !gisLoaded || !tokenClient) {
+            alert('Google API not loaded yet.');
+            return;
         }
-    };
 
-    const googleCalendarLink = generateGoogleCalendarLink({
-        title: name || 'Service Provider Name',
-        startDate: formData.selectDate,
-        startTime: formData.selectTime,
-        duration: formData.meetingDuration,
-        timeZone: formData.timeZone,
-    });
+        tokenClient.callback = async (resp: any) => {
+            if (resp.error !== undefined) {
+                console.error('OAuth error:', resp.error);
+                alert('Failed to get access token.');
+                return;
+            }
 
-    const handleAddToCalendar = () => {
-        if (googleCalendarLink) {
-            window.open(googleCalendarLink, '_blank', 'noopener,noreferrer');
-        } else {
-            alert('Unable to generate calendar link.');
-        }
-    };
+            try {
+                const formattedDateTime = (date, time) => {
+                    return `${date}T${time}:00`;
+                };
+
+                const event = {
+                    summary: 'Your Appointment',
+                    description: `Meeting with ${name}`,
+                    start: {
+                        dateTime: formattedDateTime(formattedDate, formattedTime),
+                        timeZone: formData.timeZone || 'America/Los_Angeles',
+                    },
+                    end: {
+                        dateTime: formattedDateTime(formattedDate, formattedTime),
+                        timeZone: formData.timeZone || 'America/Los_Angeles',
+                    },
+                    reminders: {
+                        useDefault: false,
+                        overrides: [
+                            { method: 'email', minutes: 24 * 60 },
+                            { method: 'popup', minutes: 10 },
+                        ],
+                    },
+                };
+
+                console.log('Event data being sent to Google Calendar:', event);
+
+                const request = gapi.client.calendar.events.insert({
+                    calendarId: 'primary',
+                    resource: event,
+                });
+
+                request.execute((event: any) => {
+                    console.log('Event creation response:', event);
+                    if (event && event.htmlLink) {
+                        alert('Event created: ' + event.htmlLink);
+                    } else {
+                        console.error('Event creation response error:', event);
+                        alert('Failed to create event.');
+                    }
+                });
+            } catch (err) {
+                console.error('Error creating event:', err);
+                alert('Failed to create event.');
+            }
+        };
+
+        tokenClient.requestAccessToken({ prompt: '' });
+    }, [gapiLoaded, gisLoaded, tokenClient, formattedDate, formattedTime, formData.timeZone, name]);
 
     return (
         <main>
@@ -152,8 +195,8 @@ const BookingConfirmpage = () => {
                             </Flex>
 
                             <div
-                                onClick={handleAddToCalendar}
                                 className='mt-10 cursor-pointer underline decoration-blue-600 underline-offset-4'
+                                onClick={handleAddToCalendarClick}
                             >
                                 <Flex dir='row' alignItems='center' gap={1}>
                                     <Plus className='text-blue-600' />
@@ -186,4 +229,4 @@ const BookingConfirmpage = () => {
     );
 };
 
-export default BookingConfirmpage;
+export default BookingConfirmationPage;

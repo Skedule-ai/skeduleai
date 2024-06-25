@@ -17,13 +17,6 @@ export const getFormFields = () => {
                 required: true,
                 type: 'timezone',
             },
-            // {
-            //     label: 'Select time zone',
-            //     name: 'timezone',
-            //     placeholder: 'Select your time zone',
-            //     required: true,
-            //     type: 'text',
-            // },
             {
                 label: 'Currency',
                 name: 'currency',
@@ -35,7 +28,7 @@ export const getFormFields = () => {
         availability: [
             {
                 label: 'Business hours',
-                name: 'start_time',
+                name: 'businessHours',
                 placeholder: 'Select',
                 required: true,
                 type: 'WorkingHoursSelector',
@@ -65,15 +58,9 @@ const organizationInitialValues = {
 };
 const availabilityInitialValues = {
     businessHours: '',
-    businessHoursEnd: '',
-    numberOfSlots: '',
+    duration: '',
     businessDays: [],
 };
-// const businessInitialValues = {
-//     business_name: '',
-//     service_provided: '',
-//     description: '',
-// };
 
 export const getInitialValues = (type: DetailsType) => {
     const defaultVal = { submitError: '', submitSuccess: '' };
@@ -88,11 +75,6 @@ export const getInitialValues = (type: DetailsType) => {
                 ...availabilityInitialValues,
                 ...defaultVal,
             };
-        // case DetailsType.businessDetails:
-        //     return{
-        //         ...availabilityInitialValues,
-        //         ...defaultVal,
-        //     }
         default:
             return defaultVal;
     }

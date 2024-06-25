@@ -28,41 +28,40 @@ const AvailabilityFields = ({
                 const { type, placeholder, label, name } = field;
 
                 switch (type) {
-                    case 'WorkingHoursSelector':
-                        return (
-                            <Flex key={index} dir='column'>
-                                <Label htmlFor={name}>{label}</Label>
-                                <FlexItem>
-                                    <WorkingHoursSelector
-                                        onStartChange={(value) =>
-                                            handleChange({
-                                                target: {
-                                                    name,
-                                                    value,
-                                                },
-                                            } as React.ChangeEvent<HTMLInputElement>)
-                                        }
-                                        onEndChange={(value) =>
-                                            handleChange({
-                                                target: {
-                                                    name,
-                                                    value,
-                                                },
-                                            } as React.ChangeEvent<HTMLInputElement>)
-                                        }
-                                        size='md'
-                                    />
-                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
-                                </FlexItem>
-                            </Flex>
-                        );
+                    // case 'WorkingHoursSelector':
+                    //     return (
+                    //         <Flex key={index} dir='column'>
+                    //             <Label htmlFor={name}>{label}</Label>
+                    //             <FlexItem>
+                    //                 <WorkingHoursSelector
+                    //                     onStartChange={(value) =>
+                    //                         handleChange({
+                    //                             target: {
+                    //                                 name,
+                    //                                 value,
+                    //                             },
+                    //                         } as React.ChangeEvent<HTMLInputElement>)
+                    //                     }
+                    //                     onEndChange={(value) =>
+                    //                         handleChange({
+                    //                             target: {
+                    //                                 name,
+                    //                                 value,
+                    //                             },
+                    //                         } as React.ChangeEvent<HTMLInputElement>)
+                    //                     }
+                    //                     size='md'
+                    //                 />
+                    //                 {errors[name] && <FormSubmitMessage type='error' name={name} />}
+                    //             </FlexItem>
+                    //         </Flex>
+                    //     );
 
                     case 'multi-select':
                         return (
                             <Flex key={index} dir='column' gap={1}>
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
-                                    {/* Replace with your DaySelector component or other multi-select implementation */}
                                     <DaySelector
                                         value={values[name]}
                                         onChange={(value) => setFieldValue(name, value)}
