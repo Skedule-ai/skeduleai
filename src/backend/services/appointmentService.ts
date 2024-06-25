@@ -1,17 +1,21 @@
-import { User, currentUser } from '@clerk/nextjs/server';
+import { Organization, User, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { object, string } from 'yup';
 
 import {
     createAppoinmentRepository,
+    findAppointmentRepository,
     findAppointmentsRepositoryByServiceId,
     findBookingDetails,
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
 
 import { formatTime } from '@/libs/utils/datetime-helpers';
-import { findBookingServiceRepoByUser } from '../repositories/bookingServiceRepository';
+import {
+    findBookingServiceRepo,
+    findBookingServiceRepoByUser,
+} from '../repositories/bookingServiceRepository';
 import { AppointmentStatus } from '../utils/enum';
 
 import {
@@ -19,8 +23,10 @@ import {
     sendAppointmentRejectEmailService,
 } from '@/backend/services/emailService';
 import { ErrorMessages } from '@/libs/message/error';
+import moment from 'moment';
 import { findGuestUserData } from '../repositories/guestUserRepository';
 import { getClerkClient } from '../utils/clerkClient';
+import { getFormattedImagePath, getUser, getUserOrganization } from './clerkService';
 
 const validateAppointmentBooking = object({
     timezone: string().required(ErrorMessages.REQUIRED_INPUT),
@@ -190,25 +196,36 @@ export async function updateAppointmentStatusService(
 
         // Step 6: ToDo: Send email notification.
 
-        let customerName: string | undefined, customerEmail: string | undefined;
+        let serviceProviderName: string | undefined, customerEmail: string | undefined;
+        let appointmentDate: string | undefined, appointmentTime: string | undefined;
         if (bookingDetails.guestUserId) {
             const guestData = await findGuestUserData(bookingDetails.guestUserId);
-            customerName = guestData?.name;
+            serviceProviderName = guestData?.name;
             customerEmail = guestData?.email;
+            appointmentDate = moment(guestData?.createdAt).format('YYYY-MM-DD');
+            appointmentTime = moment(guestData?.createdAt).format('HH:mm');
         } else if (bookingDetails.customerId) {
             const client = getClerkClient();
             const userData = await client.users.getUser(bookingDetails.customerId);
-            customerName = userData.fullName ?? '';
+            serviceProviderName = userData.fullName ?? '';
             const customerEmailObj = userData.emailAddresses.find((email) => email);
             customerEmail = customerEmailObj?.emailAddress;
+            appointmentDate = moment(userData.createdAt).format('YYYY-MM-DD');
+            appointmentTime = moment(userData.createdAt).format('HH:mm');
         }
+        console.log(acceptStatus, customerEmail, serviceProviderName);
         if (acceptStatus === AppointmentStatus.ACCEPTED) {
-            if (customerEmail && customerName) {
-                await sendAppointmentAcceptedEmailService(customerEmail, customerName);
+            if (customerEmail && serviceProviderName && appointmentDate && appointmentTime) {
+                await sendAppointmentAcceptedEmailService(
+                    customerEmail,
+                    serviceProviderName,
+                    appointmentDate,
+                    appointmentTime,
+                );
             }
         } else if (acceptStatus === AppointmentStatus.REJECT) {
-            if (customerEmail && customerName) {
-                await sendAppointmentRejectEmailService(customerEmail, customerName);
+            if (customerEmail && serviceProviderName) {
+                await sendAppointmentRejectEmailService(customerEmail, serviceProviderName);
             }
         }
         // Step 7: Return formatted booking detials.
@@ -220,3 +237,69 @@ export async function updateAppointmentStatusService(
         }
     }
 }
+
+export const getBookingDetailsByBookingIdService = async (bookingId?: string) => {
+    try {
+        if (!bookingId) {
+            throw new Error(ErrorMessages.REQUIRED_INPUT);
+        }
+
+        const appointmentDetials = await findAppointmentRepository({ id: bookingId });
+
+        if (appointmentDetials) {
+            // Step 2: Get booking service data
+            const userBookingServiceInfo = await findBookingServiceRepo(
+                appointmentDetials.serviceId,
+            );
+            if (!userBookingServiceInfo?.id) {
+                throw new Error(ErrorMessages.INVALID_BOOKING_URL);
+            }
+
+            // Step 3: Get organization info if organization id is present
+            let organization: Organization | undefined;
+            if (userBookingServiceInfo.organizationId) {
+                organization = await getUserOrganization(
+                    userBookingServiceInfo.organizationId,
+                    userBookingServiceInfo.id,
+                );
+            }
+
+            // Step 4: Get service provider user info
+            const user = await getUser(userBookingServiceInfo.userId);
+
+            const formattedOrgDetails = {
+                name: organization?.name,
+                image: getFormattedImagePath(organization?.imageUrl),
+            };
+
+            const serviceProvider = {
+                name: user.fullName,
+                image: getFormattedImagePath(user?.imageUrl),
+            };
+
+            const formattedBookingDetials = {
+                date: moment(appointmentDetials.startTime).format('DD-MM-YYYY'),
+                startTime: moment(appointmentDetials.startTime).format('HH:MM a'),
+                endTime: moment(appointmentDetials.endTime).format('HH:MM a'),
+                duration: moment(appointmentDetials.startTime).diff(
+                    moment(appointmentDetials.endTime),
+                    'minutes',
+                ),
+                timezone: appointmentDetials.timezone,
+                calenderlink: '',
+                organization: formattedOrgDetails,
+                serviceProvider,
+            };
+
+            return {
+                bookingDetails: formattedBookingDetials,
+            };
+        }
+
+        return { bookingDetials: null };
+    } catch (err) {
+        if (err instanceof Error) {
+            throw new Error(err.message);
+        }
+    }
+};
