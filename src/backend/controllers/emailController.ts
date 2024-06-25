@@ -7,8 +7,7 @@ type SendGridHookRequestData = {
     data: {
         email_addresses: {
             email_address: string;
-            first_name: string;
-            last_name: string;
+            user_name: string;
         }[];
     };
 };
@@ -23,8 +22,7 @@ export async function handleWelcomeEmail(sendGridData: SendGridHookRequestData) 
 
         const emailDataList = data.email_addresses?.map((val) => ({
             email: val.email_address,
-            firstName: val.first_name,
-            lastName: val.last_name,
+            userName: val.user_name || '',
         }));
 
         const ack = await sendWelcomeEmails(emailDataList);

@@ -74,3 +74,9 @@ model guestUser {
 
   @@unique([email, phoneNumber])
 }
+
+model blogSubscribe {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
