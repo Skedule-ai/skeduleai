@@ -27,6 +27,11 @@ export const formatTime = (time: string) => {
     return moment(time).format('hh:mm a');
 };
 
+export const getTodayDate = (): Date => {
+    return new Date();
+};
+
+
 export const addDuration = (time: string, duration: string) => {
     const startTime = moment(time);
     const formattedDuration = moment(duration).minutes();

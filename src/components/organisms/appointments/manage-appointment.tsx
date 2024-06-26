@@ -3,7 +3,7 @@ import React from 'react';
 import Container from '@/components/atoms/container';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import Grid from '@/components/atoms/grid';
-import { Header2 } from '@/components/atoms/typography';
+import { DashboardHeading } from '@/components/atoms/typography';
 import { RowType } from '@/components/atoms/grid/grid.variants';
 import { useManageAppointment } from '@/libs/hooks/useManageAppointment';
 
@@ -11,7 +11,7 @@ const ManageAppointment = () => {
     const { appointments, error, handleStatusChange } = useManageAppointment();
     return (
         <Container className='overflow-x-auto'>
-            <Header2>{'Meeting Proposals'}</Header2>
+            <DashboardHeading>{'Meeting Proposals'}</DashboardHeading>
             {error ? (
                 <p>{error}</p>
             ) : appointments.length === 0 ? (
@@ -19,7 +19,7 @@ const ManageAppointment = () => {
             ) : (
                 <Grid
                     className='mt-4'
-                    columns={4}
+                    columns={3}
                     gap={4}
                     rows={Math.ceil(appointments.length / 3) as RowType}
                 >

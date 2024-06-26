@@ -28,6 +28,7 @@ export const fontColor = {
     tertiary: 'text-neutral-400',
     error: 'text-red-500',
     light: 'text-neutral-50 dark:text-neutral-950',
+    black: 'text-black',
 };
 
 export const textAlign = {
