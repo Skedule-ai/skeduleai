@@ -1,4 +1,4 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { Organization, OrganizationMembership, currentUser } from '@clerk/nextjs/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { object, string, number, array } from 'yup';
@@ -13,6 +13,7 @@ import { DaysEnum } from '@/libs/utils/enums';
 import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
 import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
+import { createOrganization } from '@/backend/services/organizationService';
 
 const validateCreate = object({ 
     timezone: string().required(),
@@ -38,7 +39,7 @@ const validateUpdate = object({
 
 export type AvailabilityConfigServiceInput = Omit<
     Prisma.availabilityConfigurationUpdateInput,
-    'userId' | 'organizationId' | 'day' | 'createdAt' | 'updatedAt'
+    'userId' | 'organizationId' | 'organizationName' | 'day' | 'createdAt' | 'updatedAt'
 > & { days: DaysEnum[] };
 
 export async function addAvailabilitConfigurationService(
@@ -50,6 +51,16 @@ export async function addAvailabilitConfigurationService(
         const user = await currentUser();
         if (!user?.id) {
             throw new Error(ErrorMessages.UNAUTHORIZED);
+        }
+
+        // Step 1.5: To Create the organization if organizationId is not provided
+        if (!organizationId) {
+            const organizationName = data.organizationName;  
+            if (!organizationName) {
+                throw new Error('Organization name is required to create an organization.');
+            }
+            const newOrganization = await createOrganization(user.id, organizationName);
+            organizationId = newOrganization.id;
         }
 
         // Step 2: Pick required data from JSON
@@ -124,14 +135,6 @@ export async function updateAvailabilityConfigurationService(
             throw new Error(ErrorMessages.UNAUTHORIZED);
         }
 
-        const organizationId = 'org_2haythQc1DNZovaAAmccJsqwyTg';
-        const response = await clerkClient.organizations.getOrganization({ organizationId });
-        console.log(response);
- 
-        // const userId = 'user_2hMI47OhINyIqK77uFuIJzZP4D2';
-        // const response = await clerkClient.users.getOrganizationMembershipList({ userId });
-        // console.log(response);
-
         // Step 2: Pick required data from JSON
         const inputData = pick(data, ['timezone','startTime', 'endTime', 'duration', 'day']);
 
@@ -156,34 +159,3 @@ export async function updateAvailabilityConfigurationService(
 }
 
 
-// New function to fetch organization name
-export async function fetchOrganizationsByUserId(userId: string) {
-    try {
-        // Log the userId to debug
-        console.log('Fetching organizations for userId:', userId);
-        // Fetch the organization memberships for the user
-        const response: PaginatedResourceResponse<OrganizationMembership[]> = await clerkClient.users.getOrganizationMembershipList({ userId });
-
-        // Log the response to understand its structure
-        console.log('Organization Membership Response:', response);
-
-        // Access the array of memberships from the paginated response
-        const memberships = response.data;
-
-        // Map through the memberships and fetch the organization details
-        const organizationNames: string[] = await Promise.all(
-            memberships.map(async (membership) => {
-                const organization: Organization = await clerkClient.organizations.getOrganization({ organizationId: membership.organizationId });
-                return organization.name;
-            })
-        );
-
-        // Return the organization names
-        return organizationNames;
-    } catch (err) {
-        console.error('Error fetching organizations by user ID:', err);
-        if (err instanceof Error) {
-            throw new Error(err.message);
-        }
-    }
-}
