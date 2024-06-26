@@ -63,7 +63,7 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                 color='tertiary'
                 onClick={toggleDropdown}
             >
-                <Text className='font-normal'>{timeZone}</Text>
+                <Text className='font-medium'>{timeZone}</Text>
                 <Text className='ml-2'>{showDropdown ? <Cross /> : <ChevronDown />}</Text>
             </Button>
             {showDropdown && (

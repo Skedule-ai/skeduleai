@@ -1,9 +1,9 @@
 // pages/index.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import Date from '@/components/atoms/date/Date';
 import TimeZone from '@/components/atoms/date/TimeZone';
+import React, { useEffect, useState } from 'react';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
@@ -114,7 +114,7 @@ const DashboardPage = () => {
                                 className='ml-8 mt-4 items-center justify-center'
                                 icon={<Information />}
                                 type='info'
-                                width='medium'
+                                width='small'
                             >
                                 {notificationMessage}
                             </Notification>

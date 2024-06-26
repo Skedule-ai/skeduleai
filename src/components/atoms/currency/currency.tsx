@@ -23,7 +23,7 @@ const Currency: React.FC = () => {
                         <Grid>
                             <Grid>
                                 <Field
-                                    className='font-normal'
+                                    className='font-semibold'
                                     name='currency'
                                     as={Dropdown}
                                     color='primary'
