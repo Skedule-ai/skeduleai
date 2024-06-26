@@ -143,6 +143,7 @@ export async function getAppointmentsService(organizationId: string | null = '')
         }
 
         // Step 3: Fetch user appointments
+
         const appointmentList = await findAppointmentsRepositoryByServiceId(bookingService.id);
 
         // Step 4: format appointment and return it

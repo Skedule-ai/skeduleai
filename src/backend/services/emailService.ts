@@ -11,7 +11,7 @@ const senderEmail = process.env.SENDGRID_SENDER_EMAIL ?? '';
 const acceptMailTemp = process.env.ACCEPTMAIL_TEMPLATE_ID ?? '';
 const welcomeMailTemp = process.env.WELCOMEMAIL_TEMPLATE_ID ?? '';
 const rejectMailTemp = process.env.REJECTMAIL_TEMPLATE_ID ?? '';
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '';
 
 export async function sendWelcomeEmails(
     emailDataList: {
@@ -92,49 +92,69 @@ export async function sendAppointmentRejectEmailService(
     }
 }
 
-export async function handleWebhook(req: Request) {
+export async function handleWebhookVerifyService(req: Request) {
     const body = await req.text();
     const reqData = JSON.parse(body);
 
-    if (!WEBHOOK_SECRET) {
-        throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local');
-    }
+    validateWebhookSecret(WEBHOOK_SECRET);
 
-    const headerPayload = req.headers;
-    const svix_id = headerPayload.get('svix-id');
-    const svix_timestamp = headerPayload.get('svix-timestamp');
-    const svix_signature = headerPayload.get('svix-signature');
+    const { svix_id, svix_timestamp, svix_signature } = extractSvixHeaders(req.headers);
+
+    const evt = verifyWebhook(WEBHOOK_SECRET, body, svix_id, svix_timestamp, svix_signature);
+
+    return await processWebhookEvent(evt, reqData);
+}
+
+function validateWebhookSecret(secret: string | undefined) {
+    if (!secret) {
+        throw new Error(ErrorMessages.MISSING_WEBHOOK_SECRET);
+    }
+}
+
+function extractSvixHeaders(headers: Headers) {
+    const svix_id = headers.get('svix-id');
+    const svix_timestamp = headers.get('svix-timestamp');
+    const svix_signature = headers.get('svix-signature');
 
     if (!svix_id || !svix_timestamp || !svix_signature) {
-        return NextResponse.json('Error occurred -- no svix headers', {
-            status: 400,
-        });
+        throw new Error(ErrorMessages.MISSING_SVIX_HEADERS);
     }
 
-    const wh = new Webhook(WEBHOOK_SECRET);
+    return { svix_id, svix_timestamp, svix_signature };
+}
 
-    let evt: WebhookEvent;
+function verifyWebhook(
+    secret: string,
+    body: string,
+    svix_id: string,
+    svix_timestamp: string,
+    svix_signature: string,
+): WebhookEvent {
+    const wh = new Webhook(secret);
 
     try {
-        evt = wh.verify(body, {
+        return wh.verify(body, {
             'svix-id': svix_id,
             'svix-timestamp': svix_timestamp,
             'svix-signature': svix_signature,
         }) as WebhookEvent;
     } catch (err) {
         console.error('Error verifying webhook:', err);
-        return NextResponse.json('Error verifying webhook', {
-            status: 400,
-        });
+        throw new Error(ErrorMessages.WEBHOOK_VERIFICATION);
     }
+}
 
+async function processWebhookEvent(evt: WebhookEvent, reqData: any) {
     if (evt.type === 'user.created' || evt.type === 'email.created') {
         try {
             const welcomeEmailResponse = await handleWelcomeEmail(reqData);
             return welcomeEmailResponse;
         } catch (error) {
             console.error('Error sending welcome email:', error);
-            return NextResponse.json('Failed to send welcome email', { status: 500 });
+            return NextResponse.json(
+                { error: ErrorMessages.FAILED_TO_SEND_WELCOME_EMAIL },
+                { status: 500 },
+            );
         }
     }
 

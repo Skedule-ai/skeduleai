@@ -1,6 +1,6 @@
-import { handleWebhook } from '@/backend/services/emailService';
+import { handleWebhookRequestController } from '@/backend/controllers/emailController';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
-    return await handleWebhook(req);
+    return await handleWebhookRequestController(req);
 }
