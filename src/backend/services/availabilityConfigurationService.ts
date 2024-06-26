@@ -14,23 +14,6 @@ import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
 import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 
-
-// Define the type for organization membership
-interface OrganizationMembership {
-    organizationId: string;
-}
-
-// Define the type for the organization
-interface Organization {
-    name: string;
-}
-
-// Define the type for the paginated response
-interface PaginatedResourceResponse<T> {
-    data: T;
-    totalCount: number;
-}
-
 const validateCreate = object({ 
     timezone: string().required(),
     startTime: string().required(),
@@ -141,6 +124,14 @@ export async function updateAvailabilityConfigurationService(
             throw new Error(ErrorMessages.UNAUTHORIZED);
         }
 
+        const organizationId = 'org_2haythQc1DNZovaAAmccJsqwyTg';
+        const response = await clerkClient.organizations.getOrganization({ organizationId });
+        console.log(response);
+ 
+        // const userId = 'user_2hMI47OhINyIqK77uFuIJzZP4D2';
+        // const response = await clerkClient.users.getOrganizationMembershipList({ userId });
+        // console.log(response);
+
         // Step 2: Pick required data from JSON
         const inputData = pick(data, ['timezone','startTime', 'endTime', 'duration', 'day']);
 
@@ -154,7 +145,7 @@ export async function updateAvailabilityConfigurationService(
             updateData,
         );
         
-        // Step 5: Return updated configuration.
+        // Step 6: Return updated configuration.
         return { availabilityConfiguration };
     } catch (err) {
         console.error('Error updating availability configuration:', err);
