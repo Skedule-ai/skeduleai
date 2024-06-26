@@ -4,7 +4,7 @@ import { useUpdateBookingStatus } from '../api/bookingService';
 import { AppointmentStatus } from '@/backend/utils/enum';
 import toast from 'react-hot-toast';
 
-export type AppointemtResponseType = {
+export type AppointmentResponseType = {
     id: string;
     startTime: string;
     endTime: string;
@@ -13,29 +13,26 @@ export type AppointemtResponseType = {
 
 export const useManageAppointment = () => {
     const { getToken } = useAuth();
-    const [appointments, setAppointments] = useState<AppointemtResponseType[]>([]);
+    const [appointments, setAppointments] = useState<AppointmentResponseType[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const updateAppointmentList = (bookingId: string, status: number) => {
-        const updatedAppointmentList = [...appointments];
-        const appointmentIndex = updatedAppointmentList.findIndex((data) => data.id === bookingId);
-        if (updatedAppointmentList[appointmentIndex]) {
-            updatedAppointmentList[appointmentIndex].status = status;
-            setAppointments(updatedAppointmentList);
-        }
+    const updateAppointmentList = (bookingId: string) => {
+        setAppointments((prev) => prev.filter((appointment) => appointment.id !== bookingId));
     };
 
-    const notifyAppintmentUpdateStatus = (bookingDetails: AppointemtResponseType) => {
-        if (bookingDetails.status === AppointmentStatus.ACCEPTED) {
-            toast.success('Appointment accepted.');
-        } else if (bookingDetails.status === AppointmentStatus.REJECT) {
-            toast.error('Appointment rejected.');
+    const notifyAppointmentUpdateStatus = (status: number) => {
+        if (status === AppointmentStatus.ACCEPTED) {
+            toast.success('Your Meeting is Scheduled');
+        } else if (status === AppointmentStatus.REJECT) {
+            toast.error('Meeting is removed');
         }
     };
 
     const [updateBookingStatus] = useUpdateBookingStatus({
         onCompleted: ({ bookingDetails }) => {
-            updateAppointmentList(bookingDetails.id, bookingDetails.status);
-            notifyAppintmentUpdateStatus(bookingDetails);
+            updateAppointmentList(bookingDetails.id);
+            notifyAppointmentUpdateStatus(bookingDetails.status);
         },
         onError: (err) => {
             toast.error(err.message);
@@ -68,9 +65,9 @@ export const useManageAppointment = () => {
                 }
             } catch (error) {
                 console.error('Error fetching appointments:', error);
-                // setError('Failed to fetch appointments.');
+                setError('Failed to fetch appointments.');
             } finally {
-                // setLoading(false);
+                setLoading(false);
             }
         };
 
@@ -79,7 +76,9 @@ export const useManageAppointment = () => {
 
     return {
         appointments,
-        error: '',
+        setAppointments,
+        error,
+        loading,
         handleStatusChange,
     };
 };

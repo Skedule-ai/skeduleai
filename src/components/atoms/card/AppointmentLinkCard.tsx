@@ -35,7 +35,7 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     };
 
     return (
-        <Card {...props}>
+        <Card size='xl' {...props}>
             <Flex dir='column' className='relative p-4'>
                 <Button
                     className='absolute right-4 top-4 p-1'

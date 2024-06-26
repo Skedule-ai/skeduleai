@@ -1,25 +1,27 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import Date from '@/components/atoms/date/Date';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
 import AppointmentLinkCard from '@/components/atoms/card/AppointmentLinkCard';
 import Grid from '@/components/atoms/grid';
-import { DashboardHeading, Header2 } from '@/components/atoms/typography';
+import { DashboardHeading } from '@/components/atoms/typography';
 import { Toaster, toast } from 'react-hot-toast';
 import ManageAppointment from '@/components/organisms/appointments/manage-appointment';
 import useBookingUrl from '@/libs/hooks/useBookingUrl';
-// import { Listbox } from '@headlessui/react';
 import { getTodayDate } from '@/libs/utils/datetime-helpers';
 import { Loader } from '@strapi/icons';
 import Button from '@/components/atoms/button';
+import { AppointmentResponseType } from '@/libs/hooks/useManageAppointment';
+import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
+import { AppointmentStatus } from '@/backend/utils/enum';
 
-const DashboardPage = () => {
+const DashboardPage: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [bookingUrl, setBookingUrl] = useState<string | null>(null);
+    const [acceptedAppointments, setAcceptedAppointments] = useState<AppointmentResponseType[]>([]);
 
-    const handleCompleted = (data) => {
+    const handleCompleted = (data: any) => {
         if (data.bookingService && data.bookingService.bookingUrl) {
             setBookingUrl(data.bookingService.bookingUrl);
         } else {
@@ -27,7 +29,7 @@ const DashboardPage = () => {
         }
     };
 
-    const handleError = (error) => {
+    const handleError = (error: any) => {
         toast.error('Error fetching booking data');
         console.error('Error fetching booking data:', error);
     };
@@ -42,6 +44,16 @@ const DashboardPage = () => {
             toast.error('Error fetching booking data');
         }
     }, [error]);
+
+    const handleAccept = (appointment: AppointmentResponseType) => {
+        toast.success('Meeting Accepted');
+        setAcceptedAppointments((prev) => [...prev, appointment]);
+    };
+
+    const handleReject = (appointment: AppointmentResponseType) => {
+        toast.error('Meeting Rejected');
+        // No need to handle rejected appointments as they are already removed 
+    };
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
 
@@ -63,7 +75,7 @@ const DashboardPage = () => {
                         </Flex>
                     </Flex>
                     <Flex className='mt-6 flex-col'>
-                        <ManageAppointment />
+                        <ManageAppointment onAccept={handleAccept} onReject={handleReject} />
                     </Flex>
                     <Flex className='mt-6 flex-col'>
                         <Container>
@@ -77,7 +89,6 @@ const DashboardPage = () => {
                                 {!isLoading && bookingUrl && (
                                     <AppointmentLinkCard
                                         isFree
-                                        size='lg'
                                         title='Add Organization Staff'
                                         subtitle='Service provider page'
                                         link={shortUrl}
@@ -91,6 +102,29 @@ const DashboardPage = () => {
                                     </AppointmentLinkCard>
                                 )}
                             </Grid>
+                            <Flex className='mt-10' dir='column' gap={2}>
+                                <DashboardHeading>{'Weekly meetings Overview'}</DashboardHeading>
+                                <Grid columns={3} gap={4} rows={1}>
+                                    {acceptedAppointments.map((appointment) => (
+                                        <AcceptRejectCard
+                                            key={appointment.id}
+                                            id={appointment.id}
+                                            fromTime={appointment.startTime}
+                                            toTime={appointment.endTime}
+                                            isFree
+                                            status={AppointmentStatus.ACCEPTED}
+                                            title='Accepted Appointment'
+                                            userImages={[
+                                                'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                                            ]}
+                                            variant='default'
+                                            showButtons={false} 
+                                        >
+                                            <></>
+                                        </AcceptRejectCard>
+                                    ))}
+                                </Grid>
+                            </Flex>
                         </Container>
                     </Flex>
                 </Container>

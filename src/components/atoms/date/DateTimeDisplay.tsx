@@ -19,22 +19,13 @@ type DateTimeDisplayProps = {
     onSearchQueryChange: (query: any) => void;
 };
 
-const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
-    currentDate,
-    // timeZones,
-    onDateChange,
-    // searchQuery,
-}) => {
-    // const filteredTimeZones = timeZones.filter((zone) =>
-    //     zone.label.toLowerCase().includes(searchQuery.toLowerCase()),
-    // );
-
+const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({ currentDate, onDateChange }) => {
     return (
         <>
             <Container className='mb-4 block sm:hidden'>
                 <Button className='p-2' size='md' color='tertiary' type='button'>
                     <svg
-                        className='size-6'
+                        className='size-6 cursor-pointer'
                         fill='none'
                         stroke='currentColor'
                         viewBox='0 0 24 24'
@@ -50,7 +41,7 @@ const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
                 </Button>
             </Container>
             <Button
-                className='mb-4 flex items-center bg-white px-4 py-2 text-black shadow sm:mb-0'
+                className='mb-4 flex items-center px-4 py-2 text-black shadow sm:mb-0'
                 color='tertiary'
                 size='lg'
             >
@@ -58,7 +49,7 @@ const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
                     type='date'
                     value={currentDate}
                     onChange={(e) => onDateChange(e.target.value)}
-                    className='focus:outline-none'
+                    className='bg-transparent focus:outline-none'
                 />
             </Button>
         </>
