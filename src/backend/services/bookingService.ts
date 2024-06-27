@@ -81,9 +81,8 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             id,
             userId: user.id,
             organizationId: data.organizationId ?? '',
-            date: selectedDate,
             startTime,
-            endTime
+            endTime,
         });
 
         // Step 4: Format and generate booking service data.
@@ -98,12 +97,11 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             }
             console.error(JSON.stringify(err));
             throw new Error(err.message);
-        }else if (err instanceof Error) {
-                throw new Error(err.message);
+        } else if (err instanceof Error) {
+            throw new Error(err.message);
         }
     }
 }
-
 
 export type FindBookingServiceDataType = Partial<
     Pick<Prisma.bookingServiceCreateInput, 'organizationId'>

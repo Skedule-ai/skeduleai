@@ -1,5 +1,4 @@
-import { Organization, OrganizationMembership, currentUser } from '@clerk/nextjs/server';
-import { clerkClient } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { object, string, number, array } from 'yup';
 import pick from 'lodash/pick';
@@ -15,7 +14,7 @@ import { updateUserConfigurationService } from './userConfigurationService';
 import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 import { createOrganization } from '@/backend/services/organizationService';
 
-const validateCreate = object({ 
+const validateCreate = object({
     timezone: string().required(),
     startTime: string().required(),
     endTime: string().required(),
@@ -26,7 +25,6 @@ const validateCreate = object({
 });
 
 const validateUpdate = object({
-    organizationName: string().typeError('Invalid organization name input'),
     timezone: string().typeError('Invalid timezone input'),
     startTime: string().typeError('Invalid startTime input'),
     endTime: string().typeError('Invalid endTime input'),
@@ -39,8 +37,8 @@ const validateUpdate = object({
 
 export type AvailabilityConfigServiceInput = Omit<
     Prisma.availabilityConfigurationUpdateInput,
-    'userId' | 'organizationId' | 'organizationName' | 'day' | 'createdAt' | 'updatedAt'
-> & { days: DaysEnum[] };
+    'userId' | 'organizationId' | 'day' | 'createdAt' | 'updatedAt'
+> & { days: DaysEnum[]; organizationName?: string };
 
 export async function addAvailabilitConfigurationService(
     organizationId = '',
@@ -55,12 +53,11 @@ export async function addAvailabilitConfigurationService(
 
         // Step 1.5: To Create the organization if organizationId is not provided
         if (!organizationId) {
-            const organizationName = data.organizationName;  
-            if (!organizationName) {
-                throw new Error('Organization name is required to create an organization.');
+            const organizationName = data.organizationName;
+            if (organizationName) {
+                const newOrganization = await createOrganization(user.id, organizationName);
+                organizationId = newOrganization.id;
             }
-            const newOrganization = await createOrganization(user.id, organizationName);
-            organizationId = newOrganization.id;
         }
 
         // Step 2: Pick required data from JSON
@@ -136,18 +133,17 @@ export async function updateAvailabilityConfigurationService(
         }
 
         // Step 2: Pick required data from JSON
-        const inputData = pick(data, ['timezone','startTime', 'endTime', 'duration', 'day']);
+        const inputData = pick(data, ['timezone', 'startTime', 'endTime', 'duration', 'day']);
 
         // Step 3: Validate input data
-        const { day, ...updateData } = await validateUpdate.validate(inputData);      
-
+        const { day, ...updateData } = await validateUpdate.validate(inputData);
 
         // Step 4: Update availability configuration for given user, organization and day
         const availabilityConfiguration = await updateAvailabilityConfigurationRepository(
             { userId: user?.id, organizationId, day },
             updateData,
         );
-        
+
         // Step 6: Return updated configuration.
         return { availabilityConfiguration };
     } catch (err) {
@@ -157,5 +153,3 @@ export async function updateAvailabilityConfigurationService(
         }
     }
 }
-
-
