@@ -31,3 +31,5 @@ export async function updateAvailabilityConfigurationController(
         data.availabilityConfiguration,
     );
 }
+
+
