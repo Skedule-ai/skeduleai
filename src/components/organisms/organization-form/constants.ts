@@ -31,7 +31,7 @@ export const getFormFields = () => {
                 name: 'businessHours',
                 placeholder: 'Select',
                 required: true,
-                type: 'time',
+                type: 'WorkingHoursSelector',
             },
             {
                 label: 'Meeting Duration',

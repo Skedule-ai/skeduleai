@@ -72,10 +72,10 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                     className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} overflow-hidden text-black`}
                     {...props}
                 >
-                    <Flex className='items-center justify-between p-4'>
-                        <a href='/'>
+                    <Flex className='items-center justify-center p-4'>
+                        <Link href='/'>
                             <ScheduleAILogo />
-                        </a>
+                        </Link>
                         <Button
                             className='cursor-pointer p-2 md:hidden'
                             onClick={handleToggle}

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+
 import Date from '@/components/atoms/date/Date';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
@@ -15,6 +15,7 @@ import Button from '@/components/atoms/button';
 import { AppointmentResponseType } from '@/libs/hooks/useManageAppointment';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import { AppointmentStatus } from '@/backend/utils/enum';
+import { useState, useEffect } from 'react';
 
 const DashboardPage: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -52,7 +53,7 @@ const DashboardPage: React.FC = () => {
 
     const handleReject = (appointment: AppointmentResponseType) => {
         toast.error('Meeting Rejected');
-        // No need to handle rejected appointments as they are already removed 
+        // No need to handle rejected appointments as they are already removed
     };
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
@@ -118,7 +119,7 @@ const DashboardPage: React.FC = () => {
                                                 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
                                             ]}
                                             variant='default'
-                                            showButtons={false} 
+                                            showButtons={false}
                                         >
                                             <></>
                                         </AcceptRejectCard>

@@ -1,45 +1,37 @@
 import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Field } from 'formik';
 import Dropdown from '../dropdown';
 import Container from '../container';
 import Grid from '../grid';
 
-interface FormValues {
-    currency: string;
-}
+// interface FormValues {
+//     currency: string;
+// }
 
-const Currency: React.FC = () => {
-    const initialValues: FormValues = { currency: '' };
+const CURRENCY_LIST = [
+    { label: '$', value: 'usd' },
+    { label: '₹', value: 'inr' },
+];
 
-    const handleSubmit = (values: FormValues) => {
-        console.log(values);
-    };
-
+const Currency: React.FC<{
+    name: string;
+    handleFieldValueChange: (currency: string) => void;
+}> = ({ name, handleFieldValueChange }) => {
     return (
         <Container>
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ values, handleChange, handleSubmit }) => (
-                    <Form onSubmit={handleSubmit}>
-                        <Grid>
-                            <Grid>
-                                <Field
-                                    name='currency'
-                                    as={Dropdown}
-                                    color='primary'
-                                    items={[
-                                        { label: '$', value: 'usd' },
-                                        { label: '₹', value: 'inr' },
-                                    ]}
-                                    onChange={handleChange}
-                                    placeholder='Select a currency'
-                                    size='medium'
-                                    value={values.currency}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
+            <Grid>
+                <Field
+                    className='font-semibold'
+                    name={name}
+                    as={Dropdown}
+                    color='primary'
+                    items={CURRENCY_LIST}
+                    onChange={(val: string) => handleFieldValueChange(val)}
+                    placeholder='Select a Currency'
+                    size='medium'
+                    // value={values.currency}
+                />
+            </Grid>
         </Container>
     );
 };

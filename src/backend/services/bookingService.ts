@@ -2,7 +2,6 @@ import { Organization, User, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { nanoid } from 'nanoid';
-
 import {
     createBookingServiceRepo,
     findBookingServiceRepo,
@@ -38,15 +37,40 @@ const generateBookingServiceResponse = async (
     };
 };
 
+// Define the type for the create booking service data
 export type CreateBookingServiceDataType = Partial<
-    Pick<Prisma.bookingServiceCreateInput, 'organizationId'>
+    Pick<Prisma.bookingServiceCreateInput, 'organizationId'> & {
+        date: string;
+        startTime: string;
+        endTime: string;
+    }
 >;
+
+// export type CreateBookingServiceDataType = Partial<
+//     Pick<Prisma.bookingServiceCreateInput, 'organizationId'| 'date' | 'startTime' | 'endTime'>
+// >;
 export async function createBookingService(data: CreateBookingServiceDataType) {
     try {
         // Step 1: Validate if user is authenticated
         const user = await currentUser();
         if (!user?.id) {
             throw new Error(ErrorMessages.UNAUTHORIZED);
+        }
+
+        // Validate date and time
+        const { date, startTime, endTime } = data;
+        if (!date || !startTime || !endTime) {
+            throw new Error(ErrorMessages.REQUIRED_INPUT);
+        }
+
+        const selectedDate = new Date(date);
+        const today = new Date();
+        if (selectedDate < today) {
+            throw new Error(ErrorMessages.INVALID_DATE);
+        }
+
+        if (startTime >= endTime) {
+            throw new Error(ErrorMessages.INVALID_TIME);
         }
 
         // Step 2: Generate unique booking id
@@ -57,6 +81,9 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             id,
             userId: user.id,
             organizationId: data.organizationId ?? '',
+            date: selectedDate,
+            startTime,
+            endTime
         });
 
         // Step 4: Format and generate booking service data.
@@ -71,9 +98,12 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             }
             console.error(JSON.stringify(err));
             throw new Error(err.message);
+        }else if (err instanceof Error) {
+                throw new Error(err.message);
         }
     }
 }
+
 
 export type FindBookingServiceDataType = Partial<
     Pick<Prisma.bookingServiceCreateInput, 'organizationId'>
@@ -121,7 +151,7 @@ export async function findBookingService(data: FindBookingServiceDataType) {
 
 export async function findBookingServiceById(bookingServiceId: string) {
     try {
-        // Step 1: Check for bookin service id input
+        // Step 1: Check for booking service id input
         if (!bookingServiceId) {
             throw new Error(ErrorMessages.REQUIRED_INPUT);
         }
@@ -130,6 +160,15 @@ export async function findBookingServiceById(bookingServiceId: string) {
         const userBookingServiceInfo = await findBookingServiceRepo(bookingServiceId);
         if (!userBookingServiceInfo?.id) {
             throw new Error(ErrorMessages.INVALID_BOOKING_URL);
+        }
+
+        // To Validate that the booking is not in the past
+        const currentDateTime = new Date();
+        const bookingStartTime = new Date(userBookingServiceInfo.startTime);
+        const bookingEndTime = new Date(userBookingServiceInfo.endTime);
+
+        if (bookingEndTime < currentDateTime) {
+            throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
         }
 
         // Step 3: Get organization info if organization id is present

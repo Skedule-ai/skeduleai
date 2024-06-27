@@ -5,9 +5,11 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
 import { FieldProps } from 'formik';
-type TimeZoneProps = FieldProps;
+type TimeZoneProps = FieldProps & {
+    handleFieldValueChange?: (zone: string) => void;
+};
 
-const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
+const TimeZone = ({ field, form, meta, handleFieldValueChange }: TimeZoneProps) => {
     const [, setCurrentDay] = useState('');
     // const [, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
     const [, setCurrentTime] = useState('');
@@ -40,6 +42,7 @@ const TimeZone = ({ field, form, meta }: TimeZoneProps) => {
     const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
         setShowDropdown(false);
+        handleFieldValueChange?.(zone);
     };
 
     const toggleDropdown = () => {
