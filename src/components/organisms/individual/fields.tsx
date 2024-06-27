@@ -5,13 +5,22 @@ import { FormSubmitMessage } from '@/components/molecules/message';
 import React, { Fragment } from 'react';
 import TimeZone from '@/components/atoms/date/TimeZone'; // Import TimeZone component
 import Currency from '@/components/atoms/currency/currency';
+import { FormikErrors } from 'formik';
 
 const IndividualFields = (props: {
     fields: any[];
     errors: any;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    handleFieldValue: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean,
+    ) => Promise<void | FormikErrors<{
+        submitError: string;
+        submitSuccess: string;
+    }>>;
 }) => {
-    const { fields, errors, handleChange } = props;
+    const { fields, errors, handleChange, handleFieldValue } = props;
     return (
         <Fragment>
             <FlexItem>
@@ -39,6 +48,9 @@ const IndividualFields = (props: {
                                         }}
                                         meta={field}
                                         form={field.form}
+                                        handleFieldValueChange={(value: string) =>
+                                            handleFieldValue(name, value)
+                                        }
                                         // onSearchQueryChange={() => {}}
                                         // onTimeZoneChange={() => {}}
                                         // searchQuery=''
@@ -53,11 +65,15 @@ const IndividualFields = (props: {
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Currency
-                                    // id='currency'
-                                    // name='currency'
-                                    // onChange={() => {}}
-                                    // placeholder='Select a currency'
-                                    // size='md'
+                                        name={name}
+                                        handleFieldValueChange={(value: string) =>
+                                            handleFieldValue(name, value)
+                                        }
+                                        // id='currency'
+                                        // name='currency'
+                                        // onChange={() => {}}
+                                        // placeholder='Select a currency'
+                                        // size='md'
                                     />
                                 </FlexItem>
                             </Flex>

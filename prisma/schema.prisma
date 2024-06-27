@@ -21,8 +21,8 @@ model userConfiguration {
 }
 
 model availabilityConfiguration {
-  userId         String
-  organizationId String
+  userId           String
+  organizationId   String
   timezone       String
   startTime      DateTime
   endTime        DateTime
