@@ -16,7 +16,7 @@ const ApponitmentsModalTemplate = () => {
     };
 
     return (
-        <Modal show={true} onClose={setIsOpen}>
+        <Modal show={isOpen} onClose={setIsOpen}>
             <Switch label1='Organization' label2='Individual' onToggle={handleToggle} />
             {isOrganization ? <OrganizationForm /> : <IndividualForm />}
         </Modal>
