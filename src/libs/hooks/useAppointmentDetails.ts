@@ -1,15 +1,17 @@
-import { useMutation, MutationHelperResolvers } from '@/libs/utils/client';
+import { useQuery, MutationHelperResolvers } from '@/libs/utils/client';
 import { appointmentDetailUrl } from '@/libs/api/appointmentDetailsUrl' ;
 
 const useAppointmentDetails = (id: string, queryHelpers?: MutationHelperResolvers) => {
-    const [bookAppointment, { data, error, isLoading }] = useMutation(
-        appointmentDetailUrl(id),
-        queryHelpers,
-    );
+    const { data, error, isLoading } = useQuery(appointmentDetailUrl(id), queryHelpers);
 
     return {
-        bookAppointment,
-        response: data,
+        timezone: data?.bookingDetails?.timezone,
+        date: data?.bookingDetails?.date,
+        startTime: data?.bookingDetails.startTime,
+        endTime: data?.bookingDetails.endTime,
+        organization: data?.bookingDetails?.organization,
+        duration: data?.bookingDetails?.duration,
+        serviceProvider: data?.bookingDetails?.serviceProvider,
         error,
         isLoading,
     };

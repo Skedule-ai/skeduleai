@@ -18,14 +18,14 @@ import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimezoneSelect, { ITimezone } from 'react-timezone-select';
 import makeAnimated from 'react-select/animated';
-import Select, { GroupBase, StylesConfig } from 'react-select';
+import Select from 'react-select';
 import { Loader } from '@strapi/icons';
 import { useUser } from '@clerk/nextjs';
 import useServiceProvider from '@/libs/hooks/useServiceProvider';
 import useBookAppointment from '@/libs/hooks/useBookAppointment';
 import BookingSkeletonLoader from '@/components/atoms/skeleton/bookingPage/bookingSkeleton';
+import TimeZone from '@/components/atoms/date/TimeZone';
 
 const animatedComponents = makeAnimated();
 
@@ -63,29 +63,6 @@ const CustomDatePicker: React.FC<AvailabilityFormInputType> = ({
             minDate={new Date()}
             {...props}
             className='w-full rounded-md border p-3'
-        />
-    );
-};
-
-const CustomTimezoneSelect: React.FC<{ field: FieldType; form: any }> = ({
-    field,
-    form,
-    ...props
-}) => {
-    const customStyles: StylesConfig<ITimezone, false, GroupBase<ITimezone>> | undefined = {
-        control: (provided) => ({
-            ...provided,
-            width: '100%',
-            padding: '5px',
-        }),
-    };
-
-    return (
-        <TimezoneSelect
-            value={field.value.toString()}
-            onChange={(option) => form.setFieldValue(field.name, option.value)}
-            styles={customStyles}
-            {...props}
         />
     );
 };
@@ -161,15 +138,16 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
 
     const { bookAppointment } = useBookAppointment(id, {
         onCompleted: (responseData: any) => {
-            toast.success('Appointment booked successfully!');
-            const queryParams = new URLSearchParams({
-                image: serviceProvider?.image ?? '',
-                name: serviceProvider?.name ?? '',
-                organizationName: organization?.name ?? '',
-                id: params.id,
-            }).toString();
+            console.log('Booking Response Data:', responseData);
 
-            router.push(`/booking/${id}/booking-confirm?${queryParams}`);
+            const bookingId = responseData?.appointment?.id;
+
+            if (bookingId) {
+                router.push(`/booking/confirm/${bookingId}`);
+            } else {
+                console.error('Booking ID is undefined:', responseData);
+            }
+
             setIsSubmitting(false);
         },
         onError: () => {
@@ -261,7 +239,7 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
                         validationSchema={BookingManageSchema}
                         onSubmit={handleSubmit}
                     >
-                        {({ errors, touched }) => (
+                        {({ errors, touched, setFieldValue }) => (
                             <Form className='md:w-80'>
                                 <Flex dir='column' gap={3} className='w-full md:w-auto'>
                                     <Field
@@ -300,8 +278,10 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
 
                                     <Field
                                         name='timeZone'
-                                        component={CustomTimezoneSelect}
-                                        placeholder='Select timezone'
+                                        component={TimeZone}
+                                        handleFieldValueChange={(zone: string) =>
+                                            setFieldValue('timeZone', zone)
+                                        }
                                     />
                                     {errors.timeZone && touched.timeZone ? (
                                         <ErrorTitle>{errors.timeZone}</ErrorTitle>

@@ -1,18 +1,18 @@
-import { currentUser } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
-import { object, string, number, array } from 'yup';
-import pick from 'lodash/pick';
 import {
     addAvailabilityConfigurationRepository,
     findAllAvailabilityConfigurationRepository,
     updateAvailabilityConfigurationRepository,
 } from '@/backend/repositories/availabilityConfigurationRepository';
+import { createOrganization } from '@/backend/services/organizationService';
 import { ErrorMessages } from '@/libs/message/error';
+import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 import { DaysEnum } from '@/libs/utils/enums';
+import { currentUser } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
+import pick from 'lodash/pick';
+import { array, number, object, string } from 'yup';
 import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
-import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
-import { createOrganization } from '@/backend/services/organizationService';
 
 const validateCreate = object({
     timezone: string().required(),
@@ -52,7 +52,7 @@ export async function addAvailabilitConfigurationService(
         }
 
         // Step 1.5: To Create the organization if organizationId is not provided
-        if (!organizationId) {
+        if (!data.organizationName) {
             const organizationName = data.organizationName;
             if (organizationName) {
                 const newOrganization = await createOrganization(user.id, organizationName);

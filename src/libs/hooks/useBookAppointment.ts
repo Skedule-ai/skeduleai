@@ -9,7 +9,7 @@ const useBookAppointment = (id: string, queryHelpers?: MutationHelperResolvers) 
 
     return {
         bookAppointment,
-        response: data,
+        data,
         error,
         isLoading,
     };

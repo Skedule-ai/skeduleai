@@ -4,7 +4,6 @@ import React from 'react';
 import InfoCard from '@/components/atoms/card/InfoCard';
 import Container from '@/components/atoms/container';
 import { Flex } from '@/components/atoms/flex';
-import { format } from 'date-fns';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 import PageHeader from '@/components/atoms/pageheader';
 import {
@@ -14,49 +13,40 @@ import {
     IconTitle,
     Paragraph,
 } from '@/components/atoms/typography';
-import { useSearchParams } from 'next/navigation';
 import useAppointmentDetails from '@/libs/hooks/useAppointmentDetails';
-import { Loader, Plus } from '@strapi/icons';
+import { Plus } from '@strapi/icons';
 import toast, { Toaster } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import BookingConfirmSkeletonLoader from '@/components/atoms/skeleton/bookingConfirm/bookingConfirm';
 
-interface FormData {
-    selectDate?: string;
-    selectTime?: string;
-    meetingDuration?: string;
-    timeZone?: string;
-}
-
-const BookingConfirmationPage: React.FC = () => {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-    const id = searchParams.get('id');
+const BookingConfirmationPage: React.FC<{ params: { id: string } }> = ({ params }) => {
+    const id = params.id;
     const {
-        data: bookingDetails,
+        startTime,
+        endTime,
+        timezone,
+        duration,
+        serviceProvider,
+        organization,
         error,
         isLoading,
     } = useAppointmentDetails(id, {
-        onCompleted: () => toast.success('Check You mail for booking details'),
+        onCompleted: () => {
+            toast.success('Check confirmation email')
+        },
+
         onError: () => {
-            toast.error('Somwthing Happened');
-            router.push('/404');
+            toast.error('something bad happened')
         },
     });
-    const name = searchParams.get('name');
-    const image = searchParams.get('image');
-    const formDataString = searchParams.get('formData');
-    const organizationName = searchParams.get('organizationName');
-    const formData: FormData = formDataString ? JSON.parse(formDataString) : {};
-
-    const formattedDate = formData.selectDate
-        ? format(new Date(formData.selectDate), 'yyyy-MM-dd')
-        : '';
-    const formattedTime = formData.selectTime || '';
 
     if (isLoading) {
+        return <BookingConfirmSkeletonLoader />;
+    }
+
+    if (error) {
         return (
-            <Container center>
-                <Loader className='animate-spin' />
+            <Container fullWidth>
+                <h1 className='text-xl font-semibold text-red-700'>Uh Oh! Some error Occurred!</h1>
             </Container>
         );
     }
@@ -67,7 +57,7 @@ const BookingConfirmationPage: React.FC = () => {
             <Container center>
                 <PageHeader
                     logoSrc={<ScheduleAILogo />}
-                    OrganizationName={organizationName ?? ''}
+                    OrganizationName={organization?.name ?? ''}
                 />
                 <Flex
                     className='mt-10'
@@ -77,7 +67,7 @@ const BookingConfirmationPage: React.FC = () => {
                     gap={3}
                 >
                     <Header2>
-                        We have received your request, Check your email for confirmation details.
+                        We have received your request. Check your email for confirmation details.
                     </Header2>
                     <Flex
                         className='mt-10 w-[900px] bg-neutral-100 p-5'
@@ -99,23 +89,23 @@ const BookingConfirmationPage: React.FC = () => {
                                 alignItems='center'
                             >
                                 <Flex gap={1} dir='column' alignItems='center'>
-                                    <Paragraph>(Appointment Date)</Paragraph>
-                                    <Header3>{formattedDate}</Header3>
+                                    <Paragraph>(Start Time)</Paragraph>
+                                    <Header3>{startTime}</Header3>
                                 </Flex>
-                                |
+
                                 <Flex gap={1} dir='column' alignItems='center'>
-                                    <Paragraph>(Appointment Time)</Paragraph>
-                                    <Header3>{formattedTime}</Header3>
+                                    <Paragraph>(End Time)</Paragraph>
+                                    <Header3>{endTime}</Header3>
                                 </Flex>
                             </Flex>
                             <Flex gap={1} dir='column' alignItems='center'>
                                 <Paragraph>(Meeting Duration)</Paragraph>
-                                <BodyHighlight>{formData.meetingDuration} minutes</BodyHighlight>
+                                <BodyHighlight>{duration} minutes</BodyHighlight>
                             </Flex>
 
                             <Flex gap={1} dir='column' alignItems='center'>
                                 <Paragraph>(TimeZone)</Paragraph>
-                                <BodyHighlight>{formData.timeZone}</BodyHighlight>
+                                <BodyHighlight>{timezone}</BodyHighlight>
                             </Flex>
 
                             <Flex
@@ -124,7 +114,7 @@ const BookingConfirmationPage: React.FC = () => {
                                 className='cursor-pointer decoration-blue-700 underline-offset-4 hover:underline'
                             >
                                 <Plus />
-                                <IconTitle>Add to Calender</IconTitle>
+                                <IconTitle>Add to Calendar</IconTitle>
                             </Flex>
                         </Flex>
                         <Flex
@@ -137,9 +127,9 @@ const BookingConfirmationPage: React.FC = () => {
                                 batchColor='green'
                                 batchState='default'
                                 buttonText='designation'
-                                imageUrl={image || ''}
+                                imageUrl={serviceProvider?.image || ''}
                                 subtitle='Service Provider'
-                                title={name || 'User'}
+                                title={serviceProvider?.name || 'User'}
                                 variant='default'
                             >
                                 <p></p>

@@ -6,44 +6,37 @@ import { GuestForm, SignInForm, SignUpForm } from '@/components/organisms/bookin
 
 const formOptions = ['Guest', 'Sign In', 'Sign Up'];
 
+type FormDataType = {
+    meetingDuration: string;
+    selectDate: string | Date;
+    selectTime: string;
+    timeZone: string;
+};
+
+
 interface BookingModalVariantsProps {
-    formData: any;
     serviceId: string;
-    availableTimeSlots: any[];
-    serviceProviderName: string;
     onClose: () => void;
-    image: string;
+    formData: FormDataType;
 }
 
 const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
-    formData,
     serviceId,
-    // availableTimeSlots,
     onClose,
-    serviceProviderName,
-    image,
+    formData,
 }) => {
     const [activeForm, setActiveForm] = useState('Guest');
 
     const renderForm = () => {
         switch (activeForm) {
             case 'Guest':
-                return (
-                    <GuestForm
-                        onSubmit={(values) => console.log(values)}
-                        formData={formData}
-                        serviceId={serviceId}
-                        onClose={onClose}
-                        serviceProviderName={serviceProviderName}
-                        image={image}
-                    />
-                );
+                return <GuestForm formData={formData} serviceId={serviceId} onClose={onClose} />;
 
             case 'Sign In':
-                return <SignInForm formData={formData} serviceId={serviceId} onClose={onClose} />;
+                return <SignInForm serviceId={serviceId} onClose={onClose} />;
 
             case 'Sign Up':
-                return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;
+                return <SignUpForm  formData={formData} serviceId={serviceId} onClose={onClose} />;
             default:
                 return null;
         }
