@@ -4,10 +4,6 @@ import Dropdown from '../dropdown';
 import Container from '../container';
 import Grid from '../grid';
 
-// interface FormValues {
-//     currency: string;
-// }
-
 const CURRENCY_LIST = [
     { label: '$', value: 'usd' },
     { label: '₹', value: 'inr' },
@@ -29,7 +25,6 @@ const Currency: React.FC<{
                     onChange={(val: string) => handleFieldValueChange(val)}
                     placeholder='Select a Currency'
                     size='medium'
-                    // value={values.currency}
                 />
             </Grid>
         </Container>

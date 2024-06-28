@@ -28,30 +28,26 @@ const TimeZone: React.FC<TimeZoneProps> = ({
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,
-    // searchQuery,
     onSearchQueryChange,
     className = '',
 }) => {
     const [inputValue, setInputValue] = useState('');
 
-    // Filter time zones based on the input value
     const filteredTimeZones = timeZones.filter((zone) =>
         zone.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
 
-    // Handle input change and set form field value
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputValue(value);
         onSearchQueryChange(value);
-        form.setFieldValue(field.name, value); // Ensure form is correctly passed and destructured
+        form.setFieldValue(field.name, value);
     };
 
-    // Handle time zone selection
     const handleTimeZoneSelect = (zoneValue: string) => {
         onTimeZoneChange(zoneValue);
         if (form) {
-            form.setFieldValue(field.name, zoneValue); // Check if form is defined before using it
+            form.setFieldValue(field.name, zoneValue);
         }
         toggleDropdown();
     };

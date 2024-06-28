@@ -16,7 +16,7 @@ import { Field, Formik } from 'formik';
 import { Toaster } from 'react-hot-toast';
 import ManageAppointment from '@/components/organisms/appointments/manage-appointment';
 import MeetingOverview from '@/components/atoms/card/MeetingOverviewCard';
-import CardLoader from '@/components/organisms/loader/CardLoader';
+import DashboardLoader from '@/components/organisms/loader/dashboardloader';
 
 const DashboardPage = () => {
     const { getToken } = useAuth();
@@ -58,6 +58,10 @@ const DashboardPage = () => {
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
 
+    if (loading) {
+        return <DashboardLoader />;
+    }
+
     // Dummy meetings data
     const meetings = [
         {
@@ -79,36 +83,32 @@ const DashboardPage = () => {
             <Flex className='flex-col md:flex-row'>
                 <Container className='flex-1 p-4'>
                     <Flex className='mb-6 flex-col md:flex-row md:items-center'>
-                        {loading ? (
-                            <CardLoader />
-                        ) : (
-                            <Grid columns={2} rows={1} gap={2}>
-                                <Date />
-                                <Formik
-                                    initialValues={{ timeZone: 'UTC' }}
-                                    onSubmit={(values) => {
-                                        console.log('Form values:', values);
-                                    }}
-                                >
-                                    {({ values, setFieldValue }) => (
-                                        <Field
-                                            name='timeZone'
-                                            component={TimeZone}
-                                            timeZone={values.timeZone}
-                                            onTimeZoneChange={(zone: string) =>
-                                                setFieldValue('timeZone', zone)
-                                            }
-                                            showDropdown={false}
-                                            toggleDropdown={() => console.log('Toggle Dropdown')}
-                                            searchQuery=''
-                                            onSearchQueryChange={(query: string) =>
-                                                console.log('Search Query:', query)
-                                            }
-                                        />
-                                    )}
-                                </Formik>
-                            </Grid>
-                        )}
+                        <Grid columns={2} rows={1} gap={2}>
+                            <Date />
+                            <Formik
+                                initialValues={{ timeZone: 'UTC' }}
+                                onSubmit={(values) => {
+                                    console.log('Form values:', values);
+                                }}
+                            >
+                                {({ values, setFieldValue }) => (
+                                    <Field
+                                        name='timeZone'
+                                        component={TimeZone}
+                                        timeZone={values.timeZone}
+                                        onTimeZoneChange={(zone: string) =>
+                                            setFieldValue('timeZone', zone)
+                                        }
+                                        showDropdown={false}
+                                        toggleDropdown={() => console.log('Toggle Dropdown')}
+                                        searchQuery=''
+                                        onSearchQueryChange={(query: string) =>
+                                            console.log('Search Query:', query)
+                                        }
+                                    />
+                                )}
+                            </Formik>
+                        </Grid>
                         {notificationMessage && (
                             <Notification
                                 className='ml-8 mt-4 items-center justify-center'
@@ -122,7 +122,7 @@ const DashboardPage = () => {
                     </Flex>
 
                     <Flex className='mb-6 flex-col'>
-                        {loading ? <CardLoader /> : <ManageAppointment />}
+                        <ManageAppointment />
                     </Flex>
 
                     <Flex className='mb-6 flex-col'>
@@ -130,22 +130,18 @@ const DashboardPage = () => {
                             <Header2>{'Share Appointment Link'}</Header2>
 
                             <Grid className='mt-2' columns={1} gap={4} rows={1}>
-                                {loading ? (
-                                    <CardLoader />
-                                ) : (
-                                    <AppointmentLinkCard
-                                        isFree
-                                        size='lg'
-                                        title='Add Organization Staff'
-                                        subtitle='Service provider page'
-                                        link={shortUrl}
-                                        fullLink={bookingUrl}
-                                        variant='default'
-                                        onCopySuccess={showNotification} // Pass the function
-                                    >
-                                        <></>
-                                    </AppointmentLinkCard>
-                                )}
+                                <AppointmentLinkCard
+                                    isFree
+                                    size='lg'
+                                    title='Add Organization Staff'
+                                    subtitle='Service provider page'
+                                    link={shortUrl}
+                                    fullLink={bookingUrl}
+                                    variant='default'
+                                    onCopySuccess={showNotification} // Pass the function
+                                >
+                                    <></>
+                                </AppointmentLinkCard>
                             </Grid>
                         </Container>
                     </Flex>
@@ -153,15 +149,11 @@ const DashboardPage = () => {
                     <Flex className='mb-6 flex-col'>
                         <Container>
                             <Header2>{'Weekly Meeting Overview'}</Header2>
-                            {loading ? (
-                                <CardLoader />
-                            ) : (
-                                <Grid className='mt-2' columns={4} gap={4}>
-                                    {meetings.map((meeting) => (
-                                        <MeetingOverview key={meeting.id} {...meeting} />
-                                    ))}
-                                </Grid>
-                            )}
+                            <Grid className='mt-2' columns={4} gap={4}>
+                                {meetings.map((meeting) => (
+                                    <MeetingOverview key={meeting.id} {...meeting} />
+                                ))}
+                            </Grid>
                         </Container>
                     </Flex>
                 </Container>
