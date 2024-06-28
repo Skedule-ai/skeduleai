@@ -14,28 +14,22 @@ interface ManageAppointmentProps {
 }
 
 const ManageAppointment: React.FC<ManageAppointmentProps> = ({ onAccept, onReject }) => {
-    const { appointments, setAppointments, error, loading, handleStatusChange } =
+    const { appointments, error, loading, handleStatusChange, fetchAppointments } =
         useManageAppointment();
-    const [removingAppointments, setRemovingAppointments] = useState<Set<string>>(new Set());
+    const [processingAppointments, setProcessingAppointments] = useState<Set<string>>(new Set());
 
-    const handleAccept = (appointment: AppointmentResponseType) => {
+    const handleAccept = async (appointment: AppointmentResponseType) => {
         handleStatusChange(appointment.id, true);
         onAccept(appointment);
+        setProcessingAppointments((prev) => new Set(prev).add(appointment.id));
+        await fetchAppointments();
     };
 
-    const handleReject = (appointment: AppointmentResponseType) => {
+    const handleReject = async (appointment: AppointmentResponseType) => {
         handleStatusChange(appointment.id, false);
         onReject(appointment);
-        setRemovingAppointments((prev) => new Set(prev).add(appointment.id));
-
-        setTimeout(() => {
-            setAppointments((prev) => prev.filter((a) => a.id !== appointment.id));
-            setRemovingAppointments((prev) => {
-                const newSet = new Set(prev);
-                newSet.delete(appointment.id);
-                return newSet;
-            });
-        }, 500); // Duration of the CSS transition
+        setProcessingAppointments((prev) => new Set(prev).add(appointment.id));
+        await fetchAppointments();
     };
 
     return (
@@ -69,8 +63,12 @@ const ManageAppointment: React.FC<ManageAppointmentProps> = ({ onAccept, onRejec
                                 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
                             ]}
                             variant='default'
-                            showButtons={appointment.status !== AppointmentStatus.ACCEPTED}
-                            className={removingAppointments.has(appointment.id) ? 'fade-out' : ''}
+                            showButtons={appointment.status === AppointmentStatus.PENDING}
+                            className={
+                                processingAppointments.has(appointment.id)
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : ''
+                            }
                         >
                             <></>
                         </AcceptRejectCard>

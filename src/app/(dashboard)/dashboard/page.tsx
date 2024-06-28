@@ -16,11 +16,14 @@ import { AppointmentResponseType } from '@/libs/hooks/useManageAppointment';
 import AcceptRejectCard from '@/components/atoms/card/AcceptRejectCard';
 import { AppointmentStatus } from '@/backend/utils/enum';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/nextjs';
 
 const DashboardPage: React.FC = () => {
+    const { getToken } = useAuth();
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [bookingUrl, setBookingUrl] = useState<string | null>(null);
     const [acceptedAppointments, setAcceptedAppointments] = useState<AppointmentResponseType[]>([]);
+    const [processingAppointments, setProcessingAppointments] = useState<Set<string>>(new Set());
 
     const handleCompleted = (data: any) => {
         if (data.bookingService && data.bookingService.bookingUrl) {
@@ -46,14 +49,44 @@ const DashboardPage: React.FC = () => {
         }
     }, [error]);
 
+    const fetchAcceptedAppointments = async () => {
+        const token = await getToken();
+        try {
+            const response = await fetch('http://localhost:3000/api/booking_service/appointment', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+            if (data.appointments) {
+                setAcceptedAppointments(
+                    data.appointments.filter(
+                        (appointment: AppointmentResponseType) =>
+                            appointment.status === AppointmentStatus.ACCEPTED,
+                    ),
+                );
+            }
+        } catch (error) {
+            console.error('Error fetching accepted appointments:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAcceptedAppointments();
+    }, [getToken]);
+
     const handleAccept = (appointment: AppointmentResponseType) => {
-        toast.success('Meeting Accepted');
+        toast.success('Meeting Accepted Successfully');
         setAcceptedAppointments((prev) => [...prev, appointment]);
+        setProcessingAppointments((prev) => new Set(prev).add(appointment.id));
+        fetchAcceptedAppointments()
     };
 
     const handleReject = (appointment: AppointmentResponseType) => {
-        toast.error('Meeting Rejected');
-        // No need to handle rejected appointments as they are already removed
+        toast.error('Meeting Rejected Successfully');
+        setProcessingAppointments((prev) => new Set(prev).add(appointment.id));
+        fetchAcceptedAppointments()
     };
 
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
