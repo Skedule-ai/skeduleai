@@ -8,6 +8,7 @@ export const ErrorMessages = {
     INVALID_BOOKING_URL: 'Invalid booking url',
     MISSING_AVAILABILITY_CONFIGURATION: 'Availability configuration not found.',
     FAILED_TO_SEND_EMAIL: 'Failed to send appointment accepted email',
-    INVALID_DATE : 'Invalid date',
-    INVALID_TIME : 'Invalid time',
+    INVALID_DATE: 'Invalid date',
+    INVALID_TIME: 'Invalid time',
+    ORGANIZATION_CREATE_ERROR: 'organization creation error',
 };

@@ -1,6 +1,6 @@
 import { prisma } from '@/backend/utils/db';
-import { AppointmentStatus } from '../utils/enum';
 import { Prisma } from '@prisma/client';
+import { AppointmentStatus } from '../utils/enum';
 
 export async function createAppoinmentRepository(data: Prisma.bookingDetailsCreateInput) {
     return await prisma.bookingDetails.create({ data });
