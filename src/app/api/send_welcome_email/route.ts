@@ -1,7 +1,6 @@
-import { handleWelcomeEmail } from '@/backend/controllers/emailController';
+import { handleWebhookRequestController } from '@/backend/controllers/emailController';
+import { NextRequest } from 'next/server';
 
-export async function POST(req: Request) {
-    const reqData = await req.json();
-
-    return await handleWelcomeEmail(reqData);
+export async function POST(req: NextRequest) {
+    return await handleWebhookRequestController(req);
 }
