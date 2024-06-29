@@ -128,7 +128,10 @@ export async function createAppointmentService(
     }
 }
 
-export async function getAppointmentsService(organizationId: string | null = '') {
+export async function getAppointmentsService(
+    organizationId: string | null = '',
+    startTime?: Date | string,
+) {
     try {
         // Step 1: Check if user is logged in.
         const user = await currentUser();
@@ -143,7 +146,26 @@ export async function getAppointmentsService(organizationId: string | null = '')
         }
 
         // Step 3: Fetch user appointments
-        const appointmentList = await findAppointmentsRepositoryByServiceId(bookingService.id);
+        let startOfDay: Date | string;
+        let endOfDay: Date | string;
+
+        if (startTime) {
+            startOfDay = moment(startTime).startOf('day').toISOString();
+            endOfDay = moment(startTime).endOf('day').toISOString();
+        } else {
+            const today = new Date();
+            console.log('today:', today);
+            startOfDay = moment(today).startOf('day').toISOString();
+            endOfDay = moment(today).endOf('day').toISOString();
+        }
+        console.log('startOfDay:', startOfDay);
+        console.log('endOfDay:', endOfDay);
+
+        const appointmentList = await findAppointmentsRepositoryByServiceId(
+            bookingService.id,
+            startOfDay,
+            endOfDay,
+        );
 
         // Step 4: format appointment and return it
         const formattedAppointments = await Promise.all(

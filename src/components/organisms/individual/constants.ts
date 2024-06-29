@@ -3,13 +3,13 @@ import { DetailsType } from '@/libs/utils/enums';
 export const getFormFields = () => {
     return {
         individual: [
-            // {
-            //     label: 'Your Name',
-            //     name: 'name',
-            //     placeholder: 'Enter your business name',
-            //     required: true,
-            //     type: 'text',
-            // },
+            {
+                label: 'Business name',
+                name: 'organizationName',
+                placeholder: 'Enter your business name',
+                required: true,
+                type: 'text',
+            },
             {
                 label: 'Select time zone',
                 name: 'timezone',
@@ -51,7 +51,7 @@ export const getFormFields = () => {
     };
 };
 
-const organizationInitialValues = {
+const individualInitialValues = {
     organizationName: '',
     timezone: '',
     currency: '',
@@ -65,9 +65,9 @@ const availabilityInitialValues = {
 export const getInitialValues = (type: DetailsType) => {
     const defaultVal = { submitError: '', submitSuccess: '' };
     switch (type) {
-        case DetailsType.organizationDetails:
+        case DetailsType.individualDetails:
             return {
-                ...organizationInitialValues,
+                ...individualInitialValues,
                 ...defaultVal,
             };
         case DetailsType.availabilityDetails:

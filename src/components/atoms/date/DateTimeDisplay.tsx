@@ -41,7 +41,7 @@ const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({ currentDate, onDateCh
                 </Button>
             </Container>
             <Button
-                className='mb-4 flex items-center bg-white px-4 py-2 font-semibold text-black shadow sm:mb-0'
+                className='mb-4 flex items-center bg-white px-4 py-2 font-medium text-black shadow sm:mb-0'
                 color='tertiary'
                 size='lg'
             >

@@ -1,5 +1,5 @@
 import { useQuery, MutationHelperResolvers } from '@/libs/utils/client';
-import { appointmentDetailUrl } from '@/libs/api/appointmentDetailsUrl' ;
+import { appointmentDetailUrl } from '@/libs/api/appointmentDetailsUrl';
 
 const useAppointmentDetails = (id: string, queryHelpers?: MutationHelperResolvers) => {
     const { data, error, isLoading } = useQuery(appointmentDetailUrl(id), queryHelpers);

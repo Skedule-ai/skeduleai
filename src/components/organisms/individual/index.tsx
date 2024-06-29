@@ -13,7 +13,7 @@ import { availabilityDetailsSchema } from '../validations/organization-form-vali
 import individualSchema from './individual-form-validation';
 import useOnBoardingModal from '@/libs/hooks/useOnBoardingModal';
 import useAvailability from '@/libs/hooks/useAvailability';
-import { Skeleton } from '@chakra-ui/react';
+// import { Skeleton } from '@chakra-ui/react';
 import toast, { Toaster } from 'react-hot-toast';
 
 type OrganizationFormType = {
@@ -28,7 +28,10 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
     );
     const formFields = getFormFields();
     const initValues = getInitialValues(detailsType);
-    const { submitAvailability, isLoading, error } = useAvailability({
+    const {
+        submitAvailability,
+        // isLoading, error
+    } = useAvailability({
         onCompleted: () => {
             setIsOpen(false);
             toast.success('Successfully added details');
@@ -56,7 +59,9 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
             actions.setStatus({ submitSuccess: 'Form submitted successfully!' });
         } catch (error) {
             console.error('Error submitting form:', error);
-            actions.setStatus({ submitError: error.message });
+            if (error instanceof Error) {
+                actions.setStatus({ submitError: error.message });
+            }
         } finally {
             actions.setSubmitting(false);
         }
@@ -141,13 +146,13 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
                                 </Button>
                             </FlexItem>
                         </Flex>
-                        {isLoading && (
+                        {/* {isLoading && (
                             <div className='animate-pulse'>
                                 <Skeleton height='20px' my='10px' />
                                 <Skeleton height='20px' my='10px' />
                                 <Skeleton height='20px' my='10px' />
                             </div>
-                        )}
+                        )} */}
                     </Form>
                 )}
             </Formik>

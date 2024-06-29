@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUpdateBookingStatus } from '../api/bookingService';
 import { AppointmentStatus } from '@/backend/utils/enum';
 import toast from 'react-hot-toast';
@@ -49,7 +49,7 @@ export const useManageAppointment = () => {
         updateAppointmentStatus(id, status);
     };
 
-    const fetchAppointments = async () => {
+    const fetchAppointments = useCallback(async () => {
         const token = await getToken();
         try {
             const response = await fetch('http://localhost:3000/api/booking_service/appointment', {
@@ -68,11 +68,11 @@ export const useManageAppointment = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [getToken]);
 
     useEffect(() => {
         fetchAppointments();
-    }, [getToken]);
+    }, [fetchAppointments, getToken]);
 
     return { appointments, setAppointments, error, loading, handleStatusChange, fetchAppointments };
 };

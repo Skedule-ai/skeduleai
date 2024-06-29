@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { Loader } from '@strapi/icons';
 import { useSignUp } from '@clerk/clerk-react';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import useBookAppointment from '@/libs/hooks/useBookAppointment';
 
 const SignUpFormSchema = Yup.object().shape({
@@ -84,7 +84,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ formData, serviceId, onClose })
             });
 
             if (signUpResponse.status === 'complete') {
-                Cookies.set('userSession', JSON.stringify(signUpResponse.session));
+                // Cookies.set('userSession', JSON.stringify(signUpResponse.session));
                 await bookAppointment(payload);
                 toast.success('Signed up and appointment booked successfully');
                 onClose();

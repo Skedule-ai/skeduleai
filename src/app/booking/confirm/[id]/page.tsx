@@ -31,11 +31,11 @@ const BookingConfirmationPage: React.FC<{ params: { id: string } }> = ({ params 
         isLoading,
     } = useAppointmentDetails(id, {
         onCompleted: () => {
-            toast.success('Check confirmation email')
+            toast.success('Check confirmation email');
         },
 
         onError: () => {
-            toast.error('something bad happened')
+            toast.error('something bad happened');
         },
     });
 

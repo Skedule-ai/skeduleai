@@ -11,7 +11,16 @@ const currencies = [
     { id: 2, name: 'EUR' },
 ];
 
-const DropdownIndividual = ({ label, name, options, value, onChange }) => {
+const DropdownIndividual: React.FC<{
+    label: string;
+    name: string;
+    options: {
+        id: number;
+        name: string;
+    }[];
+    value?: { name: string };
+    onChange: () => void;
+}> = ({ label, options, value, onChange }) => {
     return (
         <Listbox value={value} onChange={onChange}>
             <div className='relative mt-1'>
@@ -57,7 +66,10 @@ const DropdownIndividual = ({ label, name, options, value, onChange }) => {
     );
 };
 
-export const TimezoneDropdown = ({ value, onChange }) => (
+export const TimezoneDropdown: React.FC<{
+    value: { name: string };
+    onChange: () => void;
+}> = ({ value, onChange }) => (
     <DropdownIndividual
         label='Timezone'
         name='timezone'
@@ -67,7 +79,12 @@ export const TimezoneDropdown = ({ value, onChange }) => (
     />
 );
 
-export const CurrencyDropdown = ({ value, onChange }) => (
+export const CurrencyDropdown: React.FC<{
+    value: {
+        name: string;
+    };
+    onChange: () => void;
+}> = ({ value, onChange }) => (
     <DropdownIndividual
         label='Currency'
         name='currency'

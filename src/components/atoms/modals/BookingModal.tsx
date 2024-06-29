@@ -78,7 +78,17 @@ const BookingModal: React.FC<BookingModalProps> = ({
                 </Flex>
             </Flex>
 
-            <BookingModalVariants formData={formData} serviceId={serviceId} onClose={onClose} />
+            <BookingModalVariants
+                formData={{
+                    ...formData,
+                    selectDate:
+                        typeof formData.selectDate === 'string'
+                            ? formData.selectDate
+                            : formData.selectDate.toLocaleTimeString(),
+                }}
+                serviceId={serviceId}
+                onClose={onClose}
+            />
         </Modal>
     );
 };

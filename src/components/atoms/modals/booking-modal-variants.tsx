@@ -8,11 +8,10 @@ const formOptions = ['Guest', 'Sign In', 'Sign Up'];
 
 type FormDataType = {
     meetingDuration: string;
-    selectDate: string | Date;
+    selectDate: string;
     selectTime: string;
     timeZone: string;
 };
-
 
 interface BookingModalVariantsProps {
     serviceId: string;
@@ -33,10 +32,10 @@ const BookingModalVariants: React.FC<BookingModalVariantsProps> = ({
                 return <GuestForm formData={formData} serviceId={serviceId} onClose={onClose} />;
 
             case 'Sign In':
-                return <SignInForm serviceId={serviceId} onClose={onClose} />;
+                return <SignInForm serviceId={serviceId} onClose={onClose} formData={formData} />;
 
             case 'Sign Up':
-                return <SignUpForm  formData={formData} serviceId={serviceId} onClose={onClose} />;
+                return <SignUpForm formData={formData} serviceId={serviceId} onClose={onClose} />;
             default:
                 return null;
         }
