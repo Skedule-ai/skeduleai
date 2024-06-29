@@ -9,30 +9,30 @@ const SidebarLoader: React.FC = () => (
                 <div className='h-6 w-24 rounded bg-slate-200'></div>
             </Flex>
             <ul className='mt-4 w-full grow'>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
-                <li className='mt-8 flex items-center px-5 py-2'>
-                    <div className='col-span-2 h-2 w-full rounded bg-slate-200'></div>
+                <li className='mt-8 flex items-center px-3'>
+                    <Flex className='h-5 w-72 animate-pulse rounded-md bg-slate-200 p-5'></Flex>
                 </li>
             </ul>
             <Flex className='justify-center p-4'>
-                <div className='h-10 w-24 rounded bg-slate-200'></div>
+                <Flex className='h-10 w-24 rounded bg-slate-200'></Flex>
             </Flex>
             <Flex className='shrink-0 items-center justify-center px-4 py-2'>
-                <div className='h-10 w-24 rounded bg-slate-200'></div>
+                <Flex className='h-10 w-24 rounded bg-slate-200'></Flex>
             </Flex>
         </Flex>
     </Container>

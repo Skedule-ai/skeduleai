@@ -21,6 +21,7 @@ const MeetingOverview: React.FC<MeetingOverviewProps> = ({
     toTime,
     isFree,
     userImages,
+    // children,
     ...props
 }) => {
     return (

@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import SideBar from '@/components/organisms/sidebar';
 import { useUser } from '@clerk/nextjs';
-import { Loader } from '@strapi/icons';
-import SidebarLoaderSkeleton from '@/components/organisms/loader/SidebarLoader';
+import SidebarLoader from '@/components/organisms/loader/SidebarLoader';
 
 export default function DashboardLayout({
     children,
@@ -30,14 +29,13 @@ export default function DashboardLayout({
 
     if (loading) {
         return (
-            <div className='flex w-full justify-center'>
-                <Loader className='animate-spin' />
-                <SidebarLoaderSkeleton />
-            </div>
+            <Flex className='flex w-full justify-center'>
+                <SidebarLoader />
+            </Flex>
         );
     }
     return (
-        <Container fullscreen className='w-screen'>
+        <Container fullscreen className='w-full'>
             <Flex dir='row'>
                 <FlexItem>
                     <SideBar />

@@ -11,12 +11,10 @@ type TimeZoneProps = FieldProps & {
 
 const TimeZone = ({ field, form, meta, handleFieldValueChange }: TimeZoneProps) => {
     const [, setCurrentDay] = useState('');
-    // const [, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
     const [, setCurrentTime] = useState('');
     const [timeZone, setTimeZone] = useState(moment.tz.guess());
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    // Fetch the list of time zones from moment-timezone
     const timeZones = moment.tz.names().map((zone) => ({
         label: zone.replace('_', ' '),
         value: zone,
@@ -35,10 +33,6 @@ const TimeZone = ({ field, form, meta, handleFieldValueChange }: TimeZoneProps) 
         return () => clearInterval(interval);
     }, [timeZone]);
 
-    // const handleDateChange = (date: string) => {
-    //     setCurrentDate(date);
-    // };
-
     const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
         setShowDropdown(false);
@@ -55,12 +49,8 @@ const TimeZone = ({ field, form, meta, handleFieldValueChange }: TimeZoneProps) 
 
     return (
         <TimeZoneDisplay
-            // currentDay={currentDay}
-            // currentDate={currentDate}
-            // currentTime={currentTime}
             timeZone={timeZone}
             timeZones={timeZones}
-            // onDateChange={handleDateChange}
             onTimeZoneChange={handleTimeZoneChange}
             searchQuery={searchQuery}
             onSearchQueryChange={handleSearchQueryChange}

@@ -35,7 +35,7 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
     };
 
     return (
-        <Card {...props}>
+        <Card size='xl' {...props}>
             <Flex dir='column' className='relative p-4'>
                 <Button
                     className='absolute right-4 top-4 p-1'
@@ -67,8 +67,8 @@ const AppointmentLink: React.FC<AppointmentLinkProps> = ({
                         />
                     </svg>
                 </Button>
-                <Flex dir='row' justifyContent='between' alignItems='center'>
-                    <h2 className='mt-4 text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>
+                <Flex dir='row' alignItems='center'>
+                    <h2 className='mt-4 text-xs font-semibold md:text-base'>{title}</h2>
                 </Flex>
 
                 <Flex
