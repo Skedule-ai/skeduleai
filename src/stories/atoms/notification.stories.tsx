@@ -5,7 +5,6 @@ import {
     notificationTypes,
     notificationWidth,
 } from '@/components/atoms/notification/notification.variants';
-
 const meta: Meta<typeof Notification> = {
     title: 'Atoms/Notification',
     component: Notification,
@@ -19,28 +18,22 @@ const meta: Meta<typeof Notification> = {
     },
     args: {},
 } satisfies Meta<typeof Notification>;
-
 export default meta;
 type Story = StoryObj<typeof Notification>;
-
 export const SuccessNotification: Story = {
     args: {
         type: 'success',
-        // width: 'medium',
-        icon: <CheckCircle className='text-green-800' />, // Using Strapi icon
+        icon: <CheckCircle className='text-green-800' />,
         children: 'This is a success notification.',
     },
 };
-
 export const WarningNotification: Story = {
     args: {
         type: 'warning',
-        // width: 'full',
-        icon: <ExclamationMarkCircle />, // Using Strapi icon
+        icon: <ExclamationMarkCircle />,
         children: 'This is a warning notification.',
     },
 };
-
 export const InfoNotification: Story = {
     args: {
         type: 'info',

@@ -1,10 +1,8 @@
 import useSWR, { mutate } from 'swr';
-
 export type QueryHelperResolvers = {
     onCompleted?: (data: any) => void;
     onError?: (err: any) => void;
 };
-
 export const get = async (url: string, queryHelpers?: QueryHelperResolvers) => {
     try {
         const response = await fetch(url);
@@ -19,7 +17,6 @@ export const get = async (url: string, queryHelpers?: QueryHelperResolvers) => {
         throw error;
     }
 };
-
 export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
     const {
         data,
@@ -32,7 +29,6 @@ export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
         isLoading,
     };
 }
-
 export const post = async (url: string, data: any) => {
     try {
         const response = await fetch(url, {
@@ -63,13 +59,11 @@ export const post = async (url: string, data: any) => {
 interface PostData {
     [key: string]: any;
 }
-
 export type MutationHelperResolvers = {
     initialData?: any;
     onCompleted?: (data: any) => void;
     onError?: (err: any) => void;
 };
-
 export function useMutation(
     url: string,
     queryHelpers?: MutationHelperResolvers,

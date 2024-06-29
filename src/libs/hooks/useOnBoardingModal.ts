@@ -3,7 +3,6 @@ import {
     useUpdateUserConfigurationMutation,
     useFetchUserConfigurationQuery,
 } from '../api/userConfiguration';
-
 const useOnBoardingModal = () => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -13,7 +12,6 @@ const useOnBoardingModal = () => {
             onBoardingModal: true,
         });
     };
-
     useFetchUserConfigurationQuery({
         onCompleted: ({ userConfiguration }) => {
             if (!userConfiguration?.onBoardingModal) {
@@ -25,11 +23,9 @@ const useOnBoardingModal = () => {
             console.error(err);
         },
     });
-
     return {
         isOpen,
         setIsOpen,
     };
 };
-
 export default useOnBoardingModal;

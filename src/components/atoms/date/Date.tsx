@@ -11,8 +11,6 @@ const DateContainer = () => {
     const [timeZone, setTimeZone] = useState(moment.tz.guess());
     const [showDropdown, setShowDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
-    // Fetch the list of time zones from moment-timezone
     const timeZones = moment.tz.names().map((zone) => ({
         label: zone.replace('_', ' '),
         value: zone,
@@ -30,16 +28,13 @@ const DateContainer = () => {
 
         return () => clearInterval(interval);
     }, [timeZone]);
-
     const handleDateChange = (date: string) => {
         setCurrentDate(date);
     };
-
     const handleTimeZoneChange = (zone: string) => {
         setTimeZone(zone);
         setShowDropdown(false);
     };
-
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     };

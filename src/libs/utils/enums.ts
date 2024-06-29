@@ -3,7 +3,6 @@ export enum DetailsType {
     availabilityDetails = 'availability',
     individualDetails = 'individual',
 }
-
 export enum DaysEnum {
     SUNDAY = 1,
     MONDAY = 2,

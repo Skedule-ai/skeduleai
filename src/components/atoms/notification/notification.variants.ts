@@ -25,7 +25,7 @@ const notificationVariants = tv({
 type NotificationProps = React.ComponentPropsWithRef<'div'> &
     VariantProps<typeof notificationVariants> & {
         as?: ElementType;
-        icon?: React.ReactNode; // New prop for icon
+        icon?: React.ReactNode;
     };
 
 export { type NotificationProps, notificationVariants };
