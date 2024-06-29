@@ -28,30 +28,26 @@ const TimeZone: React.FC<TimeZoneProps> = ({
     onTimeZoneChange,
     showDropdown,
     toggleDropdown,
-    // searchQuery,
     onSearchQueryChange,
     className = '',
 }) => {
     const [inputValue, setInputValue] = useState('');
 
-    // Filter time zones based on the input value
     const filteredTimeZones = timeZones.filter((zone) =>
         zone.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
 
-    // Handle input change and set form field value
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputValue(value);
         onSearchQueryChange(value);
-        form.setFieldValue(field.name, value); // Ensure form is correctly passed and destructured
+        form.setFieldValue(field.name, value);
     };
 
-    // Handle time zone selection
     const handleTimeZoneSelect = (zoneValue: string) => {
         onTimeZoneChange(zoneValue);
         if (form) {
-            form.setFieldValue(field.name, zoneValue); // Check if form is defined before using it
+            form.setFieldValue(field.name, zoneValue);
         }
         toggleDropdown();
     };
@@ -61,14 +57,16 @@ const TimeZone: React.FC<TimeZoneProps> = ({
             <Button
                 className='flex w-full items-center justify-between bg-white px-4 py-2 text-black shadow'
                 color='tertiary'
-                size='lg'
                 onClick={toggleDropdown}
             >
-                <Text>{timeZone}</Text>
+                <Text className='font-medium'>{timeZone}</Text>
                 <Text className='ml-2'>{showDropdown ? <Cross /> : <ChevronDown />}</Text>
             </Button>
             {showDropdown && (
-                <div className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'>
+                <div
+                    className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'
+                    style={{ zIndex: 9999 }} // Ensure dropdown is above other elements
+                >
                     <input
                         type='text'
                         placeholder='Search...'

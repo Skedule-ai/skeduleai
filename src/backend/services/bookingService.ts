@@ -1,8 +1,3 @@
-import { Organization, User, currentUser } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { nanoid } from 'nanoid';
-
 import {
     createBookingServiceRepo,
     findBookingServiceRepo,
@@ -10,6 +5,10 @@ import {
 } from '@/backend/repositories/bookingServiceRepository';
 import { ErrorMessages } from '@/libs/message/error';
 import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
+import { Organization, User, currentUser } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { nanoid } from 'nanoid';
 import { findAllAvailabilityConfigurationRepository } from '../repositories/availabilityConfigurationRepository';
 import { getFormattedImagePath, getUser, getUserOrganization } from './clerkService';
 // import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
@@ -38,9 +37,18 @@ const generateBookingServiceResponse = async (
     };
 };
 
+// Define the type for the create booking service data
 export type CreateBookingServiceDataType = Partial<
-    Pick<Prisma.bookingServiceCreateInput, 'organizationId'>
+    Pick<Prisma.bookingServiceCreateInput, 'organizationId'> & {
+        date: string;
+        startTime: string;
+        endTime: string;
+    }
 >;
+
+// export type CreateBookingServiceDataType = Partial<
+//     Pick<Prisma.bookingServiceCreateInput, 'organizationId'| 'date' | 'startTime' | 'endTime'>
+// >;
 export async function createBookingService(data: CreateBookingServiceDataType) {
     try {
         // Step 1: Validate if user is authenticated
@@ -48,6 +56,22 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
         if (!user?.id) {
             throw new Error(ErrorMessages.UNAUTHORIZED);
         }
+
+        // Validate date and time
+        // const { date, startTime, endTime } = data;
+        // if (!date || !startTime || !endTime) {
+        //     throw new Error(ErrorMessages.REQUIRED_INPUT);
+        // }
+
+        // const selectedDate = new Date(date);
+        // const today = new Date();
+        // if (selectedDate < today) {
+        //     throw new Error(ErrorMessages.INVALID_DATE);
+        // }
+
+        // if (startTime >= endTime) {
+        //     throw new Error(ErrorMessages.INVALID_TIME);
+        // }
 
         // Step 2: Generate unique booking id
         const id = nanoid(12);
@@ -57,6 +81,8 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             id,
             userId: user.id,
             organizationId: data.organizationId ?? '',
+            // startTime,
+            // endTime,
         });
 
         // Step 4: Format and generate booking service data.
@@ -70,6 +96,8 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
                 return { message: ErrorMessages.BOOKING_CREATE_ERROR };
             }
             console.error(JSON.stringify(err));
+            throw new Error(err.message);
+        } else if (err instanceof Error) {
             throw new Error(err.message);
         }
     }
@@ -121,7 +149,7 @@ export async function findBookingService(data: FindBookingServiceDataType) {
 
 export async function findBookingServiceById(bookingServiceId: string) {
     try {
-        // Step 1: Check for bookin service id input
+        // Step 1: Check for booking service id input
         if (!bookingServiceId) {
             throw new Error(ErrorMessages.REQUIRED_INPUT);
         }
@@ -131,6 +159,15 @@ export async function findBookingServiceById(bookingServiceId: string) {
         if (!userBookingServiceInfo?.id) {
             throw new Error(ErrorMessages.INVALID_BOOKING_URL);
         }
+
+        // To Validate that the booking is not in the past
+        // const currentDateTime = new Date();
+        // const bookingStartTime = new Date(userBookingServiceInfo.startTime);
+        // const bookingEndTime = new Date(userBookingServiceInfo.endTime);
+
+        // if (bookingEndTime < currentDateTime) {
+        //     throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
+        // }
 
         // Step 3: Get organization info if organization id is present
         let organization: Organization | undefined;

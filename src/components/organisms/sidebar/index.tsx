@@ -65,17 +65,17 @@ const SideBar: React.FC<SidebarProps> = ({ collapse = false, ...props }) => {
                 </div>
             )}
             <Container
-                className={`fixed inset-y-0 left-0 z-40 h-screen w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:w-64 md:translate-x-0 md:shadow-none`}
+                className={`fixed inset-y-0 left-0 z-40 h-screen w-52 bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:w-52 md:translate-x-0 md:shadow-none`}
                 style={{ position: 'sticky', top: '0' }}
             >
                 <Container
                     className={`${containerClass} flex h-full flex-col ${isCollapsed ? 'bg-transparent' : 'bg-gray-50'} overflow-hidden text-black`}
                     {...props}
                 >
-                    <Flex className='items-center justify-between p-4'>
-                        <a href='/'>
+                    <Flex className='items-center justify-center p-4'>
+                        <Link href='/'>
                             <ScheduleAILogo />
-                        </a>
+                        </Link>
                         <Button
                             className='cursor-pointer p-2 md:hidden'
                             onClick={handleToggle}

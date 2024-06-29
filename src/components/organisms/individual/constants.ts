@@ -4,8 +4,8 @@ export const getFormFields = () => {
     return {
         individual: [
             {
-                label: 'Your Name',
-                name: 'name',
+                label: 'Business name',
+                name: 'organizationName',
                 placeholder: 'Enter your business name',
                 required: true,
                 type: 'text',
@@ -17,13 +17,6 @@ export const getFormFields = () => {
                 required: true,
                 type: 'timezone',
             },
-            // {
-            //     label: 'Select time zone',
-            //     name: 'timezone',
-            //     placeholder: 'Select your time zone',
-            //     required: true,
-            //     type: 'text',
-            // },
             {
                 label: 'Currency',
                 name: 'currency',
@@ -35,7 +28,7 @@ export const getFormFields = () => {
         availability: [
             {
                 label: 'Business hours',
-                name: 'start_time',
+                name: 'businessHours',
                 placeholder: 'Select',
                 required: true,
                 type: 'WorkingHoursSelector',
@@ -58,7 +51,7 @@ export const getFormFields = () => {
     };
 };
 
-const organizationInitialValues = {
+const individualInitialValues = {
     organizationName: '',
     timezone: '',
     currency: '',
@@ -69,18 +62,13 @@ const availabilityInitialValues = {
     numberOfSlots: '',
     businessDays: [],
 };
-// const businessInitialValues = {
-//     business_name: '',
-//     service_provided: '',
-//     description: '',
-// };
 
 export const getInitialValues = (type: DetailsType) => {
     const defaultVal = { submitError: '', submitSuccess: '' };
     switch (type) {
-        case DetailsType.organizationDetails:
+        case DetailsType.individualDetails:
             return {
-                ...organizationInitialValues,
+                ...individualInitialValues,
                 ...defaultVal,
             };
         case DetailsType.availabilityDetails:
@@ -88,11 +76,6 @@ export const getInitialValues = (type: DetailsType) => {
                 ...availabilityInitialValues,
                 ...defaultVal,
             };
-        // case DetailsType.businessDetails:
-        //     return{
-        //         ...availabilityInitialValues,
-        //         ...defaultVal,
-        //     }
         default:
             return defaultVal;
     }

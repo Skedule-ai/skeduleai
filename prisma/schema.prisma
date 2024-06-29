@@ -79,3 +79,12 @@ model blogSubscribe {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+model organizationDetails {
+  organizationId     String   @id
+  typeOfOrganization String
+  servicesOffered    String
+  aboutOrganization  String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

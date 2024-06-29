@@ -1,17 +1,30 @@
+import Currency from '@/components/atoms/currency/currency';
+import TimeZone from '@/components/atoms/date/TimeZone';
 import Input from '@/components/atoms/fields';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import { Header1, Label, Subtitle } from '@/components/atoms/typography';
 import { FormSubmitMessage } from '@/components/molecules/message';
+import { FormikErrors } from 'formik';
 import React, { Fragment } from 'react';
-import TimeZone from '@/components/atoms/date/TimeZone'; // Import TimeZone component
-import Currency from '@/components/atoms/currency/currency';
 
-const IndividualFields = (props: {
+const IndFields = ({
+    fields,
+    errors,
+    handleChange,
+    handleFieldValueChange,
+}: {
     fields: any[];
     errors: any;
     handleChange: React.ChangeEventHandler<HTMLInputElement>;
+    handleFieldValueChange?: (
+        field: string,
+        value: any,
+        shouldValidate?: boolean,
+    ) => Promise<void | FormikErrors<{
+        submitError: string;
+        submitSuccess: string;
+    }>>;
 }) => {
-    const { fields, errors, handleChange } = props;
     return (
         <Fragment>
             <FlexItem>
@@ -21,28 +34,26 @@ const IndividualFields = (props: {
             {fields.map((field, _inx: number) => {
                 const { type, placeholder, label } = field;
                 const name = field.name;
-                const Field = Input;
+                let Field = Input;
 
                 switch (type) {
                     case 'timezone':
                         return (
                             <Flex key={_inx} dir='column' gap={1}>
-                                <Label htmlFor={name}>{label}</Label>
+                                <Label htmlFor={field.name}>{label}</Label>
                                 <FlexItem>
                                     <TimeZone
-                                        // className='lg'
                                         field={{
                                             name: 'timeZone',
                                             onBlur: () => {},
                                             onChange: () => {},
                                             value: '',
                                         }}
-                                        meta={field}
                                         form={field.form}
-                                        // onSearchQueryChange={() => {}}
-                                        // onTimeZoneChange={() => {}}
-                                        // searchQuery=''
-                                        // toggleDropdown={() => {}}
+                                        meta={field}
+                                        handleFieldValueChange={(value: string) => {
+                                            handleFieldValueChange?.(name, value);
+                                        }}
                                     />
                                 </FlexItem>
                             </Flex>
@@ -53,35 +64,35 @@ const IndividualFields = (props: {
                                 <Label htmlFor={name}>{label}</Label>
                                 <FlexItem>
                                     <Currency
-                                    // id='currency'
-                                    // name='currency'
-                                    // onChange={() => {}}
-                                    // placeholder='Select a currency'
-                                    // size='md'
+                                        name={name}
+                                        handleFieldValueChange={(currency) => {
+                                            handleFieldValueChange?.(name, currency);
+                                        }}
                                     />
                                 </FlexItem>
                             </Flex>
                         );
                     default:
-                        return (
-                            <Flex key={_inx} dir='column' gap={1}>
-                                <Label htmlFor={name}>{label}</Label>
-                                <FlexItem>
-                                    <Field
-                                        type={type}
-                                        name={name}
-                                        placeholder={placeholder}
-                                        onChange={handleChange}
-                                        className='w-full'
-                                    />
-                                    {errors[name] && <FormSubmitMessage type='error' name={name} />}
-                                </FlexItem>
-                            </Flex>
-                        );
+                        Field = Input;
+                        break;
                 }
+                return (
+                    <Flex key={_inx} dir='column' gap={1}>
+                        <Label htmlFor={field.name}>{label}</Label>
+                        <FlexItem>
+                            <Field
+                                type={type}
+                                name={name}
+                                placeholder={placeholder}
+                                onChange={handleChange}
+                            />
+                            {errors[name] && <FormSubmitMessage type='error' name={name} />}
+                        </FlexItem>
+                    </Flex>
+                );
             })}
         </Fragment>
     );
 };
 
-export default IndividualFields;
+export default IndFields;

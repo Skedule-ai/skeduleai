@@ -8,4 +8,11 @@ export const ErrorMessages = {
     INVALID_BOOKING_URL: 'Invalid booking url',
     MISSING_AVAILABILITY_CONFIGURATION: 'Availability configuration not found.',
     FAILED_TO_SEND_EMAIL: 'Failed to send appointment accepted email',
+    WEBHOOK_VERIFICATION: 'Error verifying webhook',
+    MISSING_WEBHOOK_SECRET: 'webhook secret missing',
+    MISSING_SVIX_HEADERS: 'svix headers missing',
+    FAILED_TO_SEND_WELCOME_EMAIL: 'Failed to send welcome email',
+    INVALID_DATE: 'Invalid date',
+    INVALID_TIME: 'Invalid time',
+    ORGANIZATION_CREATE_ERROR: 'organization creation error',
 };

@@ -102,6 +102,7 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
                                 fields={formFields.individual}
                                 errors={errors}
                                 handleChange={handleChange}
+                                handleFieldValueChange={setFieldValue}
                             />
                         ) : (
                             <AvailabilityFields

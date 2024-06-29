@@ -1,4 +1,4 @@
-import { sendWelcomeEmails } from '@/backend/services/emailService';
+import { handleWebhookVerifyService, sendWelcomeEmails } from '@/backend/services/emailService';
 import { NextResponse } from 'next/server';
 
 type SendGridHookRequestData = {
@@ -35,6 +35,18 @@ export async function handleWelcomeEmail(sendGridData: SendGridHookRequestData) 
         console.error('Error sending welcome email:', error);
         if (error instanceof Error) {
             return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+    }
+}
+
+export async function handleWebhookRequestController(req: Request) {
+    try {
+        const response = await handleWebhookVerifyService(req);
+        return response;
+    } catch (error: unknown) {
+        console.error('Error handling webhook request:', error);
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message }, { status: 500 });
         }
     }
 }
