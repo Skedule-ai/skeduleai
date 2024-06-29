@@ -34,3 +34,18 @@ export async function updateBookingStatusRepo(id: string, status: AppointmentSta
         data: { status }, // Include related bookingDetails
     });
 }
+export async function findGuestUserDetails(guestUserId: number) {
+    try {
+        return await prisma.guestUser.findUnique({
+            where: { id: guestUserId },
+            select: {
+                name: true,
+                email: true,
+                phoneNumber: true,
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching guest user details:', error);
+        throw new Error('Failed to fetch guest user details');
+    }
+}
