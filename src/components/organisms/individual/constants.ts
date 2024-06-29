@@ -58,8 +58,7 @@ const individualInitialValues = {
 };
 const availabilityInitialValues = {
     businessHours: '',
-    businessHoursEnd: '',
-    numberOfSlots: '',
+    duration: '',
     businessDays: [],
 };
 

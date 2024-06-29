@@ -35,7 +35,7 @@ export default function DashboardLayout({
         );
     }
     return (
-        <Container fullscreen className='w-screen'>
+        <Container fullscreen className='w-full'>
             <Flex dir='row'>
                 <FlexItem>
                     <SideBar />

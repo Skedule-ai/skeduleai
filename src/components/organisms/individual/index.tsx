@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Formik, Form } from 'formik';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import Button from '@/components/atoms/button';
@@ -11,9 +11,10 @@ import IndividualFields from './fields';
 import AvailabilityFields from '../availability-fields';
 import { availabilityDetailsSchema } from '../validations/organization-form-validation';
 import individualSchema from './individual-form-validation';
-import { useAuth } from '@clerk/nextjs';
 import useOnBoardingModal from '@/libs/hooks/useOnBoardingModal';
-import toast from 'react-hot-toast';
+import useAvailability from '@/libs/hooks/useAvailability';
+// import { Skeleton } from '@chakra-ui/react';
+import toast, { Toaster } from 'react-hot-toast';
 
 type OrganizationFormType = {
     submitBtnText?: string;
@@ -21,16 +22,27 @@ type OrganizationFormType = {
 };
 
 const IndividualForm: React.FC<OrganizationFormType> = () => {
-    const { getToken } = useAuth();
     const { setIsOpen } = useOnBoardingModal();
     const [detailsType, setDetailsType] = React.useState<DetailsType>(
         DetailsType.individualDetails,
     );
     const formFields = getFormFields();
     const initValues = getInitialValues(detailsType);
+    const {
+        submitAvailability,
+        // isLoading, error
+    } = useAvailability({
+        onCompleted: () => {
+            setIsOpen(false);
+            toast.success('Successfully added details');
+        },
+        onError: (err) => {
+            toast.error(err.message);
+        },
+    });
 
     const handleSubmitForm = async (values: any, actions: any) => {
-        const token = await getToken();
+        console.log('Submitting form with values:', values);
         const data = {
             organizationId: '',
             availabilityConfiguration: {
@@ -42,114 +54,109 @@ const IndividualForm: React.FC<OrganizationFormType> = () => {
             },
         };
 
-        console.log('Form values:', values);
-        console.log('Payload:', data);
-
         try {
-            const response = await fetch('http://localhost:3000/api/availability', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(data),
-            });
-
-            console.log('Response status:', response.status);
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const result = await response.json();
-            setIsOpen(false);
-            toast.success('successfully added details');
-            console.log('Response data:', result);
+            await submitAvailability(data);
             actions.setStatus({ submitSuccess: 'Form submitted successfully!' });
         } catch (error) {
-            console.error('Error:', error);
-            actions.setStatus({ submitError: 'Submission failed. Please try again.' });
+            console.error('Error submitting form:', error);
+            if (error instanceof Error) {
+                actions.setStatus({ submitError: error.message });
+            }
         } finally {
             actions.setSubmitting(false);
         }
     };
 
     return (
-        <Formik
-            initialValues={initValues}
-            validationSchema={
-                detailsType === DetailsType.individualDetails
-                    ? individualSchema
-                    : availabilityDetailsSchema
-            }
-            validateOnMount
-            onSubmit={handleSubmitForm}
-        >
-            {({
-                isSubmitting,
-                values,
-                errors,
-                status,
-                isValid,
-                handleChange,
-                handleSubmit,
-                setFieldValue,
-            }) => (
-                <Form>
-                    <Flex dir='column' fullWidth gap={6}>
-                        {detailsType === DetailsType.individualDetails ? (
-                            <IndividualFields
-                                fields={formFields.individual}
-                                errors={errors}
-                                handleChange={handleChange}
-                                handleFieldValueChange={setFieldValue}
-                            />
-                        ) : (
-                            <AvailabilityFields
-                                fields={formFields.availability}
-                                errors={errors}
-                                handleChange={handleChange}
-                                values={values}
-                                setFieldValue={setFieldValue}
-                            />
-                        )}
+        <Fragment>
+            <Toaster />
+            <Formik
+                initialValues={initValues}
+                validationSchema={
+                    detailsType === DetailsType.individualDetails
+                        ? individualSchema
+                        : availabilityDetailsSchema
+                }
+                validateOnMount
+                onSubmit={handleSubmitForm}
+            >
+                {({
+                    isSubmitting,
+                    values,
+                    errors,
+                    status,
+                    isValid,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                }) => (
+                    <Form>
+                        <Flex dir='column' fullWidth gap={6}>
+                            {detailsType === DetailsType.individualDetails ? (
+                                <IndividualFields
+                                    fields={formFields.individual}
+                                    errors={errors}
+                                    handleChange={handleChange}
+                                />
+                            ) : (
+                                <AvailabilityFields
+                                    fields={formFields.availability}
+                                    errors={errors}
+                                    handleChange={handleChange}
+                                    values={values}
+                                    setFieldValue={setFieldValue}
+                                />
+                            )}
 
-                        {status?.submitError && (
-                            <FlexItem className='col-span-2 mt-2 w-full'>
-                                <FormSubmitMessage type='error' name='submitError' />
-                            </FlexItem>
-                        )}
-                        {status?.submitSuccess && (
-                            <FlexItem className='col-span-2 mt-2 w-full'>
-                                <FormSubmitMessage type='success' name='submitSuccess' />
-                            </FlexItem>
-                        )}
+                            {status?.submitError && (
+                                <FlexItem className='col-span-2 mt-2 w-full'>
+                                    <FormSubmitMessage type='error' name='submitError' />
+                                </FlexItem>
+                            )}
+                            {status?.submitSuccess && (
+                                <FlexItem className='col-span-2 mt-2 w-full'>
+                                    <FormSubmitMessage type='success' name='submitSuccess' />
+                                </FlexItem>
+                            )}
 
-                        <FlexItem alignSelf='end' className='col-span-2'>
-                            <Button
-                                type='button'
-                                size={'xl'}
-                                color='outline'
-                                className='cursor-pointer'
-                                disabled={isSubmitting || status?.submitSuccess || !isValid}
-                                loading={isSubmitting}
-                                onClick={() => {
-                                    if (detailsType === DetailsType.individualDetails && isValid) {
-                                        setDetailsType(DetailsType.availabilityDetails);
-                                    } else {
-                                        handleSubmit();
-                                    }
-                                }}
-                            >
-                                {detailsType === DetailsType.individualDetails
-                                    ? 'Continue'
-                                    : 'Submit'}
-                            </Button>
-                        </FlexItem>
-                    </Flex>
-                </Form>
-            )}
-        </Formik>
+                            <FlexItem alignSelf='end' className='col-span-2'>
+                                <Button
+                                    type='button'
+                                    size={'xl'}
+                                    color='outline'
+                                    className='cursor-pointer'
+                                    disabled={isSubmitting || status?.submitSuccess || !isValid}
+                                    loading={isSubmitting}
+                                    onClick={() => {
+                                        if (
+                                            detailsType === DetailsType.individualDetails &&
+                                            isValid
+                                        ) {
+                                            setDetailsType(DetailsType.availabilityDetails);
+                                        } else if (
+                                            detailsType === DetailsType.availabilityDetails
+                                        ) {
+                                            handleSubmit();
+                                        }
+                                    }}
+                                >
+                                    {detailsType === DetailsType.individualDetails
+                                        ? 'Continue'
+                                        : 'Submit'}
+                                </Button>
+                            </FlexItem>
+                        </Flex>
+                        {/* {isLoading && (
+                            <div className='animate-pulse'>
+                                <Skeleton height='20px' my='10px' />
+                                <Skeleton height='20px' my='10px' />
+                                <Skeleton height='20px' my='10px' />
+                            </div>
+                        )} */}
+                    </Form>
+                )}
+            </Formik>
+        </Fragment>
     );
 };
 

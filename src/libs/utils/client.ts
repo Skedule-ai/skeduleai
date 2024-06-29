@@ -34,25 +34,30 @@ export function useQuery(url: string, queryHelpers?: QueryHelperResolvers) {
 }
 
 export const post = async (url: string, data: any) => {
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
 
-    if (!response.ok) {
-        const error = new Error('An error occurred while fetching the data.') as Error & {
-            info: any;
-            status: number;
-        };
-        error.info = await response.json();
-        error.status = response.status;
+        if (!response.ok) {
+            const error = new Error('An error occurred while fetching the data.') as Error & {
+                info: any;
+                status: number;
+            };
+            error.info = await response.json();
+            error.status = response.status;
+            throw error;
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error(`Error in post request to ${url}:`, error);
         throw error;
     }
-
-    return response.json();
 };
 
 interface PostData {
@@ -81,11 +86,12 @@ export function useMutation(
     const postData = async (data: PostData) => {
         try {
             const response = await post(url, data);
-            mutate(url, response, false); // Update the local data immediately, but revalidate in the background
-            queryHelpers?.onCompleted?.(data);
+            mutate(url, response, false);
+            queryHelpers?.onCompleted?.(response);
             return response;
         } catch (error) {
             queryHelpers?.onError?.(error);
+            console.error(`Error in mutation with url ${url} and data:`, data, error);
             throw error;
         }
     };

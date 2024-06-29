@@ -1,3 +1,4 @@
+import React from 'react';
 import Text from '../text';
 import { TextProps } from '../text/text.variants';
 
@@ -117,6 +118,14 @@ export const SubHeader2: React.FC<TextProps> = ({ children, ...props }) => {
 export const Paragraph: React.FC<TextProps> = ({ children, ...props }) => {
     return (
         <Text as={'p'} size='md' color='light' {...props}>
+            {children}
+        </Text>
+    );
+};
+
+export const DashboardHeading: React.FC<TextProps> = ({ children, ...props }) => {
+    return (
+        <Text as='h2' size='xl' color='black' {...props} weight='bold'>
             {children}
         </Text>
     );
