@@ -16,7 +16,7 @@ const Weekly: React.FC = () => (
                         <Flex className='col-span-1 h-3 w-12 rounded-full bg-slate-300'></Flex>
                     </Grid>
                 </Flex>
-                <Flex className='h-10 w-10 justify-end rounded-full bg-slate-300'></Flex>
+                <Flex className='size-10 justify-end rounded-full bg-slate-300'></Flex>
             </Flex>
         </Container>
     </Card>

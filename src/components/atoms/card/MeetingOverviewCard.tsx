@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Card from './index';
 import { CardProps } from './card.variants';
 import { Flex } from '../flex';
@@ -21,7 +21,7 @@ const MeetingOverview: React.FC<MeetingOverviewProps> = ({
     toTime,
     isFree,
     userImages,
-    children,
+    // children,
     ...props
 }) => {
     return (

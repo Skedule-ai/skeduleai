@@ -1,10 +1,10 @@
 import { useAuth } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUpdateBookingStatus } from '../api/bookingService';
 import { AppointmentStatus } from '@/backend/utils/enum';
 import toast from 'react-hot-toast';
 
-export type AppointemtResponseType = {
+export type AppointmentResponseType = {
     id: string;
     startTime: string;
     endTime: string;
@@ -13,29 +13,30 @@ export type AppointemtResponseType = {
 
 export const useManageAppointment = () => {
     const { getToken } = useAuth();
-    const [appointments, setAppointments] = useState<AppointemtResponseType[]>([]);
+    const [appointments, setAppointments] = useState<AppointmentResponseType[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const updateAppointmentList = (bookingId: string, status: number) => {
-        const updatedAppointmentList = [...appointments];
-        const appointmentIndex = updatedAppointmentList.findIndex((data) => data.id === bookingId);
-        if (updatedAppointmentList[appointmentIndex]) {
-            updatedAppointmentList[appointmentIndex].status = status;
-            setAppointments(updatedAppointmentList);
-        }
+    const updateAppointmentStatus = (bookingId: string, status: number) => {
+        setAppointments((prev) =>
+            prev.map((appointment) =>
+                appointment.id === bookingId ? { ...appointment, status } : appointment,
+            ),
+        );
     };
 
-    const notifyAppintmentUpdateStatus = (bookingDetails: AppointemtResponseType) => {
-        if (bookingDetails.status === AppointmentStatus.ACCEPTED) {
-            toast.success('Appointment accepted.');
-        } else if (bookingDetails.status === AppointmentStatus.REJECT) {
-            toast.error('Appointment rejected.');
+    const notifyAppointmentUpdateStatus = (status: number) => {
+        if (status === AppointmentStatus.ACCEPTED) {
+            toast.success('Your Meeting is Scheduled');
+        } else if (status === AppointmentStatus.REJECT) {
+            toast.error('Meeting is removed');
         }
     };
 
     const [updateBookingStatus] = useUpdateBookingStatus({
         onCompleted: ({ bookingDetails }) => {
-            updateAppointmentList(bookingDetails.id, bookingDetails.status);
-            notifyAppintmentUpdateStatus(bookingDetails);
+            updateAppointmentStatus(bookingDetails.id, bookingDetails.status);
+            notifyAppointmentUpdateStatus(bookingDetails.status);
         },
         onError: (err) => {
             toast.error(err.message);
@@ -43,43 +44,35 @@ export const useManageAppointment = () => {
     });
 
     const handleStatusChange = (id: string, accepted: boolean) => {
-        updateBookingStatus({
-            id,
-            accepted,
-        });
+        const status = accepted ? AppointmentStatus.ACCEPTED : AppointmentStatus.REJECT;
+        updateBookingStatus({ id, accepted });
+        updateAppointmentStatus(id, status);
     };
 
-    useEffect(() => {
-        const fetchAppointments = async () => {
-            const token = await getToken();
-            try {
-                const response = await fetch(
-                    'http://localhost:3000/api/booking_service/appointment',
-                    {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                );
-                const data = await response.json();
-                if (data.appointments) {
-                    setAppointments(data.appointments);
-                }
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
-                // setError('Failed to fetch appointments.');
-            } finally {
-                // setLoading(false);
+    const fetchAppointments = useCallback(async () => {
+        const token = await getToken();
+        try {
+            const response = await fetch('http://localhost:3000/api/booking_service/appointment', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+            if (data.appointments) {
+                setAppointments(data.appointments);
             }
-        };
-
-        fetchAppointments();
+        } catch (error) {
+            console.error('Error fetching appointments:', error);
+            setError('Failed to fetch appointments.');
+        } finally {
+            setLoading(false);
+        }
     }, [getToken]);
 
-    return {
-        appointments,
-        error: '',
-        handleStatusChange,
-    };
+    useEffect(() => {
+        fetchAppointments();
+    }, [fetchAppointments, getToken]);
+
+    return { appointments, setAppointments, error, loading, handleStatusChange, fetchAppointments };
 };

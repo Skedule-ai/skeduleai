@@ -1,3 +1,4 @@
+// pages/booking/[id].tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -17,11 +18,14 @@ import BookingModalMobile from '@/components/atoms/modals/booking-modal-mobile';
 import ScheduleAILogo from '@/components/atoms/icons/schedule-ai-logo';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimezoneSelect, { ITimezone } from 'react-timezone-select';
 import makeAnimated from 'react-select/animated';
-import Select, { GroupBase, StylesConfig } from 'react-select';
+import Select from 'react-select';
 import { Loader } from '@strapi/icons';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
+import useServiceProvider from '@/libs/hooks/useServiceProvider';
+import useBookAppointment from '@/libs/hooks/useBookAppointment';
+import BookingSkeletonLoader from '@/components/atoms/skeleton/bookingPage/bookingSkeleton';
+import TimeZone from '@/components/atoms/date/TimeZone';
 
 const animatedComponents = makeAnimated();
 
@@ -59,29 +63,6 @@ const CustomDatePicker: React.FC<AvailabilityFormInputType> = ({
             minDate={new Date()}
             {...props}
             className='w-full rounded-md border p-3'
-        />
-    );
-};
-
-const CustomTimezoneSelect: React.FC<{ field: FieldType; form: any }> = ({
-    field,
-    form,
-    ...props
-}) => {
-    const customStyles: StylesConfig<ITimezone, false, GroupBase<ITimezone>> | undefined = {
-        control: (provided) => ({
-            ...provided,
-            width: '100%',
-            padding: '5px',
-        }),
-    };
-
-    return (
-        <TimezoneSelect
-            value={field.value.toString()}
-            onChange={(option) => form.setFieldValue(field.name, option.value)}
-            styles={customStyles}
-            {...props}
         />
     );
 };
@@ -129,9 +110,7 @@ const CustomTimeSelect: React.FC<
 };
 
 const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) => {
-    const { getToken } = useAuth();
-    const { isLoaded, isSignedIn } = useUser();
-    const [loading, setLoading] = useState(true);
+    const { isSignedIn } = useUser();
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenMobile, setIsOpenMobile] = useState(false);
     const [isMediumOrLarger, setIsMediumOrLarger] = useState(false);
@@ -141,14 +120,41 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
         selectTime: '',
         timeZone: '',
     });
-    const [serviceProvider, setServiceProvider] = useState<{ name: string; image: string } | null>(
-        null,
-    );
-    const [allTimeSlots, setAllTimeSlots] = useState([]);
-    const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+    const [availableTimeSlots, setAvailableTimeSlots] = useState<SlotType[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const id = params.id;
     const router = useRouter();
+
+    const { serviceProvider, allTimeSlots, error, isLoading, organization } = useServiceProvider(
+        id,
+        {
+            onCompleted: () => toast.success('Successfully fetched the Details'),
+            onError: () => {
+                toast.error('Failed to fetch service provider details.');
+                router.push('/404');
+            },
+        },
+    );
+
+    const { bookAppointment } = useBookAppointment(id, {
+        onCompleted: (responseData: any) => {
+            console.log('Booking Response Data:', responseData);
+
+            const bookingId = responseData?.appointment?.id;
+
+            if (bookingId) {
+                router.push(`/booking/confirm/${bookingId}`);
+            } else {
+                console.error('Booking ID is undefined:', responseData);
+            }
+
+            setIsSubmitting(false);
+        },
+        onError: () => {
+            toast.error('Failed to book the appointment.');
+            setIsSubmitting(false);
+        },
+    });
 
     useEffect(() => {
         const handleResize = () => {
@@ -163,36 +169,10 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
     }, []);
 
     useEffect(() => {
-        const fetchServiceProviderDetails = async () => {
-            try {
-                const response = await fetch(`/api/booking_service/appointment/${id}`);
-                const data = await response.json();
-                setServiceProvider(data.bookingService.serviceProvider);
-                setAllTimeSlots(data.bookingService.timeSlots);
-                toast.success('Successfully fetched the Service Provider Details');
-            } catch (error) {
-                console.error('Error fetching service provider details:', error);
-                toast.error('Failed to fetch service provider details.');
-                router.push('/404');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) {
-            fetchServiceProviderDetails();
+        if (allTimeSlots) {
+            setAvailableTimeSlots(allTimeSlots);
         }
-    }, [id, router]);
-
-    if (loading || !isLoaded) {
-        return (
-            <div className='flex items-center justify-center'>
-                <div className='animate-spin'>
-                    <Loader fontSize={30} />
-                </div>
-            </div>
-        );
-    }
+    }, [allTimeSlots]);
 
     const handleSubmit = async (values: {
         meetingDuration: string;
@@ -201,9 +181,6 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
         timeZone: string;
     }) => {
         setIsSubmitting(true);
-        console.log('Selected Date:', values.selectDate);
-        console.log('Selected Time:', values.selectTime);
-        console.log('Selected Timezone:', values.timeZone);
 
         const formattedValues = {
             ...values,
@@ -215,7 +192,6 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
         setFormData(formattedValues);
 
         if (isSignedIn) {
-            const token = await getToken();
             try {
                 const payload = {
                     timezone: formattedValues.timeZone,
@@ -224,38 +200,9 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
                 };
 
                 console.log('Payload:', JSON.stringify(payload));
-
-                const response = await fetch(
-                    `http://localhost:3000/api/booking_service/appointment/${id}`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(payload),
-                    },
-                );
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const responseData = await response.json();
-                toast.success('Appointment booked successfully!');
-                const queryParams = new URLSearchParams({
-                    data: JSON.stringify(responseData),
-                    image: serviceProvider?.image ?? '',
-                    name: serviceProvider?.name ?? '',
-                    formData: JSON.stringify(formattedValues),
-                }).toString();
-
-                router.push(`/booking/${id}/booking-confirm?${queryParams}`);
+                await bookAppointment(payload);
             } catch (error) {
                 console.error('Error booking appointment:', error);
-                toast.error('Failed to book the appointment.');
-            } finally {
-                setIsSubmitting(false);
             }
         } else {
             if (isMediumOrLarger) {
@@ -267,122 +214,123 @@ const BookAppointmentsPage: React.FC<{ params: { id: string } }> = ({ params }) 
         }
     };
 
+    if (isLoading) {
+        return <BookingSkeletonLoader />;
+    }
+
     return (
         <Container fullWidth>
             <Toaster />
-            <PageHeader logoSrc={<ScheduleAILogo />} OrganizationName='Organization name' />
+            <PageHeader logoSrc={<ScheduleAILogo />} OrganizationName={organization?.name || ''} />
+            <Flex
+                dir='row'
+                justifyContent='between'
+                alignItems='center'
+                className='m-auto mt-10 w-[90%]'
+            >
+                <Flex dir='column' gap={4} className='m-5 h-auto md:m-0 md:pl-28 lg:w-1/2'>
+                    <Header1>Hey There!</Header1>
+                    <Header3>
+                        Schedule your appointment in just a few easy steps: Select a service, choose
+                        your date and time, and enter your details. We look forward to seeing you!
+                    </Header3>
+                    <Formik
+                        initialValues={formData}
+                        validationSchema={BookingManageSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ errors, touched, setFieldValue }) => (
+                            <Form className='md:w-80'>
+                                <Flex dir='column' gap={3} className='w-full md:w-auto'>
+                                    <Field
+                                        name='meetingDuration'
+                                        as={Input}
+                                        placeholder='Meeting duration'
+                                    />
+                                    {errors.meetingDuration && touched.meetingDuration ? (
+                                        <ErrorTitle>{errors.meetingDuration}</ErrorTitle>
+                                    ) : null}
+                                    <Field
+                                        name='selectDate'
+                                        component={CustomDatePicker}
+                                        availableTimeSlots={allTimeSlots}
+                                        setAvailableTimeSlots={setAvailableTimeSlots}
+                                        placeholderText='Select date'
+                                    />
+                                    {errors.selectDate && touched.selectDate ? (
+                                        <ErrorTitle className=''>{errors.selectDate}</ErrorTitle>
+                                    ) : null}
 
-            {!isOpenMobile && (
-                <Flex
-                    dir='row'
-                    justifyContent='between'
-                    alignItems='center'
-                    className='m-auto mt-10 w-[90%]'
-                >
-                    <Flex dir='column' gap={4} className='m-5 h-auto md:m-0 md:pl-28 lg:w-1/2'>
-                        <Header1>Hey There!</Header1>
-                        <Header3>
-                            Schedule your appointment in just a few easy steps: Select a service,
-                            choose your date and time, and enter your details. We look forward to
-                            seeing you!
-                        </Header3>
-                        <Formik
-                            initialValues={formData}
-                            validationSchema={BookingManageSchema}
-                            onSubmit={handleSubmit}
-                        >
-                            {({ errors, touched }) => (
-                                <Form className='md:w-80'>
-                                    <Flex dir='column' gap={3} className='w-full md:w-auto'>
+                                    {availableTimeSlots.length > 0 ? (
                                         <Field
-                                            name='meetingDuration'
-                                            as={Input}
-                                            placeholder='Meeting duration'
+                                            name='selectTime'
+                                            component={CustomTimeSelect}
+                                            availableTimeSlots={availableTimeSlots}
+                                            placeholder='Select time'
                                         />
-                                        {errors.meetingDuration && touched.meetingDuration ? (
-                                            <ErrorTitle>{errors.meetingDuration}</ErrorTitle>
-                                        ) : null}
-                                        <Field
-                                            name='selectDate'
-                                            component={CustomDatePicker}
-                                            availableTimeSlots={allTimeSlots}
-                                            setAvailableTimeSlots={setAvailableTimeSlots}
-                                            placeholderText='Select date'
-                                        />
-                                        {errors.selectDate && touched.selectDate ? (
-                                            <ErrorTitle className=''>
-                                                {errors.selectDate}
-                                            </ErrorTitle>
-                                        ) : null}
+                                    ) : (
+                                        <ErrorTitle>No available time slots</ErrorTitle>
+                                    )}
 
-                                        {availableTimeSlots.length > 0 ? (
-                                            <Field
-                                                name='selectTime'
-                                                component={CustomTimeSelect}
-                                                availableTimeSlots={availableTimeSlots}
-                                                placeholder='Select time'
-                                            />
-                                        ) : (
-                                            <ErrorTitle>No available time slots</ErrorTitle>
-                                        )}
+                                    {errors.selectTime && touched.selectTime ? (
+                                        <ErrorTitle>{errors.selectTime}</ErrorTitle>
+                                    ) : null}
 
-                                        {errors.selectTime && touched.selectTime ? (
-                                            <ErrorTitle>{errors.selectTime}</ErrorTitle>
-                                        ) : null}
-
-                                        <Field
-                                            name='timeZone'
-                                            component={CustomTimezoneSelect}
-                                            placeholder='Select timezone'
-                                        />
-                                        {errors.timeZone && touched.timeZone ? (
-                                            <ErrorTitle>{errors.timeZone}</ErrorTitle>
-                                        ) : null}
-                                    </Flex>
-                                    <Flex
-                                        dir='row'
-                                        justifyContent='center'
-                                        className='md:flex md:justify-start'
+                                    <Field
+                                        name='timeZone'
+                                        component={TimeZone}
+                                        handleFieldValueChange={(zone: string) =>
+                                            setFieldValue('timeZone', zone)
+                                        }
+                                    />
+                                    {errors.timeZone && touched.timeZone ? (
+                                        <ErrorTitle>{errors.timeZone}</ErrorTitle>
+                                    ) : null}
+                                </Flex>
+                                {error && <ErrorTitle>{error.message}</ErrorTitle>}
+                                <Flex
+                                    dir='row'
+                                    justifyContent='center'
+                                    className='md:flex md:justify-start'
+                                >
+                                    <Button
+                                        className='mt-10'
+                                        type='submit'
+                                        size='lg'
+                                        color='outline'
+                                        disabled={isSubmitting}
                                     >
-                                        <Button
-                                            className='mt-10'
-                                            type='submit'
-                                            size='lg'
-                                            color='outline'
-                                            disabled={isSubmitting}
-                                        >
-                                            {isSubmitting ? (
-                                                <div className='flex items-center gap-2'>
-                                                    <div className='animate-spin'>
-                                                        <Loader fontSize={16} />
-                                                    </div>
-                                                    {'Booking...'}
+                                        {isSubmitting ? (
+                                            <div className='flex items-center gap-2'>
+                                                <div className='animate-spin'>
+                                                    <Loader fontSize={16} />
                                                 </div>
-                                            ) : (
-                                                'Book Appointment'
-                                            )}
-                                        </Button>
-                                    </Flex>
-                                </Form>
-                            )}
-                        </Formik>
-                    </Flex>
-
-                    <Flex dir='row' justifyContent='center' className='hidden h-full w-1/2 lg:flex'>
-                        <InfoCard
-                            batchColor='green'
-                            batchState='default'
-                            buttonText='designation'
-                            imageUrl={serviceProvider?.image || 'default-image.jpg'}
-                            subtitle='Service Provider'
-                            title={serviceProvider?.name || 'Service Provider Name'}
-                            variant='default'
-                        >
-                            <p></p>
-                        </InfoCard>
-                    </Flex>
+                                                {'Booking...'}
+                                            </div>
+                                        ) : (
+                                            'Book Appointment'
+                                        )}
+                                    </Button>
+                                </Flex>
+                            </Form>
+                        )}
+                    </Formik>
                 </Flex>
-            )}
+
+                <Flex dir='row' justifyContent='center' className='hidden h-full w-1/2 lg:flex'>
+                    <InfoCard
+                        batchColor='green'
+                        batchState='default'
+                        buttonText='designation'
+                        imageUrl={serviceProvider?.image || '/default-image.jpg'}
+                        subtitle='Service Provider'
+                        title={serviceProvider?.name || 'Service Provider Name'}
+                        variant='default'
+                    >
+                        <p></p>
+                    </InfoCard>
+                </Flex>
+            </Flex>
 
             {isOpen && isMediumOrLarger && (
                 <BookingModal

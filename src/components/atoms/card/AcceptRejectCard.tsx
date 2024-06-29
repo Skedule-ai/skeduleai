@@ -15,10 +15,10 @@ type AcceptRejectCardProps = {
     onAccept: () => void;
     onReject: () => void;
     status: number;
+    showButtons?: boolean;
 } & CardProps;
 
 const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
-    // id,
     title,
     fromTime,
     toTime,
@@ -26,7 +26,7 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     userImages,
     onAccept,
     onReject,
-    // status,
+    showButtons = true,
     ...props
 }) => {
     const [localStatus, setLocalStatus] = useState<number | null>(null);
@@ -42,11 +42,10 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
     };
 
     return (
-        <Card {...props}>
+        <Card size='xl' {...props}>
             <Flex dir='column' className='p-4'>
                 <Flex dir='row' justifyContent='between' alignItems='center'>
                     <h2 className='text-xs font-semibold md:text-base lg:text-lg'>{title}</h2>
-
                     <Flex dir='row' justifyContent='end' className='mt-2'>
                         <Flex dir='row' className='relative'>
                             {userImages.slice(0, 5).map((image, index) => (
@@ -81,33 +80,35 @@ const AcceptRejectCard: React.FC<AcceptRejectCardProps> = ({
                     </p>
                 </Flex>
 
-                <hr className='my-4' />
+                {showButtons && <hr className='my-4' />}
 
-                {localStatus === null ? (
-                    <Flex dir='row' justifyContent='between'>
-                        <button
-                            onClick={handleAccept}
-                            className='w-full rounded bg-white px-4 text-sm font-medium text-green-600 md:text-base'
+                {showButtons ? (
+                    localStatus === null ? (
+                        <Flex dir='row' justifyContent='between'>
+                            <button
+                                onClick={handleAccept}
+                                className='w-full rounded bg-white px-4 text-sm font-medium text-green-600 md:text-base'
+                            >
+                                Accept
+                            </button>
+                            <div className='w-1 border-l-2 border-gray-100'></div>
+                            <button
+                                onClick={handleReject}
+                                className='w-full rounded bg-white px-4 text-sm font-medium text-red-500 md:text-base'
+                            >
+                                Reject
+                            </button>
+                        </Flex>
+                    ) : (
+                        <p
+                            className={`text-center font-medium ${
+                                localStatus === 2 ? 'text-green-600' : 'text-red-500'
+                            }`}
                         >
-                            Accept
-                        </button>
-                        <div className='w-1 border-l-2 border-gray-100'></div>
-                        <button
-                            onClick={handleReject}
-                            className='w-full rounded bg-white px-4 text-sm font-medium text-red-500 md:text-base'
-                        >
-                            Reject
-                        </button>
-                    </Flex>
-                ) : (
-                    <p
-                        className={`text-center font-medium ${
-                            localStatus === 2 ? 'text-green-600' : 'text-red-500'
-                        }`}
-                    >
-                        {localStatus === 2 ? 'Accepted' : 'Rejected'}
-                    </p>
-                )}
+                            {localStatus === 2 ? 'Accepted' : 'Rejected'}
+                        </p>
+                    )
+                ) : null}
             </Flex>
         </Card>
     );

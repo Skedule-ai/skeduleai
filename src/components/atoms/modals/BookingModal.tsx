@@ -36,9 +36,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     onClose,
     formData,
     serviceId,
-    availableTimeSlots,
     serviceProviderName,
-    image,
 }) => {
     const formattedFormData = {
         ...formData,
@@ -81,12 +79,15 @@ const BookingModal: React.FC<BookingModalProps> = ({
             </Flex>
 
             <BookingModalVariants
-                formData={formattedFormData}
+                formData={{
+                    ...formData,
+                    selectDate:
+                        typeof formData.selectDate === 'string'
+                            ? formData.selectDate
+                            : formData.selectDate.toLocaleTimeString(),
+                }}
                 serviceId={serviceId}
-                serviceProviderName={serviceProviderName}
-                availableTimeSlots={availableTimeSlots}
                 onClose={onClose}
-                image={image}
             />
         </Modal>
     );

@@ -13,8 +13,11 @@ export async function createAppointmentController(
     return await createAppointmentService(params.id, data);
 }
 
-export async function findAppointmentsController(organizationId?: string | null) {
-    return await getAppointmentsService(organizationId);
+export async function findAppointmentsController(
+    organizationId?: string | null,
+    startTime?: Date | string,
+) {
+    return await getAppointmentsService(organizationId, startTime);
 }
 
 export async function updateAppointmentStatusController(data: { id: string; accepted: boolean }) {

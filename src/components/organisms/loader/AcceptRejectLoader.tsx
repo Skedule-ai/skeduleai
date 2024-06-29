@@ -20,7 +20,7 @@ const AcceptReject: React.FC = () => (
                         <Flex className='h-8 w-20 rounded-md bg-slate-300'></Flex>
                     </Flex>
                 </Flex>
-                <Flex className='h-10 w-10 justify-end rounded-full bg-slate-300'></Flex>
+                <Flex className='size-10 justify-end rounded-full bg-slate-300'></Flex>
             </Flex>
         </Container>
     </Card>
