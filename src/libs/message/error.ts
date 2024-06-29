@@ -14,4 +14,5 @@ export const ErrorMessages = {
     FAILED_TO_SEND_WELCOME_EMAIL: 'Failed to send welcome email',
     INVALID_DATE: 'Invalid date',
     INVALID_TIME: 'Invalid time',
+    ORGANIZATION_CREATE_ERROR: 'organization creation error',
 };
