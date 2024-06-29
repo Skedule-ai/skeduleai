@@ -161,13 +161,13 @@ export async function findBookingServiceById(bookingServiceId: string) {
         }
 
         // To Validate that the booking is not in the past
-        const currentDateTime = new Date();
-        const bookingStartTime = new Date(userBookingServiceInfo.startTime);
-        const bookingEndTime = new Date(userBookingServiceInfo.endTime);
+        // const currentDateTime = new Date();
+        // const bookingStartTime = new Date(userBookingServiceInfo.startTime);
+        // const bookingEndTime = new Date(userBookingServiceInfo.endTime);
 
-        if (bookingEndTime < currentDateTime) {
-            throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
-        }
+        // if (bookingEndTime < currentDateTime) {
+        //     throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
+        // }
 
         // Step 3: Get organization info if organization id is present
         let organization: Organization | undefined;
