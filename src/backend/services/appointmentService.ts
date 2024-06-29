@@ -1,4 +1,4 @@
-import { Organization, User, currentUser } from '@clerk/nextjs/server';
+import { Organization, User, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { object, string } from 'yup';
@@ -8,6 +8,7 @@ import {
     findAppointmentRepository,
     findAppointmentsRepositoryByServiceId,
     findBookingDetails,
+    findGuestUserDetails,
     updateBookingStatusRepo,
 } from '@/backend/repositories/appointmentRepository';
 
@@ -121,7 +122,6 @@ export async function createAppointmentService(
         // Step 9: return booking details
         return { appointment };
     } catch (err) {
-        console.log(err);
         if (err instanceof Error) {
             throw new Error(err.message);
         }
@@ -143,16 +143,39 @@ export async function getAppointmentsService(organizationId: string | null = '')
         }
 
         // Step 3: Fetch user appointments
+
         const appointmentList = await findAppointmentsRepositoryByServiceId(bookingService.id);
 
         // Step 4: format appointment and return it
-        const formattedAppointments = appointmentList.map((data) => {
-            return {
-                id: data.id,
-                startTime: formatTime(data.startTime.toISOString()),
-                endTime: formatTime(data.endTime.toISOString()),
-            };
-        });
+        const formattedAppointments = await Promise.all(
+            appointmentList.map(async (data) => {
+                let guestDetails = null;
+
+                if (data.guestUserId) {
+                    guestDetails = await findGuestUserDetails(data.guestUserId);
+                } else {
+                    const clerkUser = await clerkClient.users.getUser(data.customerId);
+                    if (clerkUser) {
+                        // Fetch additional details including phoneNumber
+                        const { username, emailAddresses, phoneNumbers } = clerkUser;
+                        guestDetails = {
+                            name: `${username}`,
+                            email: emailAddresses[0]?.emailAddress ?? '',
+                            phoneNumber: phoneNumbers[0]?.phoneNumber ?? '',
+                        };
+                    }
+                }
+
+                return {
+                    id: data.id,
+                    status: data.status,
+                    serviceId: data.serviceId,
+                    startTime: formatTime(data.startTime.toISOString()),
+                    endTime: formatTime(data.endTime.toISOString()),
+                    guestDetails: guestDetails || {},
+                };
+            }),
+        );
 
         return { appointments: formattedAppointments };
     } catch (error) {
@@ -213,7 +236,6 @@ export async function updateAppointmentStatusService(
             appointmentDate = moment(userData.createdAt).format('YYYY-MM-DD');
             appointmentTime = moment(userData.createdAt).format('HH:mm');
         }
-        console.log(acceptStatus, customerEmail, serviceProviderName);
         if (acceptStatus === AppointmentStatus.ACCEPTED) {
             if (customerEmail && serviceProviderName && appointmentDate && appointmentTime) {
                 await sendAppointmentAcceptedEmailService(

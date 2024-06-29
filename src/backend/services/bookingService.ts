@@ -1,7 +1,3 @@
-import { Organization, User, currentUser } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { nanoid } from 'nanoid';
 import {
     createBookingServiceRepo,
     findBookingServiceRepo,
@@ -9,6 +5,10 @@ import {
 } from '@/backend/repositories/bookingServiceRepository';
 import { ErrorMessages } from '@/libs/message/error';
 import { DAYS_LIST, getTimeStops } from '@/libs/utils/datetime-helpers';
+import { Organization, User, currentUser } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { nanoid } from 'nanoid';
 import { findAllAvailabilityConfigurationRepository } from '../repositories/availabilityConfigurationRepository';
 import { getFormattedImagePath, getUser, getUserOrganization } from './clerkService';
 // import { availabilityDetailsSchema } from '@/components/organisms/validations/organization-form-validation';
@@ -58,20 +58,20 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
         }
 
         // Validate date and time
-        const { date, startTime, endTime } = data;
-        if (!date || !startTime || !endTime) {
-            throw new Error(ErrorMessages.REQUIRED_INPUT);
-        }
+        // const { date, startTime, endTime } = data;
+        // if (!date || !startTime || !endTime) {
+        //     throw new Error(ErrorMessages.REQUIRED_INPUT);
+        // }
 
-        const selectedDate = new Date(date);
-        const today = new Date();
-        if (selectedDate < today) {
-            throw new Error(ErrorMessages.INVALID_DATE);
-        }
+        // const selectedDate = new Date(date);
+        // const today = new Date();
+        // if (selectedDate < today) {
+        //     throw new Error(ErrorMessages.INVALID_DATE);
+        // }
 
-        if (startTime >= endTime) {
-            throw new Error(ErrorMessages.INVALID_TIME);
-        }
+        // if (startTime >= endTime) {
+        //     throw new Error(ErrorMessages.INVALID_TIME);
+        // }
 
         // Step 2: Generate unique booking id
         const id = nanoid(12);
@@ -81,9 +81,8 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             id,
             userId: user.id,
             organizationId: data.organizationId ?? '',
-            date: selectedDate,
-            startTime,
-            endTime
+            // startTime,
+            // endTime,
         });
 
         // Step 4: Format and generate booking service data.
@@ -98,12 +97,11 @@ export async function createBookingService(data: CreateBookingServiceDataType) {
             }
             console.error(JSON.stringify(err));
             throw new Error(err.message);
-        }else if (err instanceof Error) {
-                throw new Error(err.message);
+        } else if (err instanceof Error) {
+            throw new Error(err.message);
         }
     }
 }
-
 
 export type FindBookingServiceDataType = Partial<
     Pick<Prisma.bookingServiceCreateInput, 'organizationId'>
@@ -163,13 +161,13 @@ export async function findBookingServiceById(bookingServiceId: string) {
         }
 
         // To Validate that the booking is not in the past
-        const currentDateTime = new Date();
-        const bookingStartTime = new Date(userBookingServiceInfo.startTime);
-        const bookingEndTime = new Date(userBookingServiceInfo.endTime);
+        // const currentDateTime = new Date();
+        // const bookingStartTime = new Date(userBookingServiceInfo.startTime);
+        // const bookingEndTime = new Date(userBookingServiceInfo.endTime);
 
-        if (bookingEndTime < currentDateTime) {
-            throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
-        }
+        // if (bookingEndTime < currentDateTime) {
+        //     throw new Error(ErrorMessages.INVALID_BOOKING_URL); // Custom error for past bookings
+        // }
 
         // Step 3: Get organization info if organization id is present
         let organization: Organization | undefined;

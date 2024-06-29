@@ -21,8 +21,8 @@ model userConfiguration {
 }
 
 model availabilityConfiguration {
-  userId           String
-  organizationId   String
+  userId         String
+  organizationId String
   timezone       String
   startTime      DateTime
   endTime        DateTime
@@ -78,4 +78,13 @@ model blogSubscribe {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model organizationDetails {
+  organizationId     String   @id
+  typeOfOrganization String
+  servicesOffered    String
+  aboutOrganization  String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
