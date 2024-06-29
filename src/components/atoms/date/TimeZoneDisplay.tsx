@@ -64,11 +64,14 @@ const TimeZone: React.FC<TimeZoneProps> = ({
                 size='lg'
                 onClick={toggleDropdown}
             >
-                <Text>{timeZone}</Text>
+                <Text className='font-medium'>{timeZone}</Text>
                 <Text className='ml-2'>{showDropdown ? <Cross /> : <ChevronDown />}</Text>
             </Button>
             {showDropdown && (
-                <div className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'>
+                <div
+                    className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'
+                    style={{ zIndex: 9999 }} // Ensure dropdown is above other elements
+                >
                     <input
                         type='text'
                         placeholder='Search...'

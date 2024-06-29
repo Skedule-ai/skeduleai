@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 const organizationDetailsSchema = Yup.object().shape({
     organizationName: Yup.string().min(2, 'Minimum 2 characters required').required('Required'),
     timezone: Yup.string().min(2, 'Minimum 2 characters required').required('Required'),
-    currency: Yup.string().min(2, 'Minimum 2 characters required').required('Required'),
+    currency: Yup.string().min(1, 'Minimum 1 characters required').required('Required'),
 });
 
 const availabilityDetailsSchema = Yup.object().shape({

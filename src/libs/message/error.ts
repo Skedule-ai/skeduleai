@@ -12,4 +12,6 @@ export const ErrorMessages = {
     MISSING_WEBHOOK_SECRET: 'webhook secret missing',
     MISSING_SVIX_HEADERS: 'svix headers missing',
     FAILED_TO_SEND_WELCOME_EMAIL: 'Failed to send welcome email',
+    INVALID_DATE: 'Invalid date',
+    INVALID_TIME: 'Invalid time',
 };

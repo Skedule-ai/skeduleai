@@ -1,18 +1,18 @@
-import { currentUser } from '@clerk/nextjs/server';
-import { Prisma } from '@prisma/client';
-import { object, string, number, array } from 'yup';
-import pick from 'lodash/pick';
-
 import {
     addAvailabilityConfigurationRepository,
     findAllAvailabilityConfigurationRepository,
     updateAvailabilityConfigurationRepository,
 } from '@/backend/repositories/availabilityConfigurationRepository';
+import { createOrganization } from '@/backend/services/organizationService';
 import { ErrorMessages } from '@/libs/message/error';
+import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 import { DaysEnum } from '@/libs/utils/enums';
+import { currentUser } from '@clerk/nextjs/server';
+import { Prisma } from '@prisma/client';
+import pick from 'lodash/pick';
+import { array, number, object, string } from 'yup';
 import { createBookingService } from './bookingService';
 import { updateUserConfigurationService } from './userConfigurationService';
-import { DAYS_LIST } from '@/libs/utils/datetime-helpers';
 
 const validateCreate = object({
     timezone: string().required(),
@@ -38,7 +38,7 @@ const validateUpdate = object({
 export type AvailabilityConfigServiceInput = Omit<
     Prisma.availabilityConfigurationUpdateInput,
     'userId' | 'organizationId' | 'day' | 'createdAt' | 'updatedAt'
-> & { days: DaysEnum[] };
+> & { days: DaysEnum[]; organizationName?: string };
 
 export async function addAvailabilitConfigurationService(
     organizationId = '',
@@ -49,6 +49,15 @@ export async function addAvailabilitConfigurationService(
         const user = await currentUser();
         if (!user?.id) {
             throw new Error(ErrorMessages.UNAUTHORIZED);
+        }
+
+        // Step 1.5: To Create the organization if organizationId is not provided
+        if (!data.organizationName) {
+            const organizationName = data.organizationName;
+            if (organizationName) {
+                const newOrganization = await createOrganization(user.id, organizationName);
+                organizationId = newOrganization.id;
+            }
         }
 
         // Step 2: Pick required data from JSON
@@ -135,7 +144,7 @@ export async function updateAvailabilityConfigurationService(
             updateData,
         );
 
-        // Step 5: Return updated configuration.
+        // Step 6: Return updated configuration.
         return { availabilityConfiguration };
     } catch (err) {
         console.error('Error updating availability configuration:', err);

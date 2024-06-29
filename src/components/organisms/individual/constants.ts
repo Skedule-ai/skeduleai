@@ -3,13 +3,13 @@ import { DetailsType } from '@/libs/utils/enums';
 export const getFormFields = () => {
     return {
         individual: [
-            {
-                label: 'Your Name',
-                name: 'name',
-                placeholder: 'Enter your business name',
-                required: true,
-                type: 'text',
-            },
+            // {
+            //     label: 'Your Name',
+            //     name: 'name',
+            //     placeholder: 'Enter your business name',
+            //     required: true,
+            //     type: 'text',
+            // },
             {
                 label: 'Select time zone',
                 name: 'timezone',

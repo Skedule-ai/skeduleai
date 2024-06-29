@@ -40,9 +40,6 @@ const OrganizationForm: React.FC<OrganizationFormType> = () => {
             },
         };
 
-        console.log('Form values:', values);
-        console.log('Payload:', data);
-
         try {
             const response = await fetch('http://localhost:3000/api/availability', {
                 method: 'POST',
@@ -99,6 +96,7 @@ const OrganizationForm: React.FC<OrganizationFormType> = () => {
                                     fields={formFields.organization}
                                     errors={errors}
                                     handleChange={handleChange}
+                                    handleFieldValueChange={setFieldValue}
                                 />
                             ) : (
                                 <AvailabilityFields

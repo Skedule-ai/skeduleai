@@ -5,6 +5,8 @@ import { DaysEnum } from '@/libs/utils/enums';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+
+
 export async function addAvailabilityConfigurationRepository(
     data: Prisma.availabilityConfigurationCreateInput[],
 ) {
@@ -57,3 +59,5 @@ export async function updateAvailabilityConfigurationRepository(
         data,
     });
 }
+
+
