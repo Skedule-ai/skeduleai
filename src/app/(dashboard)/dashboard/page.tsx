@@ -38,7 +38,10 @@ const DashboardPage: React.FC = () => {
         setProcessingAppointments,
     ] = useState<Set<string>>(new Set());
     // const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [
+        loading,
+        // setLoading
+    ] = useState(true);
 
     const handleCompleted = (data: any) => {
         if (data.bookingService && data.bookingService.bookingUrl) {
@@ -87,32 +90,33 @@ const DashboardPage: React.FC = () => {
         }
     };
 
+    // const fetchBookingData = async () => {
+    //     const token = await getToken();
+    //     try {
+    //         const response = await fetch(
+    //             'http://localhost:3000/api/booking_service?organizationId=',
+    //             {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             },
+    //         );
+    //         const data = await response.json();
+    //         if (data.bookingService && data.bookingService.bookingUrl) {
+    //             setBookingUrl(data.bookingService.bookingUrl);
+    //         }
+    //         setLoading(false);
+    //     } catch (error) {
+    //         console.error('Error fetching booking data:', error);
+    //         setLoading(false);
+    //     }
+    // };
+
     useEffect(() => {
         fetchAcceptedAppointments();
-        const fetchBookingData = async () => {
-            const token = await getToken();
-            try {
-                const response = await fetch(
-                    'http://localhost:3000/api/booking_service?organizationId=',
-                    {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    },
-                );
-                const data = await response.json();
-                if (data.bookingService && data.bookingService.bookingUrl) {
-                    setBookingUrl(data.bookingService.bookingUrl);
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching booking data:', error);
-                setLoading(false);
-            }
-        };
 
-        fetchBookingData();
+        // fetchBookingData();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getToken]);
