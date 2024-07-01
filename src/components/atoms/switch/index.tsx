@@ -30,15 +30,19 @@ const Switch: React.FC<SwitchProps> = ({ label1, label2, onToggle }) => {
                         onChange={handleCheckboxChange}
                     />
                     <Text
-                        className={`flex items-center rounded border px-[18px] py-2 text-sm font-medium ${
-                            isChecked ? 'text-black' : 'body-color bg-white text-blue-600/100'
+                        className={`flex items-center rounded px-[18px] py-2 text-sm font-medium ${
+                            isChecked
+                                ? 'text-black'
+                                : 'body-color border bg-white text-blue-600/100'
                         }`}
                     >
                         {label1}
                     </Text>
                     <Text
-                        className={`ml-space-x-[6px] ml-2 flex items-center rounded border px-[18px] py-2 text-sm font-medium ${
-                            !isChecked ? 'text-black' : 'body-color bg-white text-blue-600/100'
+                        className={`ml-space-x-[6px] ml-2 flex items-center rounded px-[18px] py-2 text-sm font-medium ${
+                            !isChecked
+                                ? 'text-black'
+                                : 'body-color border bg-white text-blue-600/100'
                         }`}
                     >
                         {label2}

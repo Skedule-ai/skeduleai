@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
 import WorkingHoursSelector from '@/components/atoms/timeInput';
 
 const meta = {
@@ -10,7 +9,7 @@ const meta = {
     },
     tags: ['autodocs'],
     argTypes: {},
-    args: { onStartChange: fn(), onEndChange: fn(), size: 'md' },
+    args: { size: 'md' },
 } satisfies Meta<typeof WorkingHoursSelector>;
 
 export default meta;
@@ -19,5 +18,16 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     args: {
         size: 'md',
+        startTimeField: {
+            name: 'startTime',
+            label: 'Start Time',
+        },
+        endTimeField: {
+            name: 'endTime',
+            label: 'End Time',
+        },
+        onChange: (e) => {
+            console.log(e.target.name, e.target.value);
+        },
     },
 };

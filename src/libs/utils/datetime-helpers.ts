@@ -50,3 +50,7 @@ export const DAYS_LIST = [
     DaysEnum.FRIDAY,
     DaysEnum.SATURDAY,
 ];
+
+export const getDefaultTimeZone = () => {
+    return moment.tz.guess();
+};
