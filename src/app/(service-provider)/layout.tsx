@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Flex, FlexItem } from '@/components/atoms/flex';
 import SideBar from '@/components/organisms/sidebar';
 import { useUser } from '@clerk/nextjs';
-import SidebarLoader from '@/components/organisms/loader/SidebarLoader';
-
 export default function DashboardLayout({
     children,
 }: Readonly<{
@@ -27,13 +25,6 @@ export default function DashboardLayout({
         }
     }, [isSignedIn, router]);
 
-    if (loading) {
-        return (
-            <Flex className='flex w-full justify-center'>
-                <SidebarLoader />
-            </Flex>
-        );
-    }
     return (
         <Container fullscreen className='w-full'>
             <Flex dir='row'>

@@ -4,8 +4,6 @@ import Button from '@/components/atoms/button';
 import Container from '../container';
 import Text from '../text';
 import { ChevronDown, Cross } from '@strapi/icons';
-
-// Define the props for the TimeZone component
 type TimeZoneProps = FieldProps & {
     timeZone: string;
     timeZones: {
@@ -17,12 +15,11 @@ type TimeZoneProps = FieldProps & {
     toggleDropdown: () => void;
     searchQuery: string;
     onSearchQueryChange: (query: string) => void;
-    className?: string; // Allow passing custom class names
+    className?: string;
 };
-
 const TimeZone: React.FC<TimeZoneProps> = ({
     field,
-    form, // Ensure 'form' is correctly received in props
+    form,
     timeZone,
     timeZones,
     onTimeZoneChange,
@@ -65,7 +62,7 @@ const TimeZone: React.FC<TimeZoneProps> = ({
             {showDropdown && (
                 <div
                     className='absolute mt-2 max-h-60 w-full overflow-y-auto rounded-md bg-white shadow-lg ring-1 ring-black/5'
-                    style={{ zIndex: 9999 }} // Ensure dropdown is above other elements
+                    style={{ zIndex: 9999 }}
                 >
                     <input
                         type='text'

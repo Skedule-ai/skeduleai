@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
 import Container from '../container';
-
 type DateTimeDisplayProps = {
     currentDate: string;
     currentDay: string;
@@ -18,7 +17,6 @@ type DateTimeDisplayProps = {
     searchQuery: string;
     onSearchQueryChange: (query: any) => void;
 };
-
 const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({ currentDate, onDateChange }) => {
     return (
         <>
@@ -55,5 +53,4 @@ const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({ currentDate, onDateCh
         </>
     );
 };
-
 export default DateTimeDisplay;

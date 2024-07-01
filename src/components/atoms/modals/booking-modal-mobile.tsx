@@ -33,8 +33,8 @@ const BookingModalMobile: React.FC<BookingModalMobileProps> = ({ isOpen, onClose
                     <ArrowLeft className='size-3 text-blue-600' /> <IconTitle>Back</IconTitle>
                 </Flex>
                 <Flex dir='column' gap={3} className='p-5'>
-                    <Header2>Host Name(Service provider)</Header2>
-                    <Subtitle>Designation</Subtitle>
+                    <Header2>{'Host Name(Service provider)'}</Header2>
+                    <Subtitle>{'Designation'}</Subtitle>
 
                     <Flex
                         dir='row'
@@ -55,8 +55,6 @@ const BookingModalMobile: React.FC<BookingModalMobileProps> = ({ isOpen, onClose
                         ))}
                     </Flex>
                 </Flex>
-
-                {/* the sign up componenet here  */}
                 <BookingModalVariants
                     formData={formData}
                     serviceId={''}

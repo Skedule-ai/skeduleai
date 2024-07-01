@@ -1,14 +1,11 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
-
 import moment from 'moment-timezone';
 import TimeZoneDisplay from './TimeZoneDisplay';
 import { FieldProps } from 'formik';
 type TimeZoneProps = FieldProps & {
     handleFieldValueChange?: (zone: string) => void;
 };
-
 const TimeZone = ({ field, form, meta, handleFieldValueChange }: TimeZoneProps) => {
     const [, setCurrentDay] = useState('');
     const [, setCurrentTime] = useState('');

@@ -1,6 +1,4 @@
-// pages/index.tsx
 'use client';
-
 import Date from '@/components/atoms/date/Date';
 import { Flex } from '@/components/atoms/flex';
 import Container from '@/components/atoms/container';
@@ -20,18 +18,14 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import MeetingOverview from '@/components/atoms/card/MeetingOverviewCard';
 import DashboardLoader from '@/components/organisms/loader/dashboardloader';
-import { Field, Formik } from 'formik';
-import TimeZone from '@/components/atoms/date/TimeZone';
-
+import SidebarLoader from '@/components/organisms/loader/SidebarLoader';
 const DashboardPage: React.FC = () => {
     const { getToken } = useAuth();
-    const [
-        ,
-        // selectedDate
-        setSelectedDate,
-    ] = useState<Date | null>(null);
+    const [, setSelectedDate] = useState<Date | null>(null);
     const [bookingUrl, setBookingUrl] = useState<string | null>(null);
     const [acceptedAppointments, setAcceptedAppointments] = useState<AppointmentResponseType[]>([]);
+    const [, setProcessingAppointments] = useState<Set<string>>(new Set());
+    const [loading, setLoading] = useState(true);
     const [
         ,
         // processingAppointments
@@ -116,9 +110,7 @@ const DashboardPage: React.FC = () => {
     useEffect(() => {
         fetchAcceptedAppointments();
 
-        // fetchBookingData();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchBookingData();
     }, [getToken]);
 
     const handleAccept = (appointment: AppointmentResponseType) => {
@@ -137,7 +129,12 @@ const DashboardPage: React.FC = () => {
     const shortUrl = bookingUrl ? `/${bookingUrl.split('/').pop()}` : '';
 
     if (loading) {
-        return <DashboardLoader />;
+        return (
+            <>
+                <SidebarLoader />
+                <DashboardLoader />
+            </>
+        );
     }
 
     // Dummy meetings data
@@ -167,51 +164,11 @@ const DashboardPage: React.FC = () => {
                                 size='md'
                                 onClick={() => setSelectedDate(getTodayDate())}
                             >
-                                Today
+                                {'Today'}
                             </Button>
                             <Date />
                         </Flex>
                     </Flex>
-
-                    <Flex className='mb-6 flex-col md:flex-row md:items-center'>
-                        <Grid columns={2} rows={1} gap={2}>
-                            <Date />
-                            <Formik
-                                initialValues={{ timeZone: 'UTC' }}
-                                onSubmit={(values) => {
-                                    console.log('Form values:', values);
-                                }}
-                            >
-                                {({ values, setFieldValue }) => (
-                                    <Field
-                                        name='timeZone'
-                                        component={TimeZone}
-                                        timeZone={values.timeZone}
-                                        onTimeZoneChange={(zone: string) =>
-                                            setFieldValue('timeZone', zone)
-                                        }
-                                        showDropdown={false}
-                                        toggleDropdown={() => console.log('Toggle Dropdown')}
-                                        searchQuery=''
-                                        onSearchQueryChange={(query: string) =>
-                                            console.log('Search Query:', query)
-                                        }
-                                    />
-                                )}
-                            </Formik>
-                        </Grid>
-                        {/* {notificationMessage && (
-                            <Notification
-                                className='ml-8 mt-4 items-center justify-center'
-                                icon={<Information />}
-                                type='info'
-                                width='small'
-                            >
-                                {notificationMessage}
-                            </Notification>
-                        )} */}
-                    </Flex>
-
                     <Flex className='mb-6 flex-col'>
                         <ManageAppointment onAccept={handleAccept} onReject={handleReject} />
                     </Flex>

@@ -2,7 +2,6 @@ import React, { useState, Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { DropdownProps, dropdownVariants } from './dropdown.variants';
 import { ChevronDown } from '@strapi/icons';
-// import DownArrow from '@/icons/DownArrow.svg'
 
 interface DropdownItem {
     label: string;

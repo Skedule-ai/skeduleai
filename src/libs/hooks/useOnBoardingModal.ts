@@ -3,6 +3,7 @@ import {
     useFetchUserConfigurationQuery,
     useUpdateUserConfigurationMutation,
 } from '../api/userConfiguration';
+
 import { FormikHelpers } from 'formik';
 
 import { useCreateAvailabilityConfiguration } from '../api/availabilityConfiguration';
@@ -20,7 +21,6 @@ const getFormattedAvailabilityAPIInputData = (values: OnboardingFormValuesType) 
         },
     };
 };
-
 const useOnBoardingModal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [onboardingType, setOnboardingType] = useState(OnboardingType.ORGANIZATION);
@@ -31,7 +31,6 @@ const useOnBoardingModal = () => {
             onBoardingModal: true,
         });
     };
-
     const [createAvailabilityConfiguration] = useCreateAvailabilityConfiguration({
         onCompleted: (data) => {
             if (data) {
@@ -46,7 +45,6 @@ const useOnBoardingModal = () => {
             : OnboardingType.ORGANIZATION;
         setOnboardingType(updateOnboardingType);
     };
-
     useFetchUserConfigurationQuery({
         onCompleted: ({ userConfiguration }) => {
             if (!userConfiguration?.onBoardingModal) {
@@ -74,7 +72,6 @@ const useOnBoardingModal = () => {
 
         formikHelpers.setSubmitting(false);
     };
-
     return {
         isOpen,
         setIsOpen,
@@ -83,5 +80,4 @@ const useOnBoardingModal = () => {
         handleSubmit,
     };
 };
-
 export default useOnBoardingModal;

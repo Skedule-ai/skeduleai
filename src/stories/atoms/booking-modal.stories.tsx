@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-// import { action } from '@storybook/addon-actions';
 import BookingModalVariants from '@/components/atoms/modals/booking-modal-variants';
 import { fireEvent, within } from '@storybook/test';
-
 const meta: Meta<typeof BookingModalVariants> = {
     title: 'Atoms/BookingModal',
     component: BookingModalVariants,
@@ -11,18 +9,14 @@ const meta: Meta<typeof BookingModalVariants> = {
     },
     tags: ['autodocs'],
     argTypes: {},
-    args: {
-        // onSubmit: action('submitted'),
-    },
+    args: {},
 } satisfies Meta<typeof BookingModalVariants>;
-
 export default meta;
 type Story = StoryObj<typeof BookingModalVariants>;
 
 export const Default: Story = {
     args: {},
 };
-
 export const SignInFormActive: Story = {
     args: {},
     play: async ({ canvasElement }) => {
