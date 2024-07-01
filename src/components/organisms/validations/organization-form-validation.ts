@@ -7,11 +7,12 @@ const organizationDetailsSchema = Yup.object().shape({
 });
 
 const availabilityDetailsSchema = Yup.object().shape({
-    businessHours: Yup.string().required('Business hours are required'),
+    startTime: Yup.string().required('Business hours are required'),
+    endTime: Yup.string().required('Business hours are required'),
     duration: Yup.number()
         .required('Meeting Duration is required')
         .min(1, 'At least one slot is required'),
-    businessDays: Yup.array().of(Yup.string()).required('At least one business day is required'),
+    days: Yup.array().of(Yup.string()).required('At least one business day is required'),
 });
 
 export { organizationDetailsSchema, availabilityDetailsSchema };
